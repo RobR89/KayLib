@@ -39,7 +39,7 @@ This library is licensed under Apache Version 2.0 as can be found here http://ww
   Currently there is only one class that uses boost.  The XML parser.  Some day I hope to change that.
   If you do not want to use boost and have no need of the XML parser you can simply remove them from the project.
 
-* The Files...
+#### The Files...
 * Graphics/Color.h  
   This is a generic color container for r,g,b,a data.  It also provides the access to the HTML defined colors.
 
