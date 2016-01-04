@@ -85,4 +85,3 @@ This library is licensed under Apache Version 2.0 as can be found here http://ww
 * Utility/DataCode.h
   A class for creating .cpp and .h files that contain binary data in unsigned char arrays.
   Useful for embedding things such as images or other resources in a program.
-
