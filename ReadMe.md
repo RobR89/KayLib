@@ -1,7 +1,7 @@
   This is my code library.  I have created many of these files over many years and now I'm making then available to whoever wants to use them.
 This library is licensed under Apache Version 2.0 as can be found here http://www.apache.org/licenses/LICENSE-2.0
 
-'''
+```
 /*
  * Copyright 2016 Robert Reinhart.
  *
@@ -17,7 +17,7 @@ This library is licensed under Apache Version 2.0 as can be found here http://ww
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'''
+```
 
 * What is KayLib?
   KayLib is a collection of files that I have been putting together for several years.  I finally decided to share them.
