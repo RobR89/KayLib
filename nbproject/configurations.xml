@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <logicalFolder name="f7" displayName="DB" projectFiles="true">
+        <itemPath>DB/KMySQL.h</itemPath>
+        <itemPath>DB/KSQL.h</itemPath>
+        <itemPath>DB/KSQLite.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="Graphics" projectFiles="true">
+        <itemPath>Graphics/Color.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="IO" projectFiles="true">
+        <itemPath>IO/Event.h</itemPath>
+        <itemPath>IO/Exceptions.h</itemPath>
+        <itemPath>IO/KFile.h</itemPath>
+        <itemPath>IO/KThread.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="KMath" projectFiles="true">
+        <itemPath>KMath/Interpolate.h</itemPath>
+        <itemPath>KMath/KMath.h</itemPath>
+        <itemPath>KMath/Matrix.h</itemPath>
+        <itemPath>KMath/PerlinNoise.h</itemPath>
+        <itemPath>KMath/Quaternion.h</itemPath>
+        <itemPath>KMath/Spherical.h</itemPath>
+        <itemPath>KMath/Spline.h</itemPath>
+        <itemPath>KMath/Vector3D.h</itemPath>
+        <itemPath>KMath/Vector4D.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f5" displayName="Parser" projectFiles="true">
+        <itemPath>Parser/JSON.h</itemPath>
+        <itemPath>Parser/StringParser.h</itemPath>
+        <itemPath>Parser/XMLDocument.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f6" displayName="String" projectFiles="true">
+        <itemPath>String/KString.h</itemPath>
+        <itemPath>String/KUTF.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="Utility" projectFiles="true">
+        <itemPath>Utility/DataCode.h</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="f6" displayName="DB" projectFiles="true">
+        <itemPath>DB/KMySQL.cpp</itemPath>
+        <itemPath>DB/KSQL.cpp</itemPath>
+        <itemPath>DB/KSQLite.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="IO" projectFiles="true">
+        <itemPath>IO/KFile.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="KMath" projectFiles="true">
+        <itemPath>KMath/Interpolate.cpp</itemPath>
+        <itemPath>KMath/Matrix.cpp</itemPath>
+        <itemPath>KMath/Quaternion.cpp</itemPath>
+        <itemPath>KMath/Spherical.cpp</itemPath>
+        <itemPath>KMath/Spline.cpp</itemPath>
+        <itemPath>KMath/Vector3D.cpp</itemPath>
+        <itemPath>KMath/Vector4D.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="Parser" projectFiles="true">
+        <itemPath>Parser/JSON.cpp</itemPath>
+        <itemPath>Parser/StringParser.cpp</itemPath>
+        <itemPath>Parser/XMLDocument.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f5" displayName="String" projectFiles="true">
+        <itemPath>String/KString.cpp</itemPath>
+        <itemPath>String/KUTF.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="Utility" projectFiles="true">
+        <itemPath>Utility/DataCode.cpp</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+    <itemPath>Makefile</itemPath>
+    <itemPath>ReadMe.html</itemPath>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="3">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <standard>8</standard>
+        </ccTool>
+        <archiverTool>
+        </archiverTool>
+      </compileType>
+      <item path="DB/KMySQL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DB/KMySQL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DB/KSQL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DB/KSQL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DB/KSQLite.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DB/KSQLite.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Graphics/Color.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IO/Event.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IO/Exceptions.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IO/KFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="IO/KFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IO/KThread.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Interpolate.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KMath/Interpolate.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/KMath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Matrix.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KMath/Matrix.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/PerlinNoise.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Quaternion.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KMath/Quaternion.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Spherical.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KMath/Spherical.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Spline.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KMath/Spline.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Vector3D.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KMath/Vector3D.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Vector4D.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KMath/Vector4D.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Makefile" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Parser/JSON.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Parser/JSON.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Parser/StringParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Parser/StringParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Parser/XMLDocument.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Parser/XMLDocument.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ReadMe.html" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="String/KString.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="String/KString.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="String/KUTF.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="String/KUTF.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Utility/DataCode.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Utility/DataCode.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="3">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <standard>8</standard>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <archiverTool>
+        </archiverTool>
+      </compileType>
+      <item path="DB/KMySQL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DB/KMySQL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DB/KSQL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DB/KSQL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DB/KSQLite.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DB/KSQLite.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Graphics/Color.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IO/Event.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IO/Exceptions.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IO/KFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="IO/KFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IO/KThread.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Interpolate.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KMath/Interpolate.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/KMath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Matrix.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KMath/Matrix.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/PerlinNoise.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Quaternion.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KMath/Quaternion.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Spherical.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KMath/Spherical.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Spline.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KMath/Spline.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Vector3D.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KMath/Vector3D.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Vector4D.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="KMath/Vector4D.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Makefile" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Parser/JSON.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Parser/JSON.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Parser/StringParser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Parser/StringParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Parser/XMLDocument.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Parser/XMLDocument.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ReadMe.html" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="String/KString.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="String/KString.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="String/KUTF.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="String/KUTF.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Utility/DataCode.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Utility/DataCode.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
