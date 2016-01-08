@@ -40,8 +40,8 @@ This library is licensed under Apache Version 2.0 as can be found here http://ww
   If you do not want to use boost and have no need of the XML parser you can simply remove them from the project.
 
 #### The Files...
-* Graphics/Color.h  
-  This is a generic color container for r,g,b,a data.  It also provides the access to the HTML defined colors.
+* Graphics/KColor.h  
+  This is a generic color container for r,g,b,a data.  It also provides the access to the HTML defined named colors.
 
 * IO/Event.h  
   This is an event dispatcher / Listener setup.  It can use multi-threading to dispatch the messages in a new thread.
