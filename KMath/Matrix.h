@@ -165,76 +165,17 @@ public:
    */
   static Matrix perspectiveProjection(double fov, double aspect, double near, double far);
 
-  /**
-   * Add the specified matrix to this matrix.
-   * @param m The matrix to add.
-   * @return The result of the addition.
-   * @note this matrix is not modified.
-   */
-  Matrix addTo(const Matrix &m) const;
-  /**
-   * Add the specified matrix to this matrix.
-   * @param m The matrix to add.
-   */
-  void add(const Matrix &m);
-  /**
-   * Subtract the specified matrix from this matrix.
-   * @param m The matrix to subtract.
-   * @return The result of the subtraction.
-   * @note this matrix is not modified.
-   */
-  Matrix subtractFrom(const Matrix &m) const;
-  /**
-   * Subtract the specified matrix to this matrix.
-   * @param m The matrix to subtract.
-   */
-  void subtract(const Matrix &m);
-  /**
-   * Multiply this matrix by the specified matrix.
-   * @param m The matrix to multiply by.
-   * @return The result of the multiplication.
-   * @note this matrix is not modified.
-   */
-  Matrix multiplyBy(const Matrix &m) const;
-  /**
-   * Multiply this matrix by the specified matrix.
-   * @param m The matrix to multiply by.
-   */
-  void multiply(const Matrix &m);
-  /**
-   * Divide this matrix by the specified matrix.
-   * @param m The matrix to divide by.
-   * @return The result of the division.
-   * @note this matrix is not modified.
-   */
-  Matrix divideBy(const Matrix &m) const;
-  /**
-   * Divide this matrix by the specified matrix.
-   * @param m The matrix to divide by.
-   */
-  void divide(const Matrix &m);
-
-  /**
-   * Multiply this matrix by a vector.
-   * @param v The vector to multiply by.
-   * @return The vector translated and rotated by the matrix.
-   */
-  Vector3D multiplyBy(const Vector3D &v);
-  /**
-   * Multiply this matrix by a vector.
-   * @param v The vector to multiply by.
-   * @return The vector translated and rotated by the matrix in homogeneous space.
-   */
-  Vector4D multiplyBy(const Vector4D &v);
-
-  Matrix operator+(const Matrix &m);
+  Matrix operator+(const Matrix &m) const;
   Matrix& operator+=(const Matrix &m);
-  Matrix operator-(const Matrix &m);
+  Matrix operator-(const Matrix &m) const;
   Matrix& operator-=(const Matrix &m);
-  Matrix operator*(const Matrix &m);
+  Matrix operator*(const Matrix &m) const;
   Matrix& operator*=(const Matrix &m);
-  Matrix operator/(const Matrix &m);
+  Matrix operator/(const Matrix &m) const;
   Matrix& operator/=(const Matrix &m);
+
+  Vector3D operator*(const Vector3D &v) const;
+  Vector4D operator*(const Vector4D &v) const;
 
   Matrix& operator=(const Matrix &m);
   Matrix& operator=(const Quaternion &q);

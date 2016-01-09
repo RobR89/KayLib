@@ -222,7 +222,7 @@ Matrix Matrix::matrixFromQuaternion(const Quaternion &q) {
 
 void Matrix::translate(const Vector3D &T) {
   Vector3D t;
-  t = T.multiplyBy(*this);
+  t = T * (*this);
   e[12] += t.x;
   e[13] += t.y;
   e[14] += t.z;
@@ -234,7 +234,7 @@ void Matrix::scale(const Vector3D &S) {
   Sc.e[0] *= S.x;
   Sc.e[5] *= S.y;
   Sc.e[10] *= S.z;
-  set(Sc.multiplyBy(*this));
+  set(Sc * (*this));
 }
 
 void Matrix::rotate(const Vector3D &R) {
@@ -251,7 +251,7 @@ void Matrix::rotateX(double X) {
   R.e[6] = si;
   R.e[9] = -si;
   R.e[10] = cs;
-  set(R.multiplyBy(*this));
+  set(R * (*this));
 }
 
 void Matrix::rotateY(double Y) {
@@ -262,7 +262,7 @@ void Matrix::rotateY(double Y) {
   R.e[2] = -si;
   R.e[8] = si;
   R.e[10] = cs;
-  set(R.multiplyBy(*this));
+  set(R * (*this));
 }
 
 void Matrix::rotateZ(double Z) {
@@ -273,7 +273,7 @@ void Matrix::rotateZ(double Z) {
   R.e[1] = si;
   R.e[4] = -si;
   R.e[5] = cs;
-  set(R.multiplyBy(*this));
+  set(R * (*this));
 }
 
 void Matrix::rotateX_LH(double X) {
@@ -284,7 +284,7 @@ void Matrix::rotateX_LH(double X) {
   R.e[6] = -si;
   R.e[9] = si;
   R.e[10] = cs;
-  set(R.multiplyBy(*this));
+  set(R * (*this));
 }
 
 void Matrix::rotateY_LH(double Y) {
@@ -295,7 +295,7 @@ void Matrix::rotateY_LH(double Y) {
   R.e[2] = si;
   R.e[8] = -si;
   R.e[10] = cs;
-  set(R.multiplyBy(*this));
+  set(R * (*this));
 }
 
 void Matrix::rotateZ_LH(double Z) {
@@ -306,14 +306,14 @@ void Matrix::rotateZ_LH(double Z) {
   R.e[1] = -si;
   R.e[4] = si;
   R.e[5] = cs;
-  set(R.multiplyBy(*this));
+  set(R * (*this));
 }
 
 Matrix Matrix::lookAt(const Vector3D &eye, const Vector3D &lookAt, const Vector3D &up) {
   // based on http://www.opengl.org/sdk/docs/man2/xhtml/gluLookAt.xml
   Vector3D U = up;
   Vector3D F(lookAt);
-  F.subtract(eye);
+  F -= eye;
   // normalize.
   F.normalize();
   U.normalize();
@@ -332,7 +332,7 @@ Matrix Matrix::lookAt(const Vector3D &eye, const Vector3D &lookAt, const Vector3
   m.e[6] = -F.y;
   m.e[10] = -F.z;
   Vector3D ee(eye);
-  ee.multiply(-1);
+  ee *= -1;
   m.translate(ee);
   return m;
 }
@@ -370,74 +370,7 @@ Matrix Matrix::perspectiveProjection(double fov, double aspect, double near, dou
   m.e[14] = (2 * far * near) / nf;
 }
 
-Matrix Matrix::addTo(const Matrix &m) const {
-  Matrix nm = Matrix();
-  for(int i = 0; i < 16; i++) {
-    nm.e[i] = e[i] + m.e[i];
-  }
-  return nm;
-}
-
-void Matrix::add(const Matrix &m) {
-  for(int i = 0; i < 16; i++) {
-    e[i] += m.e[i];
-  }
-}
-
-Matrix Matrix::subtractFrom(const Matrix &m) const {
-  Matrix nm = Matrix();
-  for(int i = 0; i < 16; i++) {
-    nm.e[i] = e[i] - m.e[i];
-  }
-  return nm;
-}
-
-void Matrix::subtract(const Matrix &m) {
-  for(int i = 0; i < 16; i++) {
-    e[i] -= m.e[i];
-  }
-}
-
-Matrix Matrix::multiplyBy(const Matrix &m) const {
-  Matrix nm = Matrix(*this);
-  nm.multiply(m);
-  return nm;
-}
-
-void Matrix::multiply(const Matrix &m) {
-  double n[16];
-  for(int i = 0; i < 16; i++) {
-    n[i] = e[i];
-  }
-  e[0] = n[0] * m.e[0] + n[1] * m.e[0 + 4] + n[2] * m.e[0 + 8] + n[3] * m.e[0 + 12];
-  e[0 + 4] = n[4] * m.e[0] + n[5] * m.e[0 + 4] + n[6] * m.e[0 + 8] + n[7] * m.e[0 + 12];
-  e[0 + 8] = n[8] * m.e[0] + n[9] * m.e[0 + 4] + n[10] * m.e[0 + 8] + n[11] * m.e[0 + 12];
-  e[0 + 12] = n[12] * m.e[0] + n[13] * m.e[0 + 4] + n[14] * m.e[0 + 8] + n[15] * m.e[0 + 12];
-  e[1] = n[0] * m.e[1] + n[1] * m.e[1 + 4] + n[2] * m.e[1 + 8] + n[3] * m.e[1 + 12];
-  e[1 + 4] = n[4] * m.e[1] + n[5] * m.e[1 + 4] + n[6] * m.e[1 + 8] + n[7] * m.e[1 + 12];
-  e[1 + 8] = n[8] * m.e[1] + n[9] * m.e[1 + 4] + n[10] * m.e[1 + 8] + n[11] * m.e[1 + 12];
-  e[1 + 12] = n[12] * m.e[1] + n[13] * m.e[1 + 4] + n[14] * m.e[1 + 8] + n[15] * m.e[1 + 12];
-  e[2] = n[0] * m.e[2] + n[1] * m.e[2 + 4] + n[2] * m.e[2 + 8] + n[3] * m.e[2 + 12];
-  e[2 + 4] = n[4] * m.e[2] + n[5] * m.e[2 + 4] + n[6] * m.e[2 + 8] + n[7] * m.e[2 + 12];
-  e[2 + 8] = n[8] * m.e[2] + n[9] * m.e[2 + 4] + n[10] * m.e[2 + 8] + n[11] * m.e[2 + 12];
-  e[2 + 12] = n[12] * m.e[2] + n[13] * m.e[2 + 4] + n[14] * m.e[2 + 8] + n[15] * m.e[2 + 12];
-  e[3] = n[0] * m.e[3] + n[1] * m.e[3 + 4] + n[2] * m.e[3 + 8] + n[3] * m.e[3 + 12];
-  e[3 + 4] = n[4] * m.e[3] + n[5] * m.e[3 + 4] + n[6] * m.e[3 + 8] + n[7] * m.e[3 + 12];
-  e[3 + 8] = n[8] * m.e[3] + n[9] * m.e[3 + 4] + n[10] * m.e[3 + 8] + n[11] * m.e[3 + 12];
-  e[3 + 12] = n[12] * m.e[3] + n[13] * m.e[3 + 4] + n[14] * m.e[3 + 8] + n[15] * m.e[3 + 12];
-}
-
-Matrix Matrix::divideBy(const Matrix &m) const {
-  Matrix nm = Matrix(*this);
-  nm.multiply(m.inverse());
-  return nm;
-}
-
-void Matrix::divide(const Matrix &m) {
-  multiply(m.inverse());
-}
-
-Matrix Matrix::operator+(const Matrix &m) {
+Matrix Matrix::operator+(const Matrix &m) const {
   return Matrix(*this) += m;
 }
 
@@ -448,7 +381,7 @@ Matrix& Matrix::operator+=(const Matrix &m) {
   return *this;
 }
 
-Matrix Matrix::operator-(const Matrix &m) {
+Matrix Matrix::operator-(const Matrix &m) const {
   return Matrix(*this) -= m;
 }
 
@@ -459,7 +392,7 @@ Matrix& Matrix::operator-=(const Matrix &m) {
   return *this;
 }
 
-Matrix Matrix::operator*(const Matrix &m) {
+Matrix Matrix::operator*(const Matrix &m) const {
   return Matrix(*this) *= m;
 }
 
@@ -487,13 +420,30 @@ Matrix& Matrix::operator*=(const Matrix &m) {
   return *this;
 }
 
-Matrix Matrix::operator/(const Matrix &m) {
+Matrix Matrix::operator/(const Matrix &m) const {
   return Matrix(*this) /= m;
 }
 
 Matrix& Matrix::operator/=(const Matrix &m) {
-  this->divide(m);
+  (*this) *= m.inverse();
   return *this;
+}
+
+Vector3D Matrix::operator*(const Vector3D &v) const {
+  Vector3D p = Vector3D();
+  p.x = e[0] * v.x + e[4] * v.y + e[8] * v.z + e[12];
+  p.y = e[1] * v.x + e[5] * v.y + e[9] * v.z + e[13];
+  p.z = e[2] * v.x + e[6] * v.y + e[10] * v.z + e[14];
+  return p;
+}
+
+Vector4D Matrix::operator*(const Vector4D &v) const {
+  Vector4D p = Vector4D();
+  p.x = e[0] * v.x + e[4] * v.y + e[8] * v.z + e[12] * v.w;
+  p.y = e[1] * v.x + e[5] * v.y + e[9] * v.z + e[13] * v.w;
+  p.z = e[2] * v.x + e[6] * v.y + e[10] * v.z + e[14] * v.w;
+  p.w = e[3] * v.x + e[7] * v.y + e[11] * v.z + e[15] * v.w;
+  return p;
 }
 
 Matrix& Matrix::operator=(const Matrix &m) {
@@ -550,23 +500,6 @@ Matrix& Matrix::operator=(const Quaternion &q) {
   e[15] = 1.0;
 
   return *this;
-}
-
-Vector3D Matrix::multiplyBy(const Vector3D &v) {
-  Vector3D p = Vector3D();
-  p.x = e[0] * v.x + e[4] * v.y + e[8] * v.z + e[12];
-  p.y = e[1] * v.x + e[5] * v.y + e[9] * v.z + e[13];
-  p.z = e[2] * v.x + e[6] * v.y + e[10] * v.z + e[14];
-  return p;
-}
-
-Vector4D Matrix::multiplyBy(const Vector4D &v) {
-  Vector4D p = Vector4D();
-  p.x = e[0] * v.x + e[4] * v.y + e[8] * v.z + e[12] * v.w;
-  p.y = e[1] * v.x + e[5] * v.y + e[9] * v.z + e[13] * v.w;
-  p.z = e[2] * v.x + e[6] * v.y + e[10] * v.z + e[14] * v.w;
-  p.w = e[3] * v.x + e[7] * v.y + e[11] * v.z + e[15] * v.w;
-  return p;
 }
 
 }

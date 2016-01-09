@@ -139,91 +139,6 @@ public:
    * @param v The new value for the vector.
    */
   void set(const Vector4D &v);
-
-  /**
-   * Add the specified vector to this vector and return the result.
-   * @param v The vector to add.
-   * @return The result of the addition.
-   * @note this object is not modified.
-   */
-  Vector4D addTo(const Vector4D &v) const;
-  /**
-   * Add the specified vector to this vector.
-   * @param v The vector to add to this vector.
-   */
-  void add(const Vector4D &v);
-  /**
-   * Subtract the specified vector from this vector.
-   * @param v The vector to subtract.
-   * @return The result of the subtraction.
-   * @note this object is not modified.
-   */
-  Vector4D subtractFrom(const Vector4D &v) const;
-  /**
-   * Subtract the specified vector from this vector.
-   * @param v The vector to subtract from this vector.
-   */
-  void subtract(const Vector4D &v);
-  /**
-   * Multiply this vector by the specified vector.
-   * @param v The vector to multiply by.
-   * @return The result of the multiplication.
-   * @note this object is not modified.
-   */
-  Vector4D multiplyBy(const Vector4D &v) const;
-  /**
-   * Multiply this vector by the specified vector.
-   * @param v The vector to multiply by.
-   */
-  void multiply(const Vector4D &v);
-  /**
-   * Divide this vector by the specified vector.
-   * @param v The vector to divide by.
-   * @return The result of the division.
-   * @note this object is not modified.
-   */
-  Vector4D divideBy(const Vector4D &v) const;
-  /**
-   * Divide this vector by the specified vector.
-   * @param v The vector to divide by.
-   */
-  void divide(const Vector4D &v);
-  /**
-   * Multiply this vector by the specified constant.
-   * @param k The constant to multiply by.
-   * @return The result of the multiplication.
-   * @note this object is not modified.
-   */
-  Vector4D multiplyBy(double k) const;
-  /**
-   * Multiply this vector by the specified constant.
-   * @param k The constant to multiply by.
-   */
-  void multiply(double k);
-  /**
-   * Divide this vector by the specified constant.
-   * @param k The constant to divide by.
-   * @return The result of the division.
-   * @note this object is not modified.
-   */
-  Vector4D divideBy(double k) const;
-  /**
-   * Divide this vector by the specified constant.
-   * @param k The constant to divide by.
-   */
-  void divide(double k);
-  /**
-   * Multiply this vector by the specified matrix.
-   * @param m The matrix to multiply by.
-   * @return The result of the multiplication.
-   * @note this object is not modified.
-   */
-  Vector4D multiplyBy(const Matrix &m) const;
-  /**
-   * Multiply this vector by the specified matrix.
-   * @param m The matrix to multiply by.
-   */
-  void multiply(const Matrix &m);
   /**
    * Set this vector to the axis of the quaternion.
    * @param q The quaternion.
@@ -241,22 +156,22 @@ public:
 
   Vector4D& operator=(const Vector4D &v);
 
-  Vector4D operator+(const Vector4D &v);
+  Vector4D operator+(const Vector4D &v) const;
   Vector4D& operator+=(const Vector4D &v);
-  Vector4D operator-(const Vector4D &v);
+  Vector4D operator-(const Vector4D &v) const;
   Vector4D& operator-=(const Vector4D &v);
-  Vector4D operator*(const Vector4D &v);
+  Vector4D operator*(const Vector4D &v) const;
   Vector4D& operator*=(const Vector4D &v);
-  Vector4D operator/(const Vector4D &v);
+  Vector4D operator/(const Vector4D &v) const;
   Vector4D& operator/=(const Vector4D &v);
 
   //scale the Vector3D
-  Vector4D operator*(const double &k);
+  Vector4D operator*(const double &k) const;
   Vector4D& operator*=(const double &k);
-  Vector4D operator/(const double &k);
+  Vector4D operator/(const double &k) const;
   Vector4D& operator/=(const double &k);
 
-  Vector4D operator*(const Matrix &m);
+  Vector4D operator*(const Matrix &m) const;
   Vector4D& operator*=(const Matrix &m);
 };
 

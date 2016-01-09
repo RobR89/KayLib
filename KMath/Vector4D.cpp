@@ -115,8 +115,8 @@ double Vector4D::dotProduct(const Vector4D &v) const {
 double Vector4D::dot_H(const Vector4D &v) const {
   Vector4D a;
   Vector4D b;
-  a = this->divideBy(w);
-  b = v.divideBy(v.w);
+  a = (*this) / w;
+  b = v / v.w;
   return ((a.x * b.x) + (a.y * b.y) + (a.z * b.z));
 }
 
@@ -136,8 +136,8 @@ Vector4D Vector4D::crossProduct(const Vector3D &v) const {
 Vector4D Vector4D::cross_H(const Vector4D &v) const {
   Vector4D a;
   Vector4D b;
-  a = this->divideBy(w);
-  b = v.divideBy(v.w);
+  a = (*this) / w;
+  b = v / v.w;
   Vector4D c = Vector4D();
   c.x = a.y * b.z - a.z * b.y;
   c.y = a.z * b.x - a.x * b.z;
@@ -150,8 +150,8 @@ Vector4D Vector4D::cross_H(const Vector4D &v) const {
 
 Vector4D Vector4D::reflection(Vector4D norm) const {
   Vector4D refl;
-  refl = norm.multiplyBy(-2 * dotProduct(norm));
-  refl = this->subtractFrom(refl);
+  refl = norm * (-2 * dotProduct(norm));
+  refl = (*this) - refl;
   return refl;
 }
 
@@ -165,8 +165,8 @@ Vector4D Vector4D::refraction(Vector4D norm, double fact) const {
   if(k < 0) {
     return refr;
   }
-  refr = multiplyBy(fact);
-  refr.subtract(norm.multiplyBy(fact * n_r + sqrt(k)));
+  refr = (*this) * fact;
+  refr -= norm * (fact * n_r + sqrt(k));
   return refr;
 }
 
@@ -200,118 +200,6 @@ void Vector4D::set(const Vector4D &v) {
   w = v.w;
 }
 
-Vector4D Vector4D::addTo(const Vector4D &v) const {
-  return Vector4D(x + v.x, y + v.y, z + v.z, w + v.w);
-}
-
-void Vector4D::add(const Vector4D &v) {
-  x += v.x;
-  y += v.y;
-  z += v.z;
-  w += v.w;
-}
-
-Vector4D Vector4D::subtractFrom(const Vector4D &v) const {
-  return Vector4D(x - v.x, y - v.y, z - v.z, w - v.w);
-}
-
-void Vector4D::subtract(const Vector4D &v) {
-  x -= v.x;
-  y -= v.y;
-  z -= v.z;
-  w -= v.w;
-}
-
-Vector4D Vector4D::multiplyBy(const Vector4D &v) const {
-  return Vector4D(x * v.x, y * v.y, z * v.z, w * v.w);
-}
-
-void Vector4D::multiply(const Vector4D &v) {
-  x *= v.x;
-  y *= v.y;
-  z *= v.z;
-  w *= v.w;
-}
-
-Vector4D Vector4D::divideBy(const Vector4D &v) const {
-  Vector4D n = Vector4D(*this);
-  if(v.x != 0) {
-    n.x /= v.x;
-  }
-  if(v.y != 0) {
-    n.y /= v.y;
-  }
-  if(v.z != 0) {
-    n.z /= v.z;
-  }
-  if(v.w != 0) {
-    n.w /= v.w;
-  }
-  return n;
-}
-
-void Vector4D::divide(const Vector4D &v) {
-  if(v.x != 0) {
-    x /= v.x;
-  }
-  if(v.y != 0) {
-    y /= v.y;
-  }
-  if(v.z != 0) {
-    z /= v.z;
-  }
-  if(v.w != 0) {
-    w /= v.w;
-  }
-}
-
-Vector4D Vector4D::multiplyBy(double k) const {
-  return Vector4D(x * k, y * k, z * k, w * k);
-}
-
-void Vector4D::multiply(double k) {
-  x *= k;
-  y *= k;
-  z *= k;
-  w *= k;
-}
-
-Vector4D Vector4D::divideBy(double k) const {
-  if(k == 0) {
-    return Vector4D();
-  }
-  return Vector4D(x / k, y / k, z / k, w / k);
-}
-
-void Vector4D::divide(double k) {
-  if(k == 0) {
-    return;
-  }
-  x /= k;
-  y /= k;
-  z /= k;
-  w /= k;
-}
-
-Vector4D Vector4D::multiplyBy(const Matrix &m) const {
-  double nx = (x * m.e[0]) + (y * m.e[4]) + (z * m.e[8]) + (m.e[12]);
-  double ny = (x * m.e[1]) + (y * m.e[5]) + (z * m.e[9]) + (m.e[13]);
-  double nz = (x * m.e[2]) + (y * m.e[6]) + (z * m.e[10]) + (m.e[14]);
-  double nw = (x * m.e[3]) + (y * m.e[7]) + (z * m.e[11]) + (w * m.e[15]);
-  return Vector4D(nx, ny, nz, nw);
-}
-
-void Vector4D::multiply(const Matrix &m) {
-  double nx = (x * m.e[0]) + (y * m.e[4]) + (z * m.e[8]) + (m.e[12]);
-  double ny = (x * m.e[1]) + (y * m.e[5]) + (z * m.e[9]) + (m.e[13]);
-  double nz = (x * m.e[2]) + (y * m.e[6]) + (z * m.e[10]) + (m.e[14]);
-  double nw = (x * m.e[3]) + (y * m.e[7]) + (z * m.e[11]) + (w * m.e[15]);
-  x = nx;
-  y = ny;
-  z = nz;
-  w = nw;
-}
-
 void Vector4D::set(Quaternion q) {
   double Scale = (q.x * q.x) + (q.y * q.y) + (q.z * q.z);
   w = 1;
@@ -334,7 +222,7 @@ Vector4D& Vector4D::operator=(const Vector4D &v) {
   return *this;
 }
 
-Vector4D Vector4D::operator+(const Vector4D &v) {
+Vector4D Vector4D::operator+(const Vector4D &v) const {
   return Vector4D(*this) += v;
 }
 
@@ -346,7 +234,7 @@ Vector4D& Vector4D::operator+=(const Vector4D &v) {
   return *this;
 }
 
-Vector4D Vector4D::operator-(const Vector4D &v) {
+Vector4D Vector4D::operator-(const Vector4D &v) const {
   return Vector4D(*this) -= v;
 }
 
@@ -358,7 +246,7 @@ Vector4D& Vector4D::operator-=(const Vector4D &v) {
   return *this;
 }
 
-Vector4D Vector4D::operator*(const Vector4D &v) {
+Vector4D Vector4D::operator*(const Vector4D &v) const {
   return Vector4D(*this) *= v;
 }
 
@@ -370,7 +258,7 @@ Vector4D& Vector4D::operator*=(const Vector4D &v) {
   return *this;
 }
 
-Vector4D Vector4D::operator/(const Vector4D &v) {
+Vector4D Vector4D::operator/(const Vector4D &v) const {
   return Vector4D(*this) /= v;
 }
 
@@ -382,7 +270,7 @@ Vector4D& Vector4D::operator/=(const Vector4D &v) {
   return *this;
 }
 
-Vector4D Vector4D::operator*(const double &k) {
+Vector4D Vector4D::operator*(const double &k) const {
   return Vector4D(*this) *= k;
 }
 
@@ -394,7 +282,7 @@ Vector4D& Vector4D::operator*=(const double &k) {
   return *this;
 }
 
-Vector4D Vector4D::operator/(const double &k) {
+Vector4D Vector4D::operator/(const double &k) const {
   return Vector4D(*this) /= k;
 }
 
@@ -406,7 +294,7 @@ Vector4D& Vector4D::operator/=(const double &k) {
   return *this;
 }
 
-Vector4D Vector4D::operator*(const Matrix &m) {
+Vector4D Vector4D::operator*(const Matrix &m) const {
   return Vector4D(*this) *= m;
 }
 

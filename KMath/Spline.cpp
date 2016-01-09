@@ -67,7 +67,7 @@ Vector3D Spline::catmull_rom(double p, const Vector3D points[], bool loop) {
   ControlPoints con;
   getSplinePoints(con, p, pLen, loop);
   if(con.ret != -1) {
-    return points[con.ret].copy();
+    return points[con.ret];
   }
   Vector3D V;
   Vector3D v3, v2, v1;
@@ -75,23 +75,23 @@ Vector3D Spline::catmull_rom(double p, const Vector3D points[], bool loop) {
   double t2, t3;
   t2 = t * t;
   t3 = t2 * t;
-  v3 = points[con.cp1].multiplyBy(-0.5);
-  v3.add(points[con.cp2].multiplyBy(1.5));
-  v3.add(points[con.cp3].multiplyBy(-1.5));
-  v3.add(points[con.cp4].multiplyBy(0.5));
-  v3.multiply(t3);
-  v2 = points[con.cp1].copy();
-  v2.add(points[con.cp2].multiplyBy(-2.5));
-  v2.add(points[con.cp3].multiplyBy(2));
-  v2.add(points[con.cp4].multiplyBy(-0.5));
-  v2.multiply(t2);
-  v1 = points[con.cp1].multiplyBy(-0.5);
-  v1.add(points[con.cp3].multiplyBy(0.5));
-  v1.multiply(t);
-  V = points[con.cp2].copy();
-  V.add(v3);
-  V.add(v2);
-  V.add(v1);
+  v3 = points[con.cp1] * -0.5;
+  v3 += points[con.cp2] * 1.5;
+  v3 += points[con.cp3] * -1.5;
+  v3 += points[con.cp4] * 0.5;
+  v3 *= t3;
+  v2 = points[con.cp1];
+  v2 += points[con.cp2] * -2.5;
+  v2 += points[con.cp3] * 2;
+  v2 += points[con.cp4] * -0.5;
+  v2 *= t2;
+  v1 = points[con.cp1] * -0.5;
+  v1 += points[con.cp3] * 0.5;
+  v1 *= t;
+  V = points[con.cp2];
+  V += v3;
+  V += v2;
+  V += v1;
   return V;
 }
 
@@ -103,7 +103,7 @@ Vector3D Spline::b_spline(double p, const Vector3D points[], bool loop) {
   ControlPoints con;
   getSplinePoints(con, p, pLen, loop);
   if(con.ret != -1) {
-    return points[con.ret].copy();
+    return points[con.ret];
   }
   Vector3D V;
   Vector3D v3, v2, v1;
@@ -111,25 +111,25 @@ Vector3D Spline::b_spline(double p, const Vector3D points[], bool loop) {
   double t2, t3;
   t2 = t * t;
   t3 = t2 * t;
-  v3 = points[con.cp1].multiplyBy(-1);
-  v3.add(points[con.cp2].multiplyBy(3));
-  v3.add(points[con.cp3].multiplyBy(-3));
-  v3.add(points[con.cp4]);
-  v3.multiply(t3);
-  v2 = points[con.cp1].multiplyBy(3);
-  v2.add(points[con.cp2].multiplyBy(-6));
-  v2.add(points[con.cp3].multiplyBy(3));
-  v2.multiply(t2);
-  v1 = points[con.cp1].multiplyBy(-3);
-  v1.add(points[con.cp3].multiplyBy(3));
-  v1.multiply(t);
-  V = points[con.cp2].multiplyBy(4);
-  V.add(points[con.cp1]);
-  V.add(points[con.cp3]);
-  V.add(v3);
-  V.add(v2);
-  V.add(v1);
-  V.multiply(1.0 / 6.0);
+  v3 = points[con.cp1] * -1;
+  v3 += points[con.cp2] * 3;
+  v3 += points[con.cp3] * -3;
+  v3 += points[con.cp4];
+  v3 *= t3;
+  v2 = points[con.cp1] * 3;
+  v2 += points[con.cp2] * -6;
+  v2 += points[con.cp3] * 3;
+  v2 *= t2;
+  v1 = points[con.cp1] * -3;
+  v1 += points[con.cp3] * 3;
+  v1 *= t;
+  V = points[con.cp2] * 4;
+  V += points[con.cp1];
+  V += points[con.cp3];
+  V += v3;
+  V += v2;
+  V += v1;
+  V *= 1.0 / 6.0;
   return V;
 }
 
@@ -141,13 +141,13 @@ Vector3D Spline::linear(double p, const Vector3D points[], bool loop) {
   ControlPoints con;
   getSplinePoints(con, p, pLen, loop);
   if(con.ret != -1) {
-    return points[con.ret].copy();
+    return points[con.ret];
   }
   Vector3D V;
   double t = p - ((int)p);
-  V = points[con.cp3].subtractFrom(points[con.cp2]);
-  V.multiply(t);
-  V.add(points[con.cp2]);
+  V = points[con.cp3] - points[con.cp2];
+  V *= (t);
+  V += (points[con.cp2]);
   return V;
 }
 

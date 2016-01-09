@@ -53,8 +53,8 @@ Vector3D Vector3D::crossProduct(const Vector3D &v) const {
 
 Vector3D Vector3D::reflection(Vector3D norm) const {
   Vector3D refl;
-  refl = norm.multiplyBy(-2 * dotProduct(norm));
-  refl = this->subtractFrom(refl);
+  refl = norm * (-2 * dotProduct(norm));
+  refl = (*this) - refl;
   return refl;
 }
 
@@ -66,8 +66,8 @@ Vector3D Vector3D::refraction(Vector3D norm, double fact) const {
   if(k < 0) {
     return refr;
   }
-  refr = multiplyBy(fact);
-  refr.subtract(norm.multiplyBy(fact * n_r + sqrt(k)));
+  refr = (*this) * fact;
+  refr -= norm * (fact * n_r + sqrt(k));
   return refr;
 }
 
@@ -81,122 +81,6 @@ void Vector3D::set(const Vector3D &v) {
   x = v.x;
   y = v.y;
   z = v.z;
-}
-
-Vector3D Vector3D::addTo(const Vector3D &v) const {
-  double nx = x + v.x;
-  double ny = y + v.y;
-  double nz = z + v.z;
-  return Vector3D(nx, ny, nz);
-}
-
-void Vector3D::add(const Vector3D &v) {
-  x += v.x;
-  y += v.y;
-  z += v.z;
-}
-
-Vector3D Vector3D::subtractFrom(const Vector3D &v) const {
-  double nx = x - v.x;
-  double ny = y - v.y;
-  double nz = z - v.z;
-  return Vector3D(nx, ny, nz);
-}
-
-void Vector3D::subtract(const Vector3D &v) {
-  x -= v.x;
-  y -= v.y;
-  z -= v.z;
-}
-
-Vector3D Vector3D::multiplyBy(const Vector3D &v) const {
-  double nx = x * v.x;
-  double ny = y * v.y;
-  double nz = z * v.z;
-  return Vector3D(nx, ny, nz);
-}
-
-void Vector3D::multiply(const Vector3D &v) {
-  x *= v.x;
-  y *= v.y;
-  z *= v.z;
-}
-
-Vector3D Vector3D::divideBy(const Vector3D &v) const {
-  double nx = 0;
-  double ny = 0;
-  double nz = 0;
-  if(v.x != 0) {
-    nx = x / v.x;
-  }
-  if(v.y != 0) {
-    ny = y / v.y;
-  }
-  if(v.z != 0) {
-    nz = z / v.z;
-  }
-  return Vector3D(nx, ny, nz);
-}
-
-void Vector3D::divide(const Vector3D &v) {
-  if(v.x != 0) {
-    x /= v.x;
-  }
-  if(v.y != 0) {
-    y /= v.y;
-  }
-  if(v.z != 0) {
-    z /= v.z;
-  }
-}
-
-Vector3D Vector3D::multiplyBy(double k) const {
-  double nx = x * k;
-  double ny = y * k;
-  double nz = z * k;
-  return Vector3D(nx, ny, nz);
-}
-
-void Vector3D::multiply(double k) {
-  x *= k;
-  y *= k;
-  z *= k;
-}
-
-Vector3D Vector3D::divideBy(double k) const {
-  if(k == 0) {
-    return Vector3D();
-  }
-  double nx = x / k;
-  double ny = y / k;
-  double nz = z / k;
-  return Vector3D(nx, ny, nz);
-}
-
-void Vector3D::divide(double k) {
-  if(k == 0) {
-    return;
-  }
-  x /= k;
-  y /= k;
-  z /= k;
-}
-
-Vector3D Vector3D::multiplyBy(const Matrix &m) const {
-  double nx = ((x * m.e[0]) + (y * m.e[4]) + (z * m.e[8]) + (m.e[12]));
-  double ny = ((x * m.e[1]) + (y * m.e[5]) + (z * m.e[9]) + (m.e[13]));
-  double nz = ((x * m.e[2]) + (y * m.e[6]) + (z * m.e[10]) + (m.e[14]));
-  return Vector3D(nx, ny, nz);
-}
-
-void Vector3D::multiply(const Matrix &m) {
-  double nx, ny, nz;
-  nx = ((x * m.e[0]) + (y * m.e[4]) + (z * m.e[8]) + (m.e[12]));
-  ny = ((x * m.e[1]) + (y * m.e[5]) + (z * m.e[9]) + (m.e[13]));
-  nz = ((x * m.e[2]) + (y * m.e[6]) + (z * m.e[10]) + (m.e[14]));
-  x = nx;
-  y = ny;
-  z = nz;
 }
 
 void Vector3D::set(Quaternion q) {
@@ -219,7 +103,7 @@ Vector3D& Vector3D::operator=(const Vector3D &v) {
   return *this;
 }
 
-Vector3D Vector3D::operator+(const Vector3D &v) {
+Vector3D Vector3D::operator+(const Vector3D &v) const {
   return Vector3D(*this) += v;
 }
 
@@ -230,7 +114,7 @@ Vector3D& Vector3D::operator+=(const Vector3D &v) {
   return *this;
 }
 
-Vector3D Vector3D::operator-(const Vector3D &v) {
+Vector3D Vector3D::operator-(const Vector3D &v) const {
   return Vector3D(*this) -= v;
 }
 
@@ -241,7 +125,7 @@ Vector3D& Vector3D::operator-=(const Vector3D &v) {
   return *this;
 }
 
-Vector3D Vector3D::operator*(const Vector3D &v) {
+Vector3D Vector3D::operator*(const Vector3D &v) const {
   return Vector3D(*this) *= v;
 }
 
@@ -252,7 +136,7 @@ Vector3D& Vector3D::operator*=(const Vector3D &v) {
   return *this;
 }
 
-Vector3D Vector3D::operator/(const Vector3D &v) {
+Vector3D Vector3D::operator/(const Vector3D &v) const {
   return Vector3D(*this) /= v;
 }
 
@@ -263,7 +147,7 @@ Vector3D& Vector3D::operator/=(const Vector3D &v) {
   return *this;
 }
 
-Vector3D Vector3D::operator*(const double &k) {
+Vector3D Vector3D::operator*(const double &k) const {
   return Vector3D(*this) *= k;
 }
 
@@ -274,7 +158,7 @@ Vector3D& Vector3D::operator*=(const double &k) {
   return *this;
 }
 
-Vector3D Vector3D::operator/(const double &k) {
+Vector3D Vector3D::operator/(const double &k) const {
   return Vector3D(*this) /= k;
 }
 
@@ -285,7 +169,7 @@ Vector3D& Vector3D::operator/=(const double &k) {
   return *this;
 }
 
-Vector3D Vector3D::operator*(const Matrix &m) {
+Vector3D Vector3D::operator*(const Matrix &m) const {
   return Vector3D(*this) *= m;
 }
 

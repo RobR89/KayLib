@@ -254,14 +254,14 @@ Quaternion Quaternion::conjugate() {
 Vector3D Quaternion::orient(const Vector3D &v) {
   Vector3D nv = Vector3D(v);
   Matrix m = Matrix::matrixFromQuaternion(*this);
-  nv.multiply(m);
+  nv *= m;
   return nv;
 }
 
 Vector4D Quaternion::orient(const Vector4D &v) {
   Vector4D nv = Vector4D(v);
   Matrix m = Matrix::matrixFromQuaternion(*this);
-  nv.multiply(m);
+  nv *= m;
   return nv;
 }
 
