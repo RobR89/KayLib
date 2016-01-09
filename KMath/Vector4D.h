@@ -239,6 +239,25 @@ public:
     return v.x == x && v.y == y && v.z == z && v.w == w;
   }
 
+  Vector4D& operator=(const Vector4D &v);
+
+  Vector4D operator+(const Vector4D &v);
+  Vector4D& operator+=(const Vector4D &v);
+  Vector4D operator-(const Vector4D &v);
+  Vector4D& operator-=(const Vector4D &v);
+  Vector4D operator*(const Vector4D &v);
+  Vector4D& operator*=(const Vector4D &v);
+  Vector4D operator/(const Vector4D &v);
+  Vector4D& operator/=(const Vector4D &v);
+
+  //scale the Vector3D
+  Vector4D operator*(const double &k);
+  Vector4D& operator*=(const double &k);
+  Vector4D operator/(const double &k);
+  Vector4D& operator/=(const double &k);
+
+  Vector4D operator*(const Matrix &m);
+  Vector4D& operator*=(const Matrix &m);
 };
 
 }

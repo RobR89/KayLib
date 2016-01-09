@@ -161,12 +161,12 @@ public:
 
 };
 
-class Spherical_Reference {
+class SphericalReference {
 
   /**
    * Create a spherical reference object for a sphere with radius 1.
    */
-  Spherical_Reference() {
+  SphericalReference() {
     setZeroElevationRadius(1);
   }
 
@@ -177,7 +177,7 @@ class Spherical_Reference {
    * with a radius of 1000 miles must then use miles as the unit in all calls to move.
    * That unit size will then be used for all return values.
    */
-  Spherical_Reference(double radius) {
+  SphericalReference(double radius) {
     setZeroElevationRadius(radius);
   }
 

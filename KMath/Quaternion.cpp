@@ -115,6 +115,10 @@ Vector3D Quaternion::getEulerAngles() {
   return u;
 }
 
+void Quaternion::latLonHeadToQuat(const LatLonHead &loc) {
+  latLonHeadToQuat(loc.Latitude, loc.Longatude, loc.Heading);
+}
+
 void Quaternion::latLonHeadToQuat(double Latitude, double Longitude, double Heading) {
   double sa = sin(Heading / 2);
   double ca = cos(Heading / 2);

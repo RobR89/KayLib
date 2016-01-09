@@ -326,4 +326,100 @@ void Vector4D::set(Quaternion q) {
   z = q.z / Scale;
 }
 
+Vector4D& Vector4D::operator=(const Vector4D &v) {
+  x = v.x;
+  y = v.y;
+  z = v.z;
+  w = v.w;
+  return *this;
+}
+
+Vector4D Vector4D::operator+(const Vector4D &v) {
+  return Vector4D(*this) += v;
+}
+
+Vector4D& Vector4D::operator+=(const Vector4D &v) {
+  x += v.x;
+  y += v.y;
+  z += v.z;
+  w += v.w;
+  return *this;
+}
+
+Vector4D Vector4D::operator-(const Vector4D &v) {
+  return Vector4D(*this) -= v;
+}
+
+Vector4D& Vector4D::operator-=(const Vector4D &v) {
+  x -= v.x;
+  y -= v.y;
+  z -= v.z;
+  w -= v.w;
+  return *this;
+}
+
+Vector4D Vector4D::operator*(const Vector4D &v) {
+  return Vector4D(*this) *= v;
+}
+
+Vector4D& Vector4D::operator*=(const Vector4D &v) {
+  x *= v.x;
+  y *= v.y;
+  z *= v.z;
+  w *= v.w;
+  return *this;
+}
+
+Vector4D Vector4D::operator/(const Vector4D &v) {
+  return Vector4D(*this) /= v;
+}
+
+Vector4D& Vector4D::operator/=(const Vector4D &v) {
+  x /= v.x;
+  y /= v.y;
+  z /= v.z;
+  w /= v.w;
+  return *this;
+}
+
+Vector4D Vector4D::operator*(const double &k) {
+  return Vector4D(*this) *= k;
+}
+
+Vector4D& Vector4D::operator*=(const double &k) {
+  x *= k;
+  y *= k;
+  z *= k;
+  w *= k;
+  return *this;
+}
+
+Vector4D Vector4D::operator/(const double &k) {
+  return Vector4D(*this) /= k;
+}
+
+Vector4D& Vector4D::operator/=(const double &k) {
+  x /= k;
+  y /= k;
+  z /= k;
+  w /= k;
+  return *this;
+}
+
+Vector4D Vector4D::operator*(const Matrix &m) {
+  return Vector4D(*this) *= m;
+}
+
+Vector4D& Vector4D::operator*=(const Matrix &m) {
+  double nx = ((x * m.e[0]) + (y * m.e[4]) + (z * m.e[8]) + (m.e[12]));
+  double ny = ((x * m.e[1]) + (y * m.e[5]) + (z * m.e[9]) + (m.e[13]));
+  double nz = ((x * m.e[2]) + (y * m.e[6]) + (z * m.e[10]) + (m.e[14]));
+  double nw = (x * m.e[3]) + (y * m.e[7]) + (z * m.e[11]) + (w * m.e[15]);
+  x = nx;
+  y = ny;
+  z = nz;
+  w = nw;
+  return *this;
+}
+
 }

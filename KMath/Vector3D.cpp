@@ -211,4 +211,93 @@ void Vector3D::set(Quaternion q) {
   y = q.y / Scale;
   z = q.z / Scale;
 }
+
+Vector3D& Vector3D::operator=(const Vector3D &v) {
+  x = v.x;
+  y = v.y;
+  z = v.z;
+  return *this;
+}
+
+Vector3D Vector3D::operator+(const Vector3D &v) {
+  return Vector3D(*this) += v;
+}
+
+Vector3D& Vector3D::operator+=(const Vector3D &v) {
+  x += v.x;
+  y += v.y;
+  z += v.z;
+  return *this;
+}
+
+Vector3D Vector3D::operator-(const Vector3D &v) {
+  return Vector3D(*this) -= v;
+}
+
+Vector3D& Vector3D::operator-=(const Vector3D &v) {
+  x -= v.x;
+  y -= v.y;
+  z -= v.z;
+  return *this;
+}
+
+Vector3D Vector3D::operator*(const Vector3D &v) {
+  return Vector3D(*this) *= v;
+}
+
+Vector3D& Vector3D::operator*=(const Vector3D &v) {
+  x *= v.x;
+  y *= v.y;
+  z *= v.z;
+  return *this;
+}
+
+Vector3D Vector3D::operator/(const Vector3D &v) {
+  return Vector3D(*this) /= v;
+}
+
+Vector3D& Vector3D::operator/=(const Vector3D &v) {
+  x /= v.x;
+  y /= v.y;
+  z /= v.z;
+  return *this;
+}
+
+Vector3D Vector3D::operator*(const double &k) {
+  return Vector3D(*this) *= k;
+}
+
+Vector3D& Vector3D::operator*=(const double &k) {
+  x *= k;
+  y *= k;
+  z *= k;
+  return *this;
+}
+
+Vector3D Vector3D::operator/(const double &k) {
+  return Vector3D(*this) /= k;
+}
+
+Vector3D& Vector3D::operator/=(const double &k) {
+  x /= k;
+  y /= k;
+  z /= k;
+  return *this;
+}
+
+Vector3D Vector3D::operator*(const Matrix &m) {
+  return Vector3D(*this) *= m;
+}
+
+Vector3D& Vector3D::operator*=(const Matrix &m) {
+  double nx, ny, nz;
+  nx = ((x * m.e[0]) + (y * m.e[4]) + (z * m.e[8]) + (m.e[12]));
+  ny = ((x * m.e[1]) + (y * m.e[5]) + (z * m.e[9]) + (m.e[13]));
+  nz = ((x * m.e[2]) + (y * m.e[6]) + (z * m.e[10]) + (m.e[14]));
+  x = nx;
+  y = ny;
+  z = nz;
+  return *this;
+}
+
 }

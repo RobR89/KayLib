@@ -23,6 +23,53 @@ Matrix::Matrix(const Matrix &m) {
   }
 }
 
+Matrix::Matrix(const Quaternion &q) {
+  // coefficients
+  double wx, wy, wz, xx, yy, yz, xy, xz, zz, x2, y2, z2;
+  // calculate coefficients
+  x2 = q.x + q.x; // x * 2
+  y2 = q.y + q.y; // y * 2
+  z2 = q.z + q.z; // z * 2
+  xx = q.x * x2; // 2x^2
+  xy = q.x * y2; // 2xy
+  xz = q.x * z2; // 2xz
+  yy = q.y * y2; // 2y^2
+  yz = q.y * z2; // 2yz
+  zz = q.z * z2; // 2z^2
+  wx = q.w * x2; // 2w^2
+  wy = q.w * y2; // 2wy
+  wz = q.w * z2; // 2wz
+
+  // 1- 2y^2 - 2z^2
+  e[0] = 1.0f - (yy + zz);
+  // 2xy - 2wz
+  e[4] = xy - wz;
+  // 2xz + 2wy
+  e[8] = xz + wy;
+  e[12] = 0;
+
+  // 2xy + 2wz
+  e[1] = xy + wz;
+  // 1- 2x^2 + 2z^2
+  e[5] = 1.0f - (xx + zz);
+  // 2yz - 2wx
+  e[9] = yz - wx;
+  e[13] = 0;
+
+  // 2xz - 2wy
+  e[2] = xz - wy;
+  // 2yz + 2wx
+  e[6] = yz + wx;
+  // 1 - 2x^2 + 2y^2
+  e[10] = 1.0f - (xx + yy);
+  e[14] = 0;
+
+  e[3] = 0;
+  e[7] = 0;
+  e[11] = 0;
+  e[15] = 1.0;
+}
+
 void Matrix::zero() {
   for(int i = 0; i < 16; i++) {
     e[i] = 0;
@@ -42,7 +89,7 @@ Matrix Matrix::createIdentity() {
   return i;
 }
 
-Matrix Matrix::transpose() {
+Matrix Matrix::transpose() const {
   Matrix tm = Matrix();
   for(int i = 0; i < 4; i++) {
     for(int j = 0; j < 4; j++) {
@@ -52,48 +99,48 @@ Matrix Matrix::transpose() {
   return tm;
 }
 
-Matrix Matrix::inverse() {
-  Matrix tm = Matrix();
+Matrix Matrix::inverse() const {
+  Matrix im = Matrix();
 
   double x = determinant();
   if(x == 0) {
-    return tm;
+    return im;
   }
 
-  tm.e[0] = (-e[13] * e[10] * e[7] + e[9] * e[14] * e[7] + e[13] * e[6] * e[11]
+  im.e[0] = (-e[13] * e[10] * e[7] + e[9] * e[14] * e[7] + e[13] * e[6] * e[11]
           - e[5] * e[14] * e[11] - e[9] * e[6] * e[15] + e[5] * e[10] * e[15]) / x;
-  tm.e[4] = (e[12] * e[10] * e[7] - e[8] * e[14] * e[7] - e[12] * e[6] * e[11]
+  im.e[4] = (e[12] * e[10] * e[7] - e[8] * e[14] * e[7] - e[12] * e[6] * e[11]
           + e[4] * e[14] * e[11] + e[8] * e[6] * e[15] - e[4] * e[10] * e[15]) / x;
-  tm.e[8] = (-e[12] * e[9] * e[7] + e[8] * e[13] * e[7] + e[12] * e[5] * e[11]
+  im.e[8] = (-e[12] * e[9] * e[7] + e[8] * e[13] * e[7] + e[12] * e[5] * e[11]
           - e[4] * e[13] * e[11] - e[8] * e[5] * e[15] + e[4] * e[9] * e[15]) / x;
-  tm.e[12] = (e[12] * e[9] * e[6] - e[8] * e[13] * e[6] - e[12] * e[5] * e[10]
+  im.e[12] = (e[12] * e[9] * e[6] - e[8] * e[13] * e[6] - e[12] * e[5] * e[10]
           + e[4] * e[13] * e[10] + e[8] * e[5] * e[14] - e[4] * e[9] * e[14]) / x;
-  tm.e[1] = (e[13] * e[10] * e[3] - e[9] * e[14] * e[3] - e[13] * e[2] * e[11]
+  im.e[1] = (e[13] * e[10] * e[3] - e[9] * e[14] * e[3] - e[13] * e[2] * e[11]
           + e[1] * e[14] * e[11] + e[9] * e[2] * e[15] - e[1] * e[10] * e[15]) / x;
-  tm.e[5] = (-e[12] * e[10] * e[3] + e[8] * e[14] * e[3] + e[12] * e[2] * e[11]
+  im.e[5] = (-e[12] * e[10] * e[3] + e[8] * e[14] * e[3] + e[12] * e[2] * e[11]
           - e[0] * e[14] * e[11] - e[8] * e[2] * e[15] + e[0] * e[10] * e[15]) / x;
-  tm.e[9] = (e[12] * e[9] * e[3] - e[8] * e[13] * e[3] - e[12] * e[1] * e[11]
+  im.e[9] = (e[12] * e[9] * e[3] - e[8] * e[13] * e[3] - e[12] * e[1] * e[11]
           + e[0] * e[13] * e[11] + e[8] * e[1] * e[15] - e[0] * e[9] * e[15]) / x;
-  tm.e[13] = (-e[12] * e[9] * e[2] + e[8] * e[13] * e[2] + e[12] * e[1] * e[10]
+  im.e[13] = (-e[12] * e[9] * e[2] + e[8] * e[13] * e[2] + e[12] * e[1] * e[10]
           - e[0] * e[13] * e[10] - e[8] * e[1] * e[14] + e[0] * e[9] * e[14]) / x;
-  tm.e[2] = (-e[13] * e[6] * e[3] + e[5] * e[14] * e[3] + e[13] * e[2] * e[7]
+  im.e[2] = (-e[13] * e[6] * e[3] + e[5] * e[14] * e[3] + e[13] * e[2] * e[7]
           - e[1] * e[14] * e[7] - e[5] * e[2] * e[15] + e[1] * e[6] * e[15]) / x;
-  tm.e[6] = (e[12] * e[6] * e[3] - e[4] * e[14] * e[3] - e[12] * e[2] * e[7]
+  im.e[6] = (e[12] * e[6] * e[3] - e[4] * e[14] * e[3] - e[12] * e[2] * e[7]
           + e[0] * e[14] * e[7] + e[4] * e[2] * e[15] - e[0] * e[6] * e[15]) / x;
-  tm.e[10] = (-e[12] * e[5] * e[3] + e[4] * e[13] * e[3] + e[12] * e[1] * e[7]
+  im.e[10] = (-e[12] * e[5] * e[3] + e[4] * e[13] * e[3] + e[12] * e[1] * e[7]
           - e[0] * e[13] * e[7] - e[4] * e[1] * e[15] + e[0] * e[5] * e[15]) / x;
-  tm.e[14] = (e[12] * e[5] * e[2] - e[4] * e[13] * e[2] - e[12] * e[1] * e[6]
+  im.e[14] = (e[12] * e[5] * e[2] - e[4] * e[13] * e[2] - e[12] * e[1] * e[6]
           + e[0] * e[13] * e[6] + e[4] * e[1] * e[14] - e[0] * e[5] * e[14]) / x;
-  tm.e[3] = (e[9] * e[6] * e[3] - e[5] * e[10] * e[3] - e[9] * e[2] * e[7]
+  im.e[3] = (e[9] * e[6] * e[3] - e[5] * e[10] * e[3] - e[9] * e[2] * e[7]
           + e[1] * e[10] * e[7] + e[5] * e[2] * e[11] - e[1] * e[6] * e[11]) / x;
-  tm.e[7] = (-e[8] * e[6] * e[3] + e[4] * e[10] * e[3] + e[8] * e[2] * e[7]
+  im.e[7] = (-e[8] * e[6] * e[3] + e[4] * e[10] * e[3] + e[8] * e[2] * e[7]
           - e[0] * e[10] * e[7] - e[4] * e[2] * e[11] + e[0] * e[6] * e[11]) / x;
-  tm.e[11] = (e[8] * e[5] * e[3] - e[4] * e[9] * e[3] - e[8] * e[1] * e[7]
+  im.e[11] = (e[8] * e[5] * e[3] - e[4] * e[9] * e[3] - e[8] * e[1] * e[7]
           + e[0] * e[9] * e[7] + e[4] * e[1] * e[11] - e[0] * e[5] * e[11]) / x;
-  tm.e[15] = (-e[8] * e[5] * e[2] + e[4] * e[9] * e[2] + e[8] * e[1] * e[6]
+  im.e[15] = (-e[8] * e[5] * e[2] + e[4] * e[9] * e[2] + e[8] * e[1] * e[6]
           - e[0] * e[9] * e[6] - e[4] * e[1] * e[10] + e[0] * e[5] * e[10]) / x;
 
-  return tm;
+  return im;
 }
 
 double Matrix::determinant() const {
@@ -127,82 +174,6 @@ void Matrix::set(const Matrix &m) {
   for(int i = 0; i < 16; i++) {
     e[i] = m.e[i];
   }
-}
-
-Matrix Matrix::addTo(const Matrix &m) const {
-  Matrix nm = Matrix();
-  for(int i = 0; i < 16; i++) {
-    nm.e[i] = e[i] + m.e[i];
-  }
-  return nm;
-}
-
-void Matrix::add(const Matrix &m) {
-  for(int i = 0; i < 16; i++) {
-    e[i] += m.e[i];
-  }
-}
-
-Matrix Matrix::subtractFrom(const Matrix &m) const {
-  Matrix nm = Matrix();
-  for(int i = 0; i < 16; i++) {
-    nm.e[i] = e[i] - m.e[i];
-  }
-  return nm;
-}
-
-void Matrix::subtract(const Matrix &m) {
-  for(int i = 0; i < 16; i++) {
-    e[i] -= m.e[i];
-  }
-}
-
-Matrix Matrix::multiplyBy(const Matrix &m) const {
-  Matrix nm = Matrix();
-  for(int i = 0; i < 4; i++) {
-    for(int j = 0; j < 4; j++) {
-      for(int a = 0; a < 4; a++) {
-        nm.e[i + (j * 4)] += e[a + (j * 4)] * m.e[i + (a * 4)];
-      }
-    }
-  }
-  return nm;
-}
-
-void Matrix::multiply(const Matrix &m) {
-  Matrix nm = Matrix();
-  for(int i = 0; i < 4; i++) {
-    for(int j = 0; j < 4; j++) {
-      for(int a = 0; a < 4; a++) {
-        nm.e[i + (j * 4)] += e[a + (j * 4)] * m.e[i + (a * 4)];
-      }
-    }
-  }
-  this->set(nm);
-}
-
-Matrix Matrix::divideBy(const Matrix &m) const {
-  Matrix nm = Matrix();
-  for(int i = 0; i < 4; i++) {
-    for(int j = 0; j < 4; j++) {
-      for(int a = 0; a < 4; a++) {
-        nm.e[i + (j * 4)] -= e[a + (j * 4)] * m.e[i + (a * 4)];
-      }
-    }
-  }
-  return nm;
-}
-
-void Matrix::divide(const Matrix &m) {
-  Matrix nm = Matrix();
-  for(int i = 0; i < 4; i++) {
-    for(int j = 0; j < 4; j++) {
-      for(int a = 0; a < 4; a++) {
-        nm.e[i + (j * 4)] -= e[a + (j * 4)] * m.e[i + (a * 4)];
-      }
-    }
-  }
-  this->set(nm);
 }
 
 Matrix Matrix::matrixFromQuaternion(const Quaternion &q) {
@@ -397,6 +368,188 @@ Matrix Matrix::perspectiveProjection(double fov, double aspect, double near, dou
   double nf = near - far;
   m.e[10] = (far + near) / nf;
   m.e[14] = (2 * far * near) / nf;
+}
+
+Matrix Matrix::addTo(const Matrix &m) const {
+  Matrix nm = Matrix();
+  for(int i = 0; i < 16; i++) {
+    nm.e[i] = e[i] + m.e[i];
+  }
+  return nm;
+}
+
+void Matrix::add(const Matrix &m) {
+  for(int i = 0; i < 16; i++) {
+    e[i] += m.e[i];
+  }
+}
+
+Matrix Matrix::subtractFrom(const Matrix &m) const {
+  Matrix nm = Matrix();
+  for(int i = 0; i < 16; i++) {
+    nm.e[i] = e[i] - m.e[i];
+  }
+  return nm;
+}
+
+void Matrix::subtract(const Matrix &m) {
+  for(int i = 0; i < 16; i++) {
+    e[i] -= m.e[i];
+  }
+}
+
+Matrix Matrix::multiplyBy(const Matrix &m) const {
+  Matrix nm = Matrix(*this);
+  nm.multiply(m);
+  return nm;
+}
+
+void Matrix::multiply(const Matrix &m) {
+  double n[16];
+  for(int i = 0; i < 16; i++) {
+    n[i] = e[i];
+  }
+  e[0] = n[0] * m.e[0] + n[1] * m.e[0 + 4] + n[2] * m.e[0 + 8] + n[3] * m.e[0 + 12];
+  e[0 + 4] = n[4] * m.e[0] + n[5] * m.e[0 + 4] + n[6] * m.e[0 + 8] + n[7] * m.e[0 + 12];
+  e[0 + 8] = n[8] * m.e[0] + n[9] * m.e[0 + 4] + n[10] * m.e[0 + 8] + n[11] * m.e[0 + 12];
+  e[0 + 12] = n[12] * m.e[0] + n[13] * m.e[0 + 4] + n[14] * m.e[0 + 8] + n[15] * m.e[0 + 12];
+  e[1] = n[0] * m.e[1] + n[1] * m.e[1 + 4] + n[2] * m.e[1 + 8] + n[3] * m.e[1 + 12];
+  e[1 + 4] = n[4] * m.e[1] + n[5] * m.e[1 + 4] + n[6] * m.e[1 + 8] + n[7] * m.e[1 + 12];
+  e[1 + 8] = n[8] * m.e[1] + n[9] * m.e[1 + 4] + n[10] * m.e[1 + 8] + n[11] * m.e[1 + 12];
+  e[1 + 12] = n[12] * m.e[1] + n[13] * m.e[1 + 4] + n[14] * m.e[1 + 8] + n[15] * m.e[1 + 12];
+  e[2] = n[0] * m.e[2] + n[1] * m.e[2 + 4] + n[2] * m.e[2 + 8] + n[3] * m.e[2 + 12];
+  e[2 + 4] = n[4] * m.e[2] + n[5] * m.e[2 + 4] + n[6] * m.e[2 + 8] + n[7] * m.e[2 + 12];
+  e[2 + 8] = n[8] * m.e[2] + n[9] * m.e[2 + 4] + n[10] * m.e[2 + 8] + n[11] * m.e[2 + 12];
+  e[2 + 12] = n[12] * m.e[2] + n[13] * m.e[2 + 4] + n[14] * m.e[2 + 8] + n[15] * m.e[2 + 12];
+  e[3] = n[0] * m.e[3] + n[1] * m.e[3 + 4] + n[2] * m.e[3 + 8] + n[3] * m.e[3 + 12];
+  e[3 + 4] = n[4] * m.e[3] + n[5] * m.e[3 + 4] + n[6] * m.e[3 + 8] + n[7] * m.e[3 + 12];
+  e[3 + 8] = n[8] * m.e[3] + n[9] * m.e[3 + 4] + n[10] * m.e[3 + 8] + n[11] * m.e[3 + 12];
+  e[3 + 12] = n[12] * m.e[3] + n[13] * m.e[3 + 4] + n[14] * m.e[3 + 8] + n[15] * m.e[3 + 12];
+}
+
+Matrix Matrix::divideBy(const Matrix &m) const {
+  Matrix nm = Matrix(*this);
+  nm.multiply(m.inverse());
+  return nm;
+}
+
+void Matrix::divide(const Matrix &m) {
+  multiply(m.inverse());
+}
+
+Matrix Matrix::operator+(const Matrix &m) {
+  return Matrix(*this) += m;
+}
+
+Matrix& Matrix::operator+=(const Matrix &m) {
+  for(int i = 0; i < 16; i++) {
+    e[i] += m.e[i];
+  }
+  return *this;
+}
+
+Matrix Matrix::operator-(const Matrix &m) {
+  return Matrix(*this) -= m;
+}
+
+Matrix& Matrix::operator-=(const Matrix &m) {
+  for(int i = 0; i < 16; i++) {
+    e[i] -= m.e[i];
+  }
+  return *this;
+}
+
+Matrix Matrix::operator*(const Matrix &m) {
+  return Matrix(*this) *= m;
+}
+
+Matrix& Matrix::operator*=(const Matrix &m) {
+  double n[16];
+  for(int i = 0; i < 16; i++) {
+    n[i] = e[i];
+  }
+  e[0] = n[0] * m.e[0] + n[1] * m.e[0 + 4] + n[2] * m.e[0 + 8] + n[3] * m.e[0 + 12];
+  e[0 + 4] = n[4] * m.e[0] + n[5] * m.e[0 + 4] + n[6] * m.e[0 + 8] + n[7] * m.e[0 + 12];
+  e[0 + 8] = n[8] * m.e[0] + n[9] * m.e[0 + 4] + n[10] * m.e[0 + 8] + n[11] * m.e[0 + 12];
+  e[0 + 12] = n[12] * m.e[0] + n[13] * m.e[0 + 4] + n[14] * m.e[0 + 8] + n[15] * m.e[0 + 12];
+  e[1] = n[0] * m.e[1] + n[1] * m.e[1 + 4] + n[2] * m.e[1 + 8] + n[3] * m.e[1 + 12];
+  e[1 + 4] = n[4] * m.e[1] + n[5] * m.e[1 + 4] + n[6] * m.e[1 + 8] + n[7] * m.e[1 + 12];
+  e[1 + 8] = n[8] * m.e[1] + n[9] * m.e[1 + 4] + n[10] * m.e[1 + 8] + n[11] * m.e[1 + 12];
+  e[1 + 12] = n[12] * m.e[1] + n[13] * m.e[1 + 4] + n[14] * m.e[1 + 8] + n[15] * m.e[1 + 12];
+  e[2] = n[0] * m.e[2] + n[1] * m.e[2 + 4] + n[2] * m.e[2 + 8] + n[3] * m.e[2 + 12];
+  e[2 + 4] = n[4] * m.e[2] + n[5] * m.e[2 + 4] + n[6] * m.e[2 + 8] + n[7] * m.e[2 + 12];
+  e[2 + 8] = n[8] * m.e[2] + n[9] * m.e[2 + 4] + n[10] * m.e[2 + 8] + n[11] * m.e[2 + 12];
+  e[2 + 12] = n[12] * m.e[2] + n[13] * m.e[2 + 4] + n[14] * m.e[2 + 8] + n[15] * m.e[2 + 12];
+  e[3] = n[0] * m.e[3] + n[1] * m.e[3 + 4] + n[2] * m.e[3 + 8] + n[3] * m.e[3 + 12];
+  e[3 + 4] = n[4] * m.e[3] + n[5] * m.e[3 + 4] + n[6] * m.e[3 + 8] + n[7] * m.e[3 + 12];
+  e[3 + 8] = n[8] * m.e[3] + n[9] * m.e[3 + 4] + n[10] * m.e[3 + 8] + n[11] * m.e[3 + 12];
+  e[3 + 12] = n[12] * m.e[3] + n[13] * m.e[3 + 4] + n[14] * m.e[3 + 8] + n[15] * m.e[3 + 12];
+  return *this;
+}
+
+Matrix Matrix::operator/(const Matrix &m) {
+  return Matrix(*this) /= m;
+}
+
+Matrix& Matrix::operator/=(const Matrix &m) {
+  this->divide(m);
+  return *this;
+}
+
+Matrix& Matrix::operator=(const Matrix &m) {
+  for(int i = 0; i < 16; i++) {
+    e[i] = m.e[i];
+  }
+  return *this;
+}
+
+Matrix& Matrix::operator=(const Quaternion &q) {
+  // coefficients
+  double wx, wy, wz, xx, yy, yz, xy, xz, zz, x2, y2, z2;
+  // calculate coefficients
+  x2 = q.x + q.x; // x * 2
+  y2 = q.y + q.y; // y * 2
+  z2 = q.z + q.z; // z * 2
+  xx = q.x * x2; // 2x^2
+  xy = q.x * y2; // 2xy
+  xz = q.x * z2; // 2xz
+  yy = q.y * y2; // 2y^2
+  yz = q.y * z2; // 2yz
+  zz = q.z * z2; // 2z^2
+  wx = q.w * x2; // 2w^2
+  wy = q.w * y2; // 2wy
+  wz = q.w * z2; // 2wz
+
+  // 1- 2y^2 - 2z^2
+  e[0] = 1.0f - (yy + zz);
+  // 2xy - 2wz
+  e[4] = xy - wz;
+  // 2xz + 2wy
+  e[8] = xz + wy;
+  e[12] = 0;
+
+  // 2xy + 2wz
+  e[1] = xy + wz;
+  // 1- 2x^2 + 2z^2
+  e[5] = 1.0f - (xx + zz);
+  // 2yz - 2wx
+  e[9] = yz - wx;
+  e[13] = 0;
+
+  // 2xz - 2wy
+  e[2] = xz - wy;
+  // 2yz + 2wx
+  e[6] = yz + wx;
+  // 1 - 2x^2 + 2y^2
+  e[10] = 1.0f - (xx + yy);
+  e[14] = 0;
+
+  e[3] = 0;
+  e[7] = 0;
+  e[11] = 0;
+  e[15] = 1.0;
+
+  return *this;
 }
 
 Vector3D Matrix::multiplyBy(const Vector3D &v) {

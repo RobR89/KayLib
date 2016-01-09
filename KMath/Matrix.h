@@ -25,11 +25,9 @@ class Matrix {
 public:
   double e[16];
 
-  //  FloatBuffer getFloatBuffer()
-
   Matrix();
-
   Matrix(const Matrix &m);
+  Matrix(const Quaternion &q);
 
   /**
    * Return a copy of the Matrix.
@@ -57,13 +55,13 @@ public:
    * Get the transposed matrix.
    * @return The transposed matrix.
    */
-  Matrix transpose();
+  Matrix transpose() const;
 
   /**
    * Get the inverse matrix.
    * @return The inverse of the matrix.
    */
-  Matrix inverse();
+  Matrix inverse() const;
 
   /**
    * Get the determinant of the matrix.
@@ -76,55 +74,6 @@ public:
    * @param m The matrix to set the values to.
    */
   void set(const Matrix &m);
-
-  /**
-   * Add the specified matrix to this matrix.
-   * @param m The matrix to add.
-   * @return The result of the addition.
-   * @note this matrix is not modified.
-   */
-  Matrix addTo(const Matrix &m) const;
-  /**
-   * Add the specified matrix to this matrix.
-   * @param m The matrix to add.
-   */
-  void add(const Matrix &m);
-  /**
-   * Subtract the specified matrix from this matrix.
-   * @param m The matrix to subtract.
-   * @return The result of the subtraction.
-   * @note this matrix is not modified.
-   */
-  Matrix subtractFrom(const Matrix &m) const;
-  /**
-   * Subtract the specified matrix to this matrix.
-   * @param m The matrix to subtract.
-   */
-  void subtract(const Matrix &m);
-  /**
-   * Multiply this matrix by the specified matrix.
-   * @param m The matrix to multiply by.
-   * @return The result of the multiplication.
-   * @note this matrix is not modified.
-   */
-  Matrix multiplyBy(const Matrix &m) const;
-  /**
-   * Multiply this matrix by the specified matrix.
-   * @param m The matrix to multiply by.
-   */
-  void multiply(const Matrix &m);
-  /**
-   * Divide this matrix by the specified matrix.
-   * @param m The matrix to divide by.
-   * @return The result of the division.
-   * @note this matrix is not modified.
-   */
-  Matrix divideBy(const Matrix &m) const;
-  /**
-   * Divide this matrix by the specified matrix.
-   * @param m The matrix to divide by.
-   */
-  void divide(const Matrix &m);
 
   /**
    * Construct a matrix representation of a Quaternion.
@@ -217,6 +166,55 @@ public:
   static Matrix perspectiveProjection(double fov, double aspect, double near, double far);
 
   /**
+   * Add the specified matrix to this matrix.
+   * @param m The matrix to add.
+   * @return The result of the addition.
+   * @note this matrix is not modified.
+   */
+  Matrix addTo(const Matrix &m) const;
+  /**
+   * Add the specified matrix to this matrix.
+   * @param m The matrix to add.
+   */
+  void add(const Matrix &m);
+  /**
+   * Subtract the specified matrix from this matrix.
+   * @param m The matrix to subtract.
+   * @return The result of the subtraction.
+   * @note this matrix is not modified.
+   */
+  Matrix subtractFrom(const Matrix &m) const;
+  /**
+   * Subtract the specified matrix to this matrix.
+   * @param m The matrix to subtract.
+   */
+  void subtract(const Matrix &m);
+  /**
+   * Multiply this matrix by the specified matrix.
+   * @param m The matrix to multiply by.
+   * @return The result of the multiplication.
+   * @note this matrix is not modified.
+   */
+  Matrix multiplyBy(const Matrix &m) const;
+  /**
+   * Multiply this matrix by the specified matrix.
+   * @param m The matrix to multiply by.
+   */
+  void multiply(const Matrix &m);
+  /**
+   * Divide this matrix by the specified matrix.
+   * @param m The matrix to divide by.
+   * @return The result of the division.
+   * @note this matrix is not modified.
+   */
+  Matrix divideBy(const Matrix &m) const;
+  /**
+   * Divide this matrix by the specified matrix.
+   * @param m The matrix to divide by.
+   */
+  void divide(const Matrix &m);
+
+  /**
    * Multiply this matrix by a vector.
    * @param v The vector to multiply by.
    * @return The vector translated and rotated by the matrix.
@@ -228,6 +226,19 @@ public:
    * @return The vector translated and rotated by the matrix in homogeneous space.
    */
   Vector4D multiplyBy(const Vector4D &v);
+
+  Matrix operator+(const Matrix &m);
+  Matrix& operator+=(const Matrix &m);
+  Matrix operator-(const Matrix &m);
+  Matrix& operator-=(const Matrix &m);
+  Matrix operator*(const Matrix &m);
+  Matrix& operator*=(const Matrix &m);
+  Matrix operator/(const Matrix &m);
+  Matrix& operator/=(const Matrix &m);
+
+  Matrix& operator=(const Matrix &m);
+  Matrix& operator=(const Quaternion &q);
+
 };
 }
 #endif	/* MATRIX_H */

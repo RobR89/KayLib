@@ -101,6 +101,11 @@ public:
    */
   void latLonHeadToQuat(double Latitude, double Longitude, double Heading);
   /**
+   * Set the quaternion to the latitude, longitude, and heading values.
+   * @param loc The location to set the quaternion to.
+   */
+  void latLonHeadToQuat(const LatLonHead &loc);
+  /**
    * Get the latitude, longitude, and heading values represented by this quaternion on a sphere of radius 1.
    * @return The latitude, longitude, and heading values in radians.
    */
@@ -161,7 +166,7 @@ public:
   /**
    * Check of the quaternions are equal
    * @param q The quaternion to check against.
-   * @return 
+   * @return
    */
   bool equals(const Quaternion &q) {
     return w == q.w && x == q.x && y == q.y && z == q.z;
