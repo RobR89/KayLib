@@ -2,14 +2,27 @@
 
 namespace KayLib {
 
+int sqLiteInits = 0;
+
 KSQLite::KSQLite() {
   connection = nullptr;
+  if(sqLiteInits == 0) {
+    int ret = sqlite3_initialize();
+    if(ret != SQLITE_OK) {
+      // Init failed.
+    }
+  }
+  sqLiteInits++;
 }
 
 KSQLite::~KSQLite() {
   if(connection != nullptr) {
     sqlite3_close(connection);
     connection = nullptr;
+  }
+  sqLiteInits--;
+  if(sqLiteInits <= 0) {
+    sqlite3_shutdown();
   }
 }
 
