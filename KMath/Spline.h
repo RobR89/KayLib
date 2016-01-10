@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include "KMath.h"
+
 #ifndef SPLINE_H
 #define	SPLINE_H
 

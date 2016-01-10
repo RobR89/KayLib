@@ -310,4 +310,16 @@ Vector4D& Vector4D::operator*=(const Matrix &m) {
   return *this;
 }
 
+Vector4D Vector4D::operator*(const Quaternion &q) const {
+  Matrix m = Matrix::matrixFromQuaternion(q);
+  Vector4D nv = (*this) * m;
+  return nv;
+}
+
+Vector4D& Vector4D::operator*=(const Quaternion &q) {
+  Matrix m = Matrix::matrixFromQuaternion(q);
+  (*this) *= m;
+  return *this;
+}
+
 }

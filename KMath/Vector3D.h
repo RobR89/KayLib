@@ -18,6 +18,8 @@
  * A 3 dimensional double vector.
  */
 
+#include "KMath.h"
+
 #ifndef VECTOR3D_H
 #define	VECTOR3D_H
 
@@ -141,8 +143,23 @@ public:
   Vector3D operator/(const double &k) const;
   Vector3D& operator/=(const double &k);
 
+  /**
+   * Orient a point in space to matrix space.
+   */
   Vector3D operator*(const Matrix &m) const;
+  /**
+   * Orient a point in space to matrix space.
+   */
   Vector3D& operator*=(const Matrix &m);
+  /**
+   * Orient a point in space to quaternion space.
+   */
+  Vector3D operator*(const Quaternion &q) const;
+  /**
+   * Orient a point in space to quaternion space.
+   */
+  Vector3D& operator*=(const Quaternion &q);
+
 };
 
 }

@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* 
+/*
  * @referance based on http://freespace.virgin.net/hugo.elias/models/m_perlin.htm
  */
+
+#include "Interpolate.h"
 
 #ifndef PERLINNOISE_H
 #define	PERLINNOISE_H

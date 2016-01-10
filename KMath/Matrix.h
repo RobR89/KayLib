@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include "KMath.h"
+
 #ifndef MATRIX_H
 #define	MATRIX_H
 
@@ -174,7 +176,13 @@ public:
   Matrix operator/(const Matrix &m) const;
   Matrix& operator/=(const Matrix &m);
 
+  /**
+   * Orient a point in space to matrix space.
+   */
   Vector3D operator*(const Vector3D &v) const;
+  /**
+   * Orient a point in space to matrix space.
+   */
   Vector4D operator*(const Vector4D &v) const;
 
   Matrix& operator=(const Matrix &m);

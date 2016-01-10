@@ -18,6 +18,8 @@
  * A 4 Dimensional double vector.
  */
 
+#include "KMath.h"
+
 #ifndef VECTOR4D_H
 #define	VECTOR4D_H
 
@@ -171,8 +173,23 @@ public:
   Vector4D operator/(const double &k) const;
   Vector4D& operator/=(const double &k);
 
+  /**
+   * Orient a point in space to matrix space.
+   */
   Vector4D operator*(const Matrix &m) const;
+  /**
+   * Orient a point in space to matrix space.
+   */
   Vector4D& operator*=(const Matrix &m);
+  /**
+   * Orient a point in space to quaternion space.
+   */
+  Vector4D operator*(const Quaternion &q) const;
+  /**
+   * Orient a point in space to quaternion space.
+   */
+  Vector4D& operator*=(const Quaternion &q);
+
 };
 
 }

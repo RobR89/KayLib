@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include "KMath.h"
+
 #ifndef SPHERICAL_H
 #define	SPHERICAL_H
 

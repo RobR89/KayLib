@@ -184,4 +184,16 @@ Vector3D& Vector3D::operator*=(const Matrix &m) {
   return *this;
 }
 
+Vector3D Vector3D::operator*(const Quaternion &q) const {
+  Matrix m = Matrix::matrixFromQuaternion(q);
+  Vector3D nv = (*this) * m;
+  return nv;
+}
+
+Vector3D& Vector3D::operator*=(const Quaternion &q) {
+  Matrix m = Matrix::matrixFromQuaternion(q);
+  (*this) *= m;
+  return *this;
+}
+
 }
