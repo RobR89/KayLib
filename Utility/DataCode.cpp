@@ -22,11 +22,11 @@ bool DataCode::writeDataToFile(const std::string variableName, const unsigned ch
     return false;
   }
   std::string declaration = "extern int " + variableName + "_SZ;\n";
-  declaration += "extern unsigned char " + variableName + "[];\n\n";
+  declaration += "extern unsigned char " + variableName + "[" + std::to_string(length) + "];\n\n";
   header << declaration;
   std::string instance = "int " + variableName + "_SZ = " + std::to_string(length) + ";\n";
   cpp << instance;
-  instance = "unsigned char " + variableName + "[] = {\n";
+  instance = "unsigned char " + variableName + "[" + std::to_string(length) + "] = {\n";
   cpp << instance;
   int index = 0;
   while(index < length) {
