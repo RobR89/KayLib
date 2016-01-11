@@ -49,6 +49,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Parser/JSON.o \
 	${OBJECTDIR}/Parser/StringParser.o \
 	${OBJECTDIR}/Parser/XMLDocument.o \
+	${OBJECTDIR}/Scripting/KLUA.o \
 	${OBJECTDIR}/String/KString.o \
 	${OBJECTDIR}/String/KUTF.o \
 	${OBJECTDIR}/Utility/DataCode.o
@@ -149,6 +150,11 @@ ${OBJECTDIR}/Parser/XMLDocument.o: Parser/XMLDocument.cpp
 	${MKDIR} -p ${OBJECTDIR}/Parser
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Parser/XMLDocument.o Parser/XMLDocument.cpp
+
+${OBJECTDIR}/Scripting/KLUA.o: Scripting/KLUA.cpp 
+	${MKDIR} -p ${OBJECTDIR}/Scripting
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Scripting/KLUA.o Scripting/KLUA.cpp
 
 ${OBJECTDIR}/String/KString.o: String/KString.cpp 
 	${MKDIR} -p ${OBJECTDIR}/String
