@@ -91,6 +91,19 @@ std::string escape(const std::string &str, bool assumeEscapes = false);
  */
 std::string xmlEscape(const std::string &str);
 
+/**
+ * Convert the string to all lower case.
+ * @param str The string to convert.
+ * @return The converted string.
+ */
+std::string strToLower(std::string str);
+/**
+ * Convert the string to all upper case.
+ * @param str The string to convert.
+ * @return The converted string.
+ */
+std::string strToUpper(std::string str);
+
 }
 
 #endif	/* KSTRING_H */

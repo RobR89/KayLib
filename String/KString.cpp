@@ -1,6 +1,7 @@
 #include "KString.h"
 
 #include <sstream>
+#include <algorithm>
 
 namespace KayLib {
 
@@ -163,6 +164,24 @@ std::string xmlEscape(const std::string &str) {
     }
   }
   return out.str();
+}
+
+std::string strToLower(std::string str) {
+  std::string str2;
+  str2.resize(str.size());
+
+  std::transform(str.begin(), str.end(), str2.begin(), std::ptr_fun<int, int>(std::tolower));
+
+  return str2;
+}
+
+std::string strToUpper(std::string str) {
+  std::string str2;
+  str2.resize(str.size());
+
+  std::transform(str.begin(), str.end(), str2.begin(), std::ptr_fun<int, int>(std::toupper));
+
+  return str2;
 }
 
 }

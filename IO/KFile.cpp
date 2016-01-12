@@ -188,13 +188,12 @@ std::vector<std::shared_ptr<KFile>> KFile::listFiles() const {
   return files;
 }
 
-bool KFile::equals(const KFile &file) const {
-  if(&file != nullptr) {
-    if(fileName.compare(file.fileName) == 0) {
-      return true;
-    }
+std::vector<std::shared_ptr<KFile>> KFile::listFiles(const std::string &fName) {
+  KFile file(fName);
+  if(file.isDirectory()) {
+    return file.listFiles();
   }
-  return false;
+  return std::vector<std::shared_ptr < KFile >> ();
 }
 
 bool KFile::mkdir(const std::string &dirName) {
@@ -282,6 +281,39 @@ KFile *KFile::searchDirectory(const KFile *dir, const std::string &fileName, con
     }
   }
   return nullptr;
+}
+
+std::string KFile::getPath() {
+  size_t pos = fileName.find_last_of("/\\");
+  if(pos != std::string::npos) {
+    return fileName.substr(0, pos);
+  }
+  return "";
+}
+
+std::string KFile::getFilename() {
+  size_t pos = fileName.find_last_of("/\\");
+  if(pos != std::string::npos) {
+    return fileName.substr(pos + 1);
+  }
+  return "";
+}
+
+std::string KFile::getExtension() {
+  size_t pos = fileName.find_last_of('.');
+  if(pos != std::string::npos) {
+    return fileName.substr(pos);
+  }
+  return "";
+}
+
+bool KFile::equals(const KFile &file) const {
+  if(&file != nullptr) {
+    if(fileName.compare(file.fileName) == 0) {
+      return true;
+    }
+  }
+  return false;
 }
 
 } // namespace KayLib

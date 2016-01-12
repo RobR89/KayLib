@@ -29,7 +29,7 @@ public:
   virtual ~KFile();
 
   /**
-   * Get the filename of this file.
+   * Get the path and filename of this file.
    * @return
    */
   std::string getName() const {
@@ -117,7 +117,12 @@ public:
    * @return The list of files.
    */
   std::vector<std::shared_ptr<KFile>> listFiles() const;
-  bool equals(const KFile &file) const;
+  /**
+   * Get a list of all files and directories in this directory.
+   * @param fName The directory to search.
+   * @return The list of files.
+   */
+  static std::vector<std::shared_ptr<KFile>> listFiles(const std::string &fName);
 
   /**
    * Attempt to make a new directory.
@@ -161,6 +166,26 @@ public:
    * @return The found file.
    */
   static KFile *searchDirectory(const KFile *dir, const std::string &fileName, const int recursion);
+
+  /**
+   * Get the file path of the file.
+   * @return The path of the file not including the final '/'.
+   */
+  std::string getPath();
+
+  /**
+   * Get the name of the file.
+   * @return The name of the file not including the path.
+   */
+  std::string getFilename();
+
+  /**
+   * Get the file extension of the file.
+   * @return The files extension string including the period.
+   */
+  std::string getExtension();
+
+  bool equals(const KFile &file) const;
 
 private:
   std::string fileName;
