@@ -22,6 +22,8 @@
 #include <map>
 #include <vector>
 #include <memory>
+// include SDL headers
+#include <SDL2/SDL_ttf.h>
 
 namespace KayLib {
 
@@ -32,15 +34,16 @@ private:
    * Create font properties object from the specified font file.
    * @param font The font file to get the properties for.
    */
-  KFontProperties(const std::string font);
+  KFontProperties(const TTF_Font *_Font, const KFile *file);
+
 public:
   virtual ~KFontProperties();
 
   /**
    * Get the font properties for the specified font file.
-   * @param font The font file to get the properties for.
+   * @param fontFile The font file to get the properties for.
    */
-  static std::shared_ptr<KFontProperties> getFontProperties(const std::string font);
+  static std::shared_ptr<KFontProperties> getFontProperties(const std::string fontFile);
 
   /**
    * Remove all font properties from the registry.
@@ -61,13 +64,13 @@ public:
    */
   static std::vector<std::shared_ptr<KFontProperties>> findFonts(const std::string fnt, int style);
 
-  std::string printProperties();
+  std::string printProperties() const;
 
   /**
    * A container for a range of glyphs.
    */
   struct GlyphRange {
-/**
+    /**
      * Construct a range of nStart to nEnd.
      */
     GlyphRange(int nStart, int nEnd) : start(nStart), end(nEnd) {
@@ -81,64 +84,65 @@ public:
      */
     const int end;
   };
+
   /**
    * The glyph ranges supported by this font.
    */
-  std::vector<GlyphRange> glyphRanges;
+  const std::vector<GlyphRange> glyphRanges;
 
   /**
    * The path of this font.
    */
-  std::string fontPath;
+  const std::string fontPath;
   /**
    * The font family name.
    */
-  std::string familyName;
+  const std::string familyName;
   /**
    * The font style name.
    */
-  std::string styleName;
+  const std::string styleName;
   /**
    * The TTF_Style of the font.
    */
-  int ttf_Style;
+  const int ttf_Style;
   /**
    * The height of the font.
    */
-  int height;
+  const int height;
   /**
    * The ascent of the font above the baseline.
    */
-  int ascent;
+  const int ascent;
   /**
    * The descent of the font below the baseline.
    */
-  int descent;
+  const int descent;
   /**
    * The spacing between lines of text.
    */
-  int lineSkip;
+  const int lineSkip;
   /**
    * Is the font a fixed width font.
    */
-  bool monospace;
+  const bool monospace;
   /**
    * Number of faces in the font.
    */
-  int faces;
+  const int faces;
 
   /**
    * The first available glyph in the font.
    */
-  int firstGlyph;
+  const int firstGlyph;
   /**
    * The last available glyph in the font.
    */
-  int lastGlyph;
+  const int lastGlyph;
   /**
    * The total number of glyphs in the font.
    */
-  int totalGlyphs;
+  const int totalGlyphs;
 
   /**
    * Enumerate fonts from all directories registered with KApplication::AddFontPath recursing to a depth of depth.
@@ -241,7 +245,7 @@ public:
    * Count the number of glyphs that exist in the specified range for this font.
    * @param range the range to search.
    */
-  int glyphsInRange(const GlyphRange &range);
+  int glyphsInRange(const GlyphRange &range) const;
 
 };
 

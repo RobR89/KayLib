@@ -4,10 +4,9 @@
 
 #include <sstream>
 #include <mutex>
+#include <bits/basic_string.h>
 
-// include SDL headers
-#include <SDL2/SDL_ttf.h>
-#include <bits/stl_map.h>
+//#include <bits/stl_map.h>
 
 namespace KayLib {
 
@@ -20,54 +19,71 @@ std::unique_lock<std::mutex> getLock() {
   return std::unique_lock<std::mutex>(lockPtr);
 }
 
-KFontProperties::KFontProperties(const std::string font) {
-  if(!TTF_WasInit()) {
-    TTF_Init();
-  }
-  TTF_Font *_Font = nullptr;
-  _Font = TTF_OpenFont(font.c_str(), 12);
-  if(_Font == nullptr) {
-    return;
-  }
-  KFile file(font);
-  fontPath = file.getAbsolutePath();
-
-  // get font properties.
-  familyName = TTF_FontFaceFamilyName(_Font);
-  styleName = TTF_FontFaceStyleName(_Font);
-  ttf_Style = TTF_GetFontStyle(_Font);
-  height = TTF_FontHeight(_Font);
-  ascent = TTF_FontAscent(_Font);
-  descent = TTF_FontDescent(_Font);
-  lineSkip = TTF_FontLineSkip(_Font);
-  monospace = false;
-  if(TTF_FontFaceIsFixedWidth(_Font))
-    monospace = true;
-  faces = TTF_FontFaces(_Font);
-
-  // find glyph ranges.
+int getFirstGlyph(const TTF_Font *_Font) {
   int ch = 0;
-  totalGlyphs = 0;
   while(ch < 0x10000) {
     if(TTF_GlyphIsProvided(_Font, ch)) {
-      if(glyphRanges.size() == 0) {
-        firstGlyph = ch;
-      }
-      int rs = ch;
-      while(TTF_GlyphIsProvided(_Font, ch)) {
-        ch++;
-      }
-      int re = ch - 1;
-      GlyphRange range(rs, re);
-      lastGlyph = range.end;
-      totalGlyphs += (range.end - range.start) + 1;
-      glyphRanges.push_back(range);
+      return ch;
     }
     ch++;
   }
+}
 
-  // free the font.
-  TTF_CloseFont(_Font);
+int getLastGlyph(const TTF_Font *_Font) {
+  int last = 0;
+  int ch = 0;
+  while(ch < 0x10000) {
+    if(TTF_GlyphIsProvided(_Font, ch)) {
+      last = ch;
+    }
+    ch++;
+  }
+  return last;
+}
+
+int getTotalGlyphs(const TTF_Font *_Font) {
+  int total = 0;
+  int ch = 0;
+  while(ch < 0x10000) {
+    if(TTF_GlyphIsProvided(_Font, ch)) {
+      total++;
+    }
+    ch++;
+  }
+  return total;
+}
+
+std::vector<KFontProperties::GlyphRange> getRanges(const TTF_Font *_Font) {
+  std::vector<KFontProperties::GlyphRange> ranges;
+  // find glyph ranges.
+  int ch = 0;
+  while(ch < 0x10000) {
+    if(TTF_GlyphIsProvided(_Font, ch++)) {
+      int rs = ch - 1;
+      while(TTF_GlyphIsProvided(_Font, ch++)) {
+      }
+      ranges.push_back(KFontProperties::GlyphRange(rs, ch - 2));
+    }
+  }
+  return ranges;
+}
+
+KFontProperties::KFontProperties(const TTF_Font *_Font, const KFile *file) :
+fontPath(file->getAbsolutePath().c_str()),
+familyName(TTF_FontFaceFamilyName(_Font)),
+styleName(TTF_FontFaceStyleName(_Font)),
+ttf_Style(TTF_GetFontStyle(_Font)),
+height(TTF_FontHeight(_Font)),
+ascent(TTF_FontAscent(_Font)),
+descent(TTF_FontDescent(_Font)),
+lineSkip(TTF_FontLineSkip(_Font)),
+faces(TTF_FontFaces(_Font)),
+monospace(TTF_FontFaceIsFixedWidth(_Font)),
+firstGlyph(getFirstGlyph(_Font)),
+lastGlyph(getLastGlyph(_Font)),
+totalGlyphs(getTotalGlyphs(_Font)),
+glyphRanges(getRanges(_Font)) {
+
 }
 
 KFontProperties::~KFontProperties() {
@@ -80,8 +96,8 @@ KFontProperties::~KFontProperties() {
   }
 }
 
-std::shared_ptr<KFontProperties> KFontProperties::getFontProperties(const std::string font) {
-  KFile file(font);
+std::shared_ptr<KFontProperties> KFontProperties::getFontProperties(const std::string fontFile) {
+  KFile file(fontFile);
   std::string absFont = file.getAbsolutePath();
   auto lock = getLock();
   auto found = fontList.find(absFont);
@@ -100,7 +116,7 @@ void KFontProperties::clearAllFontProperties() {
   fontList.clear();
 }
 
-std::string KFontProperties::printProperties() {
+std::string KFontProperties::printProperties() const {
   std::ostringstream ss;
   ss << "  path: " << fontPath << std::endl;
   ss << "  family name: " << familyName << std::endl;
@@ -140,10 +156,18 @@ std::vector<std::shared_ptr<KFontProperties>> KFontProperties::findFonts(const s
 bool KFontProperties::enumerateFont(const KFile *file) {
   if(file->isFile()) {
     if(strToLower(file->getExtension()) == ".ttf") {
-      KFontProperties *fp = new KFontProperties(file->getAbsolutePath());
-      auto lock = getLock();
-      fontList[file->getAbsolutePath()].reset(fp);
-      return true;
+      if(!TTF_WasInit()) {
+        TTF_Init();
+      }
+      TTF_Font *_Font = TTF_OpenFont(file->getAbsolutePath().c_str(), 12);
+      if(_Font != nullptr) {
+        KFontProperties *fp = new KFontProperties(_Font, file);
+        // free the font.
+        TTF_CloseFont(_Font);
+        auto lock = getLock();
+        fontList[file->getAbsolutePath()].reset(fp);
+        return true;
+      }
     }
   }
   return false;
@@ -170,7 +194,7 @@ void KFontProperties::enumerateDirectory(const std::string sPath, int depth) {
   }
 }
 
-int KFontProperties::glyphsInRange(const GlyphRange &range) {
+int KFontProperties::glyphsInRange(const GlyphRange &range) const {
   int num = 0;
 
   for(auto rng : glyphRanges) {
