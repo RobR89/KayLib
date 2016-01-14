@@ -164,7 +164,7 @@ public:
     return (surface == nullptr) ? 0 : surface->format;
   }
 
-  SDL_Surface *surface() {
+  SDL_Surface *getSurface() {
     return surface;
   };
 

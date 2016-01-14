@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/DB/KMySQL.o \
 	${OBJECTDIR}/DB/KSQL.o \
 	${OBJECTDIR}/DB/KSQLite.o \
+	${OBJECTDIR}/Graphics/KFontProperties.o \
 	${OBJECTDIR}/Graphics/KImage.o \
 	${OBJECTDIR}/IO/KFile.o \
 	${OBJECTDIR}/KMath/Interpolate.o \
@@ -96,6 +97,11 @@ ${OBJECTDIR}/DB/KSQLite.o: DB/KSQLite.cpp
 	${MKDIR} -p ${OBJECTDIR}/DB
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/DB/KSQLite.o DB/KSQLite.cpp
+
+${OBJECTDIR}/Graphics/KFontProperties.o: Graphics/KFontProperties.cpp 
+	${MKDIR} -p ${OBJECTDIR}/Graphics
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Graphics/KFontProperties.o Graphics/KFontProperties.cpp
 
 ${OBJECTDIR}/Graphics/KImage.o: Graphics/KImage.cpp 
 	${MKDIR} -p ${OBJECTDIR}/Graphics
