@@ -171,19 +171,19 @@ public:
    * Get the file path of the file.
    * @return The path of the file not including the final '/'.
    */
-  std::string getPath();
+  std::string getPath() const;
 
   /**
    * Get the name of the file.
    * @return The name of the file not including the path.
    */
-  std::string getFilename();
+  std::string getFilename() const;
 
   /**
    * Get the file extension of the file.
    * @return The files extension string including the period.
    */
-  std::string getExtension();
+  std::string getExtension() const;
 
   bool equals(const KFile &file) const;
 

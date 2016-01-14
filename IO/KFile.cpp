@@ -283,7 +283,7 @@ KFile *KFile::searchDirectory(const KFile *dir, const std::string &fileName, con
   return nullptr;
 }
 
-std::string KFile::getPath() {
+std::string KFile::getPath() const {
   size_t pos = fileName.find_last_of("/\\");
   if(pos != std::string::npos) {
     return fileName.substr(0, pos);
@@ -291,7 +291,7 @@ std::string KFile::getPath() {
   return "";
 }
 
-std::string KFile::getFilename() {
+std::string KFile::getFilename() const {
   size_t pos = fileName.find_last_of("/\\");
   if(pos != std::string::npos) {
     return fileName.substr(pos + 1);
@@ -299,7 +299,7 @@ std::string KFile::getFilename() {
   return "";
 }
 
-std::string KFile::getExtension() {
+std::string KFile::getExtension() const {
   size_t pos = fileName.find_last_of('.');
   if(pos != std::string::npos) {
     return fileName.substr(pos);
