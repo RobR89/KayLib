@@ -32,7 +32,7 @@ private:
    * Create font properties object from the specified font file.
    * @param font The font file to get the properties for.
    */
-  KFontProperties(std::string font);
+  KFontProperties(const std::string font);
 public:
   virtual ~KFontProperties();
 
@@ -40,7 +40,7 @@ public:
    * Get the font properties for the specified font file.
    * @param font The font file to get the properties for.
    */
-  static std::shared_ptr<KFontProperties> getFontProperties(std::string font);
+  static std::shared_ptr<KFontProperties> getFontProperties(const std::string font);
 
   /**
    * Remove all font properties from the registry.
@@ -52,14 +52,14 @@ public:
    * @param fnt The string to search for
    * @return A list of found fonts
    */
-  static std::vector<std::shared_ptr<KFontProperties>> findFonts(std::string fnt);
+  static std::vector<std::shared_ptr<KFontProperties>> findFonts(const std::string fnt);
   /**
    * Find a list of fonts who's names contain fnt
    * @param fnt The string to search for
    * @param style The style to match. (TTF_STYLE_<NORMAL,BOLD,STRIKETHROUGH,UNDERLINE,ITALIC>)
    * @return A list of found fonts
    */
-  static std::vector<std::shared_ptr<KFontProperties>> findFonts(std::string fnt, int style);
+  static std::vector<std::shared_ptr<KFontProperties>> findFonts(const std::string fnt, int style);
 
   std::string printProperties();
 
@@ -67,29 +67,19 @@ public:
    * A container for a range of glyphs.
    */
   struct GlyphRange {
-
-    /**
-     * Construct an range of 0 to 0.
-     */
-    GlyphRange() {
-      start = end = 0;
-    }
-
-    /**
+/**
      * Construct a range of nStart to nEnd.
      */
-    GlyphRange(int nStart, int nEnd) {
-      start = nStart;
-      end = nEnd;
+    GlyphRange(int nStart, int nEnd) : start(nStart), end(nEnd) {
     }
     /**
      * The start of the range.
      */
-    int start;
+    const int start;
     /**
      * The end of the range.
      */
-    int end;
+    const int end;
   };
   /**
    * The glyph ranges supported by this font.
@@ -178,49 +168,49 @@ public:
   /**
    * Returns range of Latin glyphs. 128 possible
    */
-  static KFontProperties::GlyphRange range_Latin1() {
+  static GlyphRange range_Latin1() {
     return GlyphRange(0x0000, 0x07f);
   };
 
   /**
    * Returns range of Greek glyphs. 144 possible
    */
-  static KFontProperties::GlyphRange range_Greek() {
+  static GlyphRange range_Greek() {
     return GlyphRange(0x0370, 0x03ff);
   };
 
   /**
    * Returns the range of Cyrillic glyphs. 304 possible
    */
-  static KFontProperties::GlyphRange range_Cyrillic() {
+  static GlyphRange range_Cyrillic() {
     return GlyphRange(0x0400, 0x052f);
   };
 
   /**
    * Returns the range of Armenian glyphs. 96 possible
    */
-  static KFontProperties::GlyphRange range_Armenian() {
+  static GlyphRange range_Armenian() {
     return GlyphRange(0x0530, 0x058f);
   };
 
   /**
    * Returns the range of Georgian glyphs. 96 possible
    */
-  static KFontProperties::GlyphRange range_Georgian() {
+  static GlyphRange range_Georgian() {
     return GlyphRange(0x10a0, 0x10ff);
   };
 
   /**
    * Returns the range of Runic glyphs. 96 possible
    */
-  static KFontProperties::GlyphRange range_Runic() {
+  static GlyphRange range_Runic() {
     return GlyphRange(0x16a0, 0x16ff);
   };
 
   /**
    * Returns the range of Coptic glyphs. 128 possible
    */
-  static KFontProperties::GlyphRange range_Coptic() {
+  static GlyphRange range_Coptic() {
     return GlyphRange(0x2c80, 0x2cff);
   };
 
@@ -229,21 +219,21 @@ public:
   /**
    * Returns range of CJK (Chinese, Japanese, Korean) glyphs. 20944 possible
    */
-  static KFontProperties::GlyphRange range_CJK() {
+  static GlyphRange range_CJK() {
     return GlyphRange(0x4e00, 0x9fcf);
   };
 
   /**
    * Returns the range of hiragana glyphs. 96 possible
    */
-  static KFontProperties::GlyphRange range_Hiragana() {
+  static GlyphRange range_Hiragana() {
     return GlyphRange(0x3040, 0x309f);
   };
 
   /**
    * Returns the range of Katakana glyphs. 96 possible
    */
-  static KFontProperties::GlyphRange range_Katakana() {
+  static GlyphRange range_Katakana() {
     return GlyphRange(0x30a0, 0x30ff);
   };
 
@@ -251,7 +241,7 @@ public:
    * Count the number of glyphs that exist in the specified range for this font.
    * @param range the range to search.
    */
-  int glyphsInRange(const KFontProperties::GlyphRange range);
+  int glyphsInRange(const GlyphRange &range);
 
 };
 

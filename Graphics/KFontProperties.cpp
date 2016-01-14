@@ -20,7 +20,7 @@ std::unique_lock<std::mutex> getLock() {
   return std::unique_lock<std::mutex>(lockPtr);
 }
 
-KFontProperties::KFontProperties(std::string font) {
+KFontProperties::KFontProperties(const std::string font) {
   if(!TTF_WasInit()) {
     TTF_Init();
   }
@@ -53,12 +53,12 @@ KFontProperties::KFontProperties(std::string font) {
       if(glyphRanges.size() == 0) {
         firstGlyph = ch;
       }
-      GlyphRange range;
-      range.start = ch;
+      int rs = ch;
       while(TTF_GlyphIsProvided(_Font, ch)) {
         ch++;
       }
-      range.end = ch - 1;
+      int re = ch - 1;
+      GlyphRange range(rs, re);
       lastGlyph = range.end;
       totalGlyphs += (range.end - range.start) + 1;
       glyphRanges.push_back(range);
@@ -71,6 +71,7 @@ KFontProperties::KFontProperties(std::string font) {
 }
 
 KFontProperties::~KFontProperties() {
+  auto lock = getLock();
   std::map<std::string, std::shared_ptr < KFontProperties>>::iterator fItr = fontList.find(fontPath);
   if(fItr != fontList.end()) {
     if(fontList[fontPath].get() == this) {
@@ -79,19 +80,23 @@ KFontProperties::~KFontProperties() {
   }
 }
 
-std::shared_ptr<KFontProperties> KFontProperties::getFontProperties(std::string font) {
+std::shared_ptr<KFontProperties> KFontProperties::getFontProperties(const std::string font) {
   KFile file(font);
   std::string absFont = file.getAbsolutePath();
+  auto lock = getLock();
   auto found = fontList.find(absFont);
   if(found == fontList.end()) {
+    lock.unlock();
     if(!KFontProperties::enumerateFont(&file)) {
       return nullptr;
     }
+    lock.lock();
   }
   return fontList[absFont];
 }
 
 void KFontProperties::clearAllFontProperties() {
+  auto lock = getLock();
   fontList.clear();
 }
 
@@ -104,8 +109,9 @@ std::string KFontProperties::printProperties() {
   return ss.str();
 }
 
-std::vector<std::shared_ptr<KFontProperties>> KFontProperties::findFonts(std::string fnt) {
+std::vector<std::shared_ptr<KFontProperties>> KFontProperties::findFonts(const std::string fnt) {
   std::vector<std::shared_ptr < KFontProperties>> found;
+  auto lock = getLock();
   for(auto itr : fontList) {
     std::string p = itr.first;
     std::shared_ptr<KFontProperties> fp = itr.second;
@@ -116,8 +122,9 @@ std::vector<std::shared_ptr<KFontProperties>> KFontProperties::findFonts(std::st
   return found;
 }
 
-std::vector<std::shared_ptr<KFontProperties>> KFontProperties::findFonts(std::string fnt, int style) {
+std::vector<std::shared_ptr<KFontProperties>> KFontProperties::findFonts(const std::string fnt, int style) {
   std::vector<std::shared_ptr < KFontProperties>> found;
+  auto lock = getLock();
   for(auto itr : fontList) {
     std::string p = itr.first;
     std::shared_ptr<KFontProperties> fp = itr.second;
@@ -134,6 +141,7 @@ bool KFontProperties::enumerateFont(const KFile *file) {
   if(file->isFile()) {
     if(strToLower(file->getExtension()) == ".ttf") {
       KFontProperties *fp = new KFontProperties(file->getAbsolutePath());
+      auto lock = getLock();
       fontList[file->getAbsolutePath()].reset(fp);
       return true;
     }
@@ -162,7 +170,7 @@ void KFontProperties::enumerateDirectory(const std::string sPath, int depth) {
   }
 }
 
-int KFontProperties::glyphsInRange(const GlyphRange range) {
+int KFontProperties::glyphsInRange(const GlyphRange &range) {
   int num = 0;
 
   for(auto rng : glyphRanges) {
