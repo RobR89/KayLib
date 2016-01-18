@@ -19,7 +19,7 @@ void KEventRate::reset() {
 double KEventRate::tick() {
   auto currentTime = std::chrono::high_resolution_clock::now();
   // Get the time since last update.
-  auto lastInterval = (currentTime - lastTime);
+  std::chrono::duration<double> interval = (currentTime - lastTime);
   lastTime = currentTime;
   // Increment the total number of ticks counted.
   totalTicks++;
@@ -31,7 +31,7 @@ double KEventRate::tick() {
   if(nextRecord >= maxRecordLength) {
     nextRecord = 0;
   }
-  double li = lastInterval.count();
+  double li = interval.count();
   if(li > 0) {
     // Calculate and return the event rate of the current event tick.
     return 1.0 / li;
