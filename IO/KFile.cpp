@@ -13,6 +13,7 @@
 #ifdef _WIN32
 #else
 #include <pwd.h>
+#include <bits/basic_string.h>
 #endif
 
 namespace KayLib {
@@ -302,7 +303,11 @@ std::string KFile::getFilename() const {
 std::string KFile::getExtension() const {
   size_t pos = fileName.find_last_of('.');
   if(pos != std::string::npos) {
-    return fileName.substr(pos);
+    std::string ext = fileName.substr(pos);
+    if(ext.find_last_of("/\\") != std::string::npos) {
+      return "";
+    }
+    return ext;
   }
   return "";
 }
@@ -316,4 +321,4 @@ bool KFile::equals(const KFile &file) const {
   return false;
 }
 
-} // namespace KayLib
+}

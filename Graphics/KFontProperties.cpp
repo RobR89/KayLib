@@ -4,9 +4,6 @@
 
 #include <sstream>
 #include <mutex>
-#include <bits/basic_string.h>
-
-//#include <bits/stl_map.h>
 
 namespace KayLib {
 
@@ -86,6 +83,24 @@ glyphRanges(getRanges(_Font)) {
 
 }
 
+KFontProperties::KFontProperties(const KFontProperties& orig) :
+fontPath(orig.fontPath),
+familyName(orig.familyName),
+styleName(orig.styleName),
+ttf_Style(orig.ttf_Style),
+height(orig.height),
+ascent(orig.ascent),
+descent(orig.descent),
+lineSkip(orig.lineSkip),
+faces(orig.faces),
+monospace(orig.monospace),
+firstGlyph(orig.firstGlyph),
+lastGlyph(orig.lastGlyph),
+totalGlyphs(orig.totalGlyphs),
+glyphRanges(orig.glyphRanges) {
+
+}
+
 KFontProperties::~KFontProperties() {
   auto lock = getLock();
   std::map<std::string, std::shared_ptr < KFontProperties>>::iterator fItr = fontList.find(fontPath);
@@ -96,7 +111,7 @@ KFontProperties::~KFontProperties() {
   }
 }
 
-std::shared_ptr<KFontProperties> KFontProperties::getFontProperties(const std::string fontFile) {
+std::shared_ptr<KFontProperties> KFontProperties::create(const std::string &fontFile) {
   KFile file(fontFile);
   std::string absFont = file.getAbsolutePath();
   auto lock = getLock();
@@ -104,14 +119,14 @@ std::shared_ptr<KFontProperties> KFontProperties::getFontProperties(const std::s
   if(found == fontList.end()) {
     lock.unlock();
     if(!KFontProperties::enumerateFont(&file)) {
-      return nullptr;
+      return std::shared_ptr<KFontProperties>();
     }
     lock.lock();
   }
   return fontList[absFont];
 }
 
-void KFontProperties::clearAllFontProperties() {
+void KFontProperties::clearGlobalFontProperties() {
   auto lock = getLock();
   fontList.clear();
 }
@@ -125,7 +140,7 @@ std::string KFontProperties::printProperties() const {
   return ss.str();
 }
 
-std::vector<std::shared_ptr<KFontProperties>> KFontProperties::findFonts(const std::string fnt) {
+std::vector<std::shared_ptr<KFontProperties>> KFontProperties::findFonts(const std::string &fnt) {
   std::vector<std::shared_ptr < KFontProperties>> found;
   auto lock = getLock();
   for(auto itr : fontList) {
@@ -138,7 +153,7 @@ std::vector<std::shared_ptr<KFontProperties>> KFontProperties::findFonts(const s
   return found;
 }
 
-std::vector<std::shared_ptr<KFontProperties>> KFontProperties::findFonts(const std::string fnt, int style) {
+std::vector<std::shared_ptr<KFontProperties>> KFontProperties::findFonts(const std::string &fnt, int style) {
   std::vector<std::shared_ptr < KFontProperties>> found;
   auto lock = getLock();
   for(auto itr : fontList) {

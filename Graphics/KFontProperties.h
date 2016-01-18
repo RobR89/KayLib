@@ -29,7 +29,7 @@ namespace KayLib {
 
 class KFontProperties {
 private:
-  KFontProperties(const KFontProperties& orig) = delete;
+  KFontProperties(const KFontProperties& orig);
   /**
    * Create font properties object from the specified font file.
    * @param font The font file to get the properties for.
@@ -43,27 +43,31 @@ public:
    * Get the font properties for the specified font file.
    * @param fontFile The font file to get the properties for.
    */
-  static std::shared_ptr<KFontProperties> getFontProperties(const std::string fontFile);
+  static std::shared_ptr<KFontProperties> create(const std::string &fontFile);
 
   /**
    * Remove all font properties from the registry.
    */
-  static void clearAllFontProperties();
+  static void clearGlobalFontProperties();
 
   /**
    * Find a list of fonts who's names contain fnt
    * @param fnt The string to search for
    * @return A list of found fonts
    */
-  static std::vector<std::shared_ptr<KFontProperties>> findFonts(const std::string fnt);
+  static std::vector<std::shared_ptr<KFontProperties>> findFonts(const std::string &fnt);
   /**
    * Find a list of fonts who's names contain fnt
    * @param fnt The string to search for
    * @param style The style to match. (TTF_STYLE_<NORMAL,BOLD,STRIKETHROUGH,UNDERLINE,ITALIC>)
    * @return A list of found fonts
    */
-  static std::vector<std::shared_ptr<KFontProperties>> findFonts(const std::string fnt, int style);
+  static std::vector<std::shared_ptr<KFontProperties>> findFonts(const std::string &fnt, int style);
 
+  /**
+   * Print the font properties.
+   * @return The string containing the font properties.
+   */
   std::string printProperties() const;
 
   /**
