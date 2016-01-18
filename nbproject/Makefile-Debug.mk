@@ -54,7 +54,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/Scripting/KLUA.o \
 	${OBJECTDIR}/String/KString.o \
 	${OBJECTDIR}/String/KUTF.o \
-	${OBJECTDIR}/Utility/DataCode.o
+	${OBJECTDIR}/Utility/DataCode.o \
+	${OBJECTDIR}/Utility/KEventRate.o
 
 
 # C Compiler Flags
@@ -182,6 +183,11 @@ ${OBJECTDIR}/Utility/DataCode.o: Utility/DataCode.cpp
 	${MKDIR} -p ${OBJECTDIR}/Utility
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Utility/DataCode.o Utility/DataCode.cpp
+
+${OBJECTDIR}/Utility/KEventRate.o: Utility/KEventRate.cpp 
+	${MKDIR} -p ${OBJECTDIR}/Utility
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Utility/KEventRate.o Utility/KEventRate.cpp
 
 # Subprojects
 .build-subprojects:
