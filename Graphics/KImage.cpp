@@ -20,7 +20,7 @@ KImage::KImage(int w, int h) {
 }
 
 KImage::KImage(int w, int h, bool alpha) {
-  Uint32 rmask, gmask, bmask, amask;
+  uint32_t rmask, gmask, bmask, amask;
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
   rmask = 0xff000000;
@@ -191,42 +191,40 @@ void KImage::resize(int w, int h) {
   surface = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
 }
 
-void KImage::setPixel(KPoint p, KColor color) {
+void KImage::setPixel(const KPoint &p, const KColor &color) {
   if(surface == nullptr) {
     return;
   }
-  if(p.x >= surface->w || p.y >= surface->h) {
+  if(p.x >= surface->w || p.y >= surface->h || p.x < 0 || p.y < 0) {
     return;
   }
-  if(p.x < 0 || p.y < 0) {
-    return;
-  }
-  Uint8 *pixel = (Uint8 *)surface->pixels;
+  uint8_t *pixel = (uint8_t *)surface->pixels;
   pixel += p.y * surface->pitch;
   pixel += p.x * surface->format->BytesPerPixel;
-  Uint32 *pixel32 = (Uint32 *)pixel;
+  uint32_t *pixel32 = (uint32_t *)pixel;
   *pixel32 = colorToUInt(color);
 }
 
-KColor KImage::getPixel(KPoint p) {
+KColor KImage::getPixel(const KPoint &p) {
   KColor color;
   if(surface == nullptr) {
     return color;
   }
-  if(p.x >= surface->w || p.y >= surface->h) {
+  if(p.x >= surface->w || p.y >= surface->h || p.x < 0 || p.y < 0) {
     return color;
   }
-  if(p.x < 0 || p.y < 0) {
-    return color;
-  }
-  Uint8 *pixel = (Uint8 *)surface->pixels;
+  uint8_t *pixel = (uint8_t *)surface->pixels;
   pixel += p.y * surface->pitch;
   pixel += p.x * surface->format->BytesPerPixel;
-  SDL_GetRGBA(*((Uint32 *)pixel), surface->format, &color.r, &color.g, &color.b, &color.a);
+  SDL_GetRGBA(*((uint32_t *)pixel), surface->format, &color.r, &color.g, &color.b, &color.a);
   return color;
 }
 
-void KImage::drawLine(KPoint p1, KPoint p2, KColor color) {
+void KImage::drawLine(const KPoint &p1, const KPoint &p2, const KColor &color) {
+  if(surface == nullptr) {
+    return;
+  }
+  KPoint p = p1;
   int dx = abs(p2.x - p1.x);
   int dy = abs(p2.y - p1.y);
   int sx = p1.x < p2.x ? 1 : -1;
@@ -235,46 +233,91 @@ void KImage::drawLine(KPoint p1, KPoint p2, KColor color) {
   int e2;
   int c = dx > dy ? dx : dy;
 
+  if(p.x >= surface->w || p.y >= surface->h || p.x < 0 || p.y < 0) {
+    // Line starts out of bounds of image. iterate till it's in bounds.
+    while(c >= 0) {
+      c--;
+      e2 = e;
+      if(e2 > -dx) {
+        // Move horizontally.
+        e -= dy;
+        p.x += sx;
+      }
+      if(e2 < dy) {
+        // Move vertically.
+        e += dx;
+        p.y += sy;
+      }
+      if(p.x < surface->w && p.y < surface->h && p.x >= 0 && p.y >= 0) {
+        // We are now in bounds.
+        break;
+      }
+    }
+  }
+  int bpp = surface->format->BytesPerPixel;
+  int ptch = surface->pitch;
+  uint8_t *pixel = (uint8_t *)surface->pixels;
+  pixel += p.y * ptch;
+  pixel += p.x * bpp;
+  // pre multiply so this is only once.
+  bpp *= sx;
+  ptch *= sy;
   while(c >= 0) {
     c--;
-    setPixel(p1, color);
+    uint32_t *pixel32 = (uint32_t *)pixel;
+    *pixel32 = colorToUInt(color);
     e2 = e;
-    if(e2 >-dx) {
+    if(e2 > -dx) {
+      // Move horizontally.
       e -= dy;
-      p1.x += sx;
+      p.x += sx;
+      // Are we still in bounds?
+      if(p.x >= surface->w || p.x < 0) {
+        // We have gone out of bounds, no need to continue.
+        break;
+      }
+      pixel += bpp;
     }
     if(e2 < dy) {
+      // Move vertically.
       e += dx;
-      p1.y += sy;
+      p.y += sy;
+      // Are we still in bounds?
+      if(p.y >= surface->h || p.y < 0) {
+        // We have gone out of bounds, no need to continue.
+        break;
+      }
+      pixel += ptch;
     }
   }
 }
 
-void KImage::drawLines(int nPoints, KPoint *p, KColor color) {
-  while(nPoints >= 2) {
-    drawLine(*p, *(p++), color);
-    p++;
-    nPoints -= 2;
+void KImage::drawLines(int nPoints, const KPoint p[], const KColor &color) {
+  int i = 0;
+  while(i < nPoints - 1) {
+    drawLine(p[i], p[i + 1], color);
+    i += 2;
   }
 }
 
-void KImage::drawLineStrip(int nPoints, KPoint *p, KColor color) {
-  while(nPoints >= 2) {
-    drawLine(*p, *(p++), color);
-    nPoints--;
+void KImage::drawLineStrip(int nPoints, const KPoint p[], const KColor &color) {
+  int i = 0;
+  while(i < nPoints - 1) {
+    drawLine(p[i], p[i + 1], color);
+    i++;
   }
 }
 
-void KImage::drawLineLoop(int nPoints, KPoint *p, KColor color) {
-  KPoint *start = p;
-  while(nPoints >= 2) {
-    drawLine(*p, *(p++), color);
-    nPoints--;
+void KImage::drawLineLoop(int nPoints, const KPoint p[], const KColor &color) {
+  int i = 0;
+  while(i < nPoints - 1) {
+    drawLine(p[i], p[i + 1], color);
+    i++;
   }
-  drawLine(*p, *start, color);
+  drawLine(p[i], p[0], color);
 }
 
-void KImage::drawRect(KRect &rect, KColor color) {
+void KImage::drawRect(const KRect &rect, const KColor &color) {
   KPoint points[4];
   points[0].x = points[3].x = rect.x;
   points[1].x = points[2].x = rect.x + rect.w;
@@ -283,14 +326,14 @@ void KImage::drawRect(KRect &rect, KColor color) {
   drawLineLoop(4, &points[0], color);
 }
 
-void KImage::fillRect(KRect &rect, KColor color) {
+void KImage::fillRect(const KRect &rect, const KColor &color) {
   SDL_Rect r = KRectTOSDLRect(rect);
   if(surface != nullptr) {
     SDL_FillRect(surface, &r, colorToUInt(color));
   }
 }
 
-void KImage::drawFilledRect(KRect &rect, KColor color, KColor borderColor) {
+void KImage::drawFilledRect(const KRect &rect, const KColor &color, const KColor &borderColor) {
   fillRect(rect, color);
   drawRect(rect, borderColor);
 }

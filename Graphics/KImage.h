@@ -69,7 +69,7 @@ public:
   bool loadImage(const std::string file, const SDL_PixelFormat* format);
 
   /**
-   * Render the image to a surface.
+   * Render this image to a surface.
    * @param dest The surface to render to.
    * @param x The x position to render to.
    * @param y The y position to render to.
@@ -77,7 +77,7 @@ public:
    */
   void blitSurface(SDL_Surface *dest, int x, int y);
   /**
-   * Render the image to a surface.
+   * Render this image to a surface.
    * @param dest The image to render to.
    * @param x The x position to render to.
    * @param y The y position to render to.
@@ -85,21 +85,21 @@ public:
    */
   void blitSurface(KImage *dest, int x, int y);
   /**
-   * Render the image to a surface.
+   * Render this image to a surface.
    * @param dest The surface to render to.
    * @param dRect The rectangle area of the destination to render to.
    * @note The blit size will be the size of dRect.
    */
   void blitSurface(SDL_Surface *dest, const KRect &dRect);
   /**
-   * Render the image to a surface.
+   * Render this image to a surface.
    * @param dest The image to render to.
    * @param dRect The rectangle area of the destination to render to.
    * @note The blit size will be the size of dRect.
    */
   void blitSurface(KImage *dest, const KRect &dRect);
   /**
-   * Render the image to a surface.
+   * Render this image to a surface.
    * @param dest The surface to render to.
    * @param x The x position to render to.
    * @param y The y position to render to.
@@ -108,7 +108,7 @@ public:
    */
   void blitSurface(SDL_Surface *dest, int x, int y, const KRect &sRect);
   /**
-   * Render the image to a surface.
+   * Render this image to a surface.
    * @param dest The image to render to.
    * @param x The x position to render to.
    * @param y The y position to render to.
@@ -117,7 +117,7 @@ public:
    */
   void blitSurface(KImage *dest, int x, int y, const KRect &sRect);
   /**
-   * Render the image to a surface.
+   * Render this image to a surface.
    * @param dest The surface to render to.
    * @param dRect The rectangle area of the destination to render to.
    * @param sRect The rectangle area of the source to render from.
@@ -125,7 +125,7 @@ public:
    */
   void blitSurface(SDL_Surface *dest, const KRect &dRect, const KRect &sRect);
   /**
-   * Render the image to a surface.
+   * Render this image to a surface.
    * @param dest The image to render to.
    * @param dRect The rectangle area of the destination to render to.
    * @param sRect The rectangle area of the source to render from.
@@ -189,13 +189,13 @@ public:
    * @param p The location of the pixel.
    * @param color The color to set.
    */
-  void setPixel(KPoint p, KColor color);
+  void setPixel(const KPoint &p, const KColor &color);
   /**
    * Get the color of the specified pixel.
    * @param p The location of the pixel.
    * @return The color.
    */
-  KColor getPixel(KPoint p);
+  KColor getPixel(const KPoint &p);
 
   /**
    * Draw a line from p1 to p2
@@ -203,7 +203,7 @@ public:
    * @param p2 Second point.
    * @param color The color to draw.
    */
-  void drawLine(KPoint p1, KPoint p2, KColor color);
+  void drawLine(const KPoint &p1, const KPoint &p2, const KColor &color);
   /**
    * Draw a group of individual lines.
    * <br>Each 2 points represents a discrete unconnected line (p1->p2, p3->p4, etc...)
@@ -212,7 +212,7 @@ public:
    * @param color The color to draw.
    * @note nPoints / 2 lines are drawn.
    */
-  void drawLines(int nPoints, KPoint *p, KColor color);
+  void drawLines(int nPoints, const KPoint p[], const KColor &color);
   /**
    * Draw a continuous strip of lines.
    * <br>Each point after the first represents a line from the previous point. (p1->p2, p2->p3, etc...)
@@ -221,7 +221,7 @@ public:
    * @param color The color to draw.
    * @note nPoints-1 lines are drawn.
    */
-  void drawLineStrip(int nPoints, KPoint *p, KColor color);
+  void drawLineStrip(int nPoints, const KPoint p[], const KColor &color);
   /**
    * Draw a continuous strip of lines.
    * <br>Each point after the first represents a line from the previous point,
@@ -231,12 +231,12 @@ public:
    * @param color The color to draw.
    * @note nPoints lines are drawn.
    */
-  void drawLineLoop(int nPoints, KPoint *p, KColor color);
+  void drawLineLoop(int nPoints, const KPoint p[], const KColor &color);
 
   // rectangles
-  void drawRect(KRect &rect, KColor color);
-  void fillRect(KRect &rect, KColor color);
-  void drawFilledRect(KRect &rect, KColor color, KColor borderColor);
+  void drawRect(const KRect &rect, const KColor &color);
+  void fillRect(const KRect &rect, const KColor &color);
+  void drawFilledRect(const KRect &rect, const KColor &color, const KColor &borderColor);
 
 };
 
