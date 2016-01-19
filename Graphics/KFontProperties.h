@@ -19,7 +19,6 @@
 
 #include "../IO/KFile.h"
 
-#include <map>
 #include <vector>
 #include <memory>
 // include SDL headers
@@ -33,8 +32,9 @@ private:
   /**
    * Create font properties object from the specified font file.
    * @param font The font file to get the properties for.
+   * @param ptSize The point size of the font.
    */
-  KFontProperties(const TTF_Font *_Font, const KFile *file);
+  KFontProperties(const TTF_Font *_Font, const KFile *file, int ptSize);
 
 public:
   virtual ~KFontProperties();
@@ -42,8 +42,16 @@ public:
   /**
    * Get the font properties for the specified font file.
    * @param fontFile The font file to get the properties for.
+   * @param ptSize The point size of the font.
    */
-  static std::shared_ptr<KFontProperties> create(const std::string &fontFile);
+  static std::shared_ptr<KFontProperties> create(const std::string &fontFile, int ptSize);
+
+  /**
+   * Get the font properties for the specified font file.
+   * @param fontFile The font file to get the properties for.
+   * @param ptSize The point size of the font.
+   */
+  static std::shared_ptr<KFontProperties> create(const KFile &file, int ptSize);
 
   /**
    * Remove all font properties from the registry.
@@ -147,25 +155,32 @@ public:
    * The total number of glyphs in the font.
    */
   const int totalGlyphs;
+  /**
+   * Point size of the font.
+   */
+  const int pointSize;
 
   /**
    * Enumerate fonts from all directories registered with KApplication::AddFontPath recursing to a depth of depth.
    * @param depth the depth of the directory recursion.
+   * @param ptSize The point size of the fonts to enumerate.
    */
-  static void enumerateFonts(int depth);
+  static void enumerateFonts(int depth, int ptSize);
 private:
   /**
    * Enumerate a specific file.
    * @param file The file to enumerate.
+   * @param ptSize The point size of the font.
    * @return True if file was a ttf file.
    */
-  static bool enumerateFont(const KayLib::KFile *file);
+  static bool enumerateFont(const KayLib::KFile *file, int ptSize);
   /**
    * Enumerate fonts from the directory recursing to a depth of depth.
    * @param sPath the directory to enumerate.
    * @param depth the depth of the directory recursion.
+   * @param ptSize The point size of the fonts to enumerate.
    */
-  static void enumerateDirectory(const std::string sPath, int depth);
+  static void enumerateDirectory(const std::string sPath, int depth, int ptSize);
 
 public:
   //http://www.russellcottrell.com/greek/utilities/UnicodeRanges.htm

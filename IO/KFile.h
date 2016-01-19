@@ -24,6 +24,7 @@ namespace KayLib {
 
 class KFile {
 public:
+  KFile();
   KFile(const std::string &nFileName);
   KFile(const KFile &nFile);
   virtual ~KFile();

@@ -18,6 +18,10 @@
 
 namespace KayLib {
 
+KFile::KFile() {
+  fileName = "";
+}
+
 KFile::KFile(const std::string &nFileName) {
   if(&nFileName != nullptr) {
     fileName = nFileName;
