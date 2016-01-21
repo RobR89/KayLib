@@ -316,9 +316,9 @@ std::string KFile::getExtension() const {
   return "";
 }
 
-bool KFile::equals(const KFile &file) const {
+bool KFile::operator==(const KFile &file) {
   if(&file != nullptr) {
-    if(fileName.compare(file.fileName) == 0) {
+    if(getAbsolutePath().compare(file.getAbsolutePath()) == 0) {
       return true;
     }
   }

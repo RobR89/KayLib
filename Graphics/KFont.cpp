@@ -1,8 +1,22 @@
 #include "KFont.h"
 #include "../String/KString.h"
-#include "../App/KApplication.h"
+
+#include <mutex>
+#include <algorithm>
 
 namespace KayLib {
+
+/**
+ * A list of paths to search when trying to load fonts.
+ */
+std::vector<KFile> fontPaths;
+
+std::mutex lockPtr;
+
+std::unique_lock<std::mutex> getLock() {
+  static std::mutex lockPtr;
+  return std::unique_lock<std::mutex>(lockPtr);
+}
 
 KFile findFont(const std::string font);
 std::shared_ptr<KFont> KFont::defaultFont;
@@ -22,7 +36,7 @@ KFont::~KFont() {
 
 std::shared_ptr<KFont> KFont::create(const std::string &fontFile, int ptSize) {
   KFile fntFile = findFont(fontFile);
-  if(!fntFile.exists()) {
+  if(!fntFile.isFile()) {
     return defaultFont;
   }
   TTF_Font *font = TTF_OpenFont(fntFile.getAbsolutePath().c_str(), ptSize);
@@ -36,15 +50,40 @@ std::shared_ptr<KFont> KFont::create(const std::string &fontFile, int ptSize) {
   return nFont;
 }
 
-SDL_Surface *KFont::drawText(const std::string &text, const TextQuality &quality) {
+bool KFont::addFontPath(const std::string &sPath) {
+  KFile path(sPath);
+  return addFontPath(path);
+}
+
+bool KFont::addFontPath(const KFile &path) {
+  auto lock = getLock();
+  // Is it a directory?
+  if(path.isDirectory()) {
+    // yes, is the path already registered?
+    if(std::find(fontPaths.begin(), fontPaths.end(), path) != fontPaths.end()) {
+      return true;
+    }
+    // no, register it.
+    fontPaths.push_back(path);
+    return true;
+  }
+  return false;
+}
+
+std::vector<KFile> KFont::getFontPaths() {
+  auto lock = getLock();
+  return std::vector<KFile>(fontPaths);
+}
+
+SDL_Surface *KFont::drawText(const std::string &text, const TextQuality &quality) const {
   return drawText(text, fontColor, backgroundColor, quality);
 }
 
-SDL_Surface *KFont::drawText(const std::string &text, const SDL_Color &tColor, const TextQuality &quality) {
+SDL_Surface *KFont::drawText(const std::string &text, const SDL_Color &tColor, const TextQuality &quality) const {
   return drawText(text, tColor, backgroundColor, quality);
 }
 
-SDL_Surface *KFont::drawText(const std::string &text, const SDL_Color &tColor, const SDL_Color &bColor, const TextQuality &quality) {
+SDL_Surface *KFont::drawText(const std::string &text, const SDL_Color &tColor, const SDL_Color &bColor, const TextQuality &quality) const {
   SDL_Surface *resulting_text;
   TextQuality useQuality = quality;
   if(useQuality == DEFAULT) {
@@ -62,7 +101,7 @@ SDL_Surface *KFont::drawText(const std::string &text, const SDL_Color &tColor, c
   return resulting_text;
 }
 
-int KFont::lineLenght(const std::string &text) {
+int KFont::lineLenght(const std::string &text) const {
   if(font == nullptr) {
     return 0;
   }
@@ -74,14 +113,14 @@ int KFont::lineLenght(const std::string &text) {
   return w;
 }
 
-int KFont::LineHeight() {
+int KFont::LineHeight() const {
   if(fontProperties.get() == nullptr) {
     return 1;
   }
   return fontProperties->lineSkip;
 }
 
-int KFont::getStyle() {
+int KFont::getStyle() const {
   if(font == nullptr) {
     return 0;
   }
@@ -95,23 +134,23 @@ void KFont::setStyle(int style) {
   TTF_SetFontStyle(font, style);
 }
 
-bool KFont::isNormal() {
+bool KFont::isNormal() const {
   return (getStyle() & TTF_STYLE_NORMAL) == 0 ? false : true;
 }
 
-bool KFont::isBold() {
+bool KFont::isBold() const {
   return (getStyle() & TTF_STYLE_BOLD) == 0 ? false : true;
 }
 
-bool KFont::isItalic() {
+bool KFont::isItalic() const {
   return (getStyle() & TTF_STYLE_ITALIC) == 0 ? false : true;
 }
 
-bool KFont::isUnderline() {
+bool KFont::isUnderline() const {
   return (getStyle() & TTF_STYLE_UNDERLINE) == 0 ? false : true;
 }
 
-bool KFont::isStrikeThrough() {
+bool KFont::isStrikeThrough() const {
   return (getStyle() & TTF_STYLE_STRIKETHROUGH) == 0 ? false : true;
 }
 
@@ -135,14 +174,14 @@ void KFont::setStrikeThrough() {
   setStyle(getStyle() | TTF_STYLE_STRIKETHROUGH);
 }
 
-bool KFont::isMonospaced() {
+bool KFont::isMonospaced() const {
   if(font == nullptr) {
     return false;
   }
   return TTF_FontFaceIsFixedWidth(font);
 }
 
-bool KFont::isGlyphProvided(int ch) {
+bool KFont::isGlyphProvided(int ch) const {
   if(font == nullptr) {
     return false;
   }
@@ -167,14 +206,13 @@ KFile findFont(const std::string font) {
   if(fFile.exists()) {
     return fFile;
   }
-  std::vector<std::string> fPaths(KApplication::FontPaths());
+  auto lock = getLock();
   // Search through the font paths.
-  for(auto path : fPaths) {
-    KFile sPath(path);
-    // Yes, is it a directory?
-    if(sPath.isDirectory()) {
+  for(auto path : fontPaths) {
+    // Is it a directory?
+    if(path.isDirectory()) {
       // Yes, check for file.
-      KFile fPath(sPath.getPath() + "/" + fFile.getFilename());
+      KFile fPath(path.getPath() + "/" + fFile.getFilename());
       if(fPath.exists()) {
         // file exists!  Return the result.
         return fPath;

@@ -180,7 +180,7 @@ private:
    * @param depth the depth of the directory recursion.
    * @param ptSize The point size of the fonts to enumerate.
    */
-  static void enumerateDirectory(const std::string sPath, int depth, int ptSize);
+  static void enumerateDirectory(const KFile &sPath, int depth, int ptSize);
 
 public:
   //http://www.russellcottrell.com/greek/utilities/UnicodeRanges.htm

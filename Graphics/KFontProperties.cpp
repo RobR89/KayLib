@@ -1,6 +1,6 @@
 #include "KFontProperties.h"
 #include "../String/KString.h"
-#include "../App/KApplication.h"
+#include "KFont.h"
 
 #include <sstream>
 #include <mutex>
@@ -202,14 +202,15 @@ bool KFontProperties::enumerateFont(const KFile *file, int ptSize) {
 
 void KFontProperties::enumerateFonts(int depth, int ptSize) {
   std::string found;
-  for(auto sPath : KApplication::FontPaths()) {
+  auto lock = getLock();
+  for(auto sPath : KFont::getFontPaths()) {
     enumerateDirectory(sPath, depth, ptSize);
   }
 }
 
-void KFontProperties::enumerateDirectory(const std::string sPath, int depth, int ptSize) {
-  if(KFile::isDirectory(sPath)) {
-    auto dContents = KFile::listFiles(sPath);
+void KFontProperties::enumerateDirectory(const KFile &sPath, int depth, int ptSize) {
+  if(sPath.isDirectory()) {
+    auto dContents = sPath.listFiles();
     for(auto file : dContents) {
       if(file->isFile()) {
         KFontProperties::enumerateFont(file.get(), ptSize);

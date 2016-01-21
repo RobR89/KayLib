@@ -186,7 +186,11 @@ public:
    */
   std::string getExtension() const;
 
-  bool equals(const KFile &file) const;
+  bool operator==(const KFile &file);
+
+  inline bool operator!=(const KFile& file) {
+    return !(*this == file);
+  }
 
 private:
   std::string fileName;

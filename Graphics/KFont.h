@@ -18,7 +18,9 @@
 #define	KFONT_H
 
 #include "KFontProperties.h"
+#include "../IO/KFile.h"
 
+#include <vector>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -44,6 +46,22 @@ public:
   static std::shared_ptr<KFont> create(const std::string &fontFile, int ptSize);
 
   /**
+   * Add a path to search for fonts if it exists.
+   * @param path The path to add.
+   */
+  static bool addFontPath(const std::string &path);
+  /**
+   * Add a path to search for fonts if it exists.
+   * @param path The path to add.
+   */
+  static bool addFontPath(const KFile &path);
+
+  /**
+   * Get a list of font search paths.
+   */
+  static std::vector<KFile> getFontPaths();
+
+  /**
    * A default font to use. If null will be set to first successfully created font.
    */
   static std::shared_ptr<KFont> defaultFont;
@@ -54,7 +72,7 @@ public:
    * @param quality The quality to draw with.
    * @return The SDL surface.
    */
-  SDL_Surface *drawText(const std::string &text, const TextQuality &quality = DEFAULT);
+  SDL_Surface *drawText(const std::string &text, const TextQuality &quality = DEFAULT) const;
   /**
    * Draw the text to a new SDL_Surface.
    * @param text The text to draw.
@@ -62,7 +80,7 @@ public:
    * @param quality The quality to draw with.
    * @return The SDL surface.
    */
-  SDL_Surface *drawText(const std::string &text, const SDL_Color &tColor, const TextQuality &quality = DEFAULT);
+  SDL_Surface *drawText(const std::string &text, const SDL_Color &tColor, const TextQuality &quality = DEFAULT) const;
   /**
    * Draw the text to a new SDL_Surface.
    * @param text The text to draw.
@@ -71,20 +89,20 @@ public:
    * @param quality The quality to draw with.
    * @return The SDL surface.
    */
-  SDL_Surface *drawText(const std::string &text, const SDL_Color &tColor, const SDL_Color &bColor, const TextQuality &quality = DEFAULT);
+  SDL_Surface *drawText(const std::string &text, const SDL_Color &tColor, const SDL_Color &bColor, const TextQuality &quality = DEFAULT) const;
 
   /**
    * Get the pixel length of the line of text.
    * @param text The line of text.
    * @return The pixel length of the text. -1 if the length cannot be determined.
    */
-  int lineLenght(const std::string &text);
+  int lineLenght(const std::string &text) const;
 
   /**
    * Get the number of pixels between lines.
    * @return The number of pixels between lines.
    */
-  int LineHeight();
+  int LineHeight() const;
 
   /**
    * The font properties.
@@ -110,7 +128,7 @@ public:
    * Get the font style.
    * @return The font style.
    */
-  int getStyle();
+  int getStyle() const;
   /**
    * Set the font style.
    * @param style The file to set.
@@ -120,27 +138,27 @@ public:
    * Is this font a normal?
    * @return true if normal, false if styled.
    */
-  bool isNormal();
+  bool isNormal() const;
   /**
    * Is this font bold?
    * @return true if bold.
    */
-  bool isBold();
+  bool isBold() const;
   /**
    * Is this font italic?
    * @return true if italic.
    */
-  bool isItalic();
+  bool isItalic() const;
   /**
    * Is this font underlined?
    * @return true if underlined.
    */
-  bool isUnderline();
+  bool isUnderline() const;
   /**
    * Is this font struck through?
    * @return true if struck through.
    */
-  bool isStrikeThrough();
+  bool isStrikeThrough() const;
   /**
    * Make this font normal.
    */
@@ -166,13 +184,13 @@ public:
    * Is this font monospaced.
    * @return True if monospaced.
    */
-  bool isMonospaced();
+  bool isMonospaced() const;
   /**
    * Does this font have the glyph.
    * @param ch The glyph to check for.
    * @return True if this font has the glyph.
    */
-  bool isGlyphProvided(int ch);
+  bool isGlyphProvided(int ch) const;
 
 private:
   TTF_Font *font;
