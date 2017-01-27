@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Robert Reinhart.
+ * Copyright 2017 Robert Reinhart.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,55 +15,65 @@
  */
 
 #ifndef KGRAPHICS_H
-#define	KGRAPHICS_H
+#define KGRAPHICS_H
 
-namespace KayLib {
+namespace KayLib
+{
 
-struct KPoint {
+    struct KPoint
+    {
 
-  KPoint() {
-    x = y = 0;
-  };
+        KPoint()
+        {
+            x = y = 0;
+        };
 
-  KPoint(int nx, int ny) {
-    x = nx;
-    y = ny;
-  };
-  int x;
-  int y;
-};
+        KPoint(int nx, int ny)
+        {
+            x = nx;
+            y = ny;
+        };
+        int x;
+        int y;
+    };
 
-struct KSize {
+    struct KSize
+    {
 
-  KSize() {
-    w = h = 0;
-  }
+        KSize()
+        {
+            w = h = 0;
+        }
 
-  KSize(int nw, int nh) {
-    w = nw;
-    h = nh;
-  }
-  int w;
-  int h;
-};
+        KSize(int nw, int nh)
+        {
+            w = nw;
+            h = nh;
+        }
+        int w;
+        int h;
+    };
 
-struct KRect {
+    struct KRect
+    {
 
-  KRect() {
-    x = y = w = h = 0;
-  }
+        KRect()
+        {
+            x = y = w = h = 0;
+        }
 
-  KRect(int nx, int ny, int nw, int nh) {
-    x = nx;
-    y = ny;
-    w = nw;
-    h = nh;
-  }
-  int x, y;
-  int w, h;
-};
+        KRect(int nx, int ny, int nw, int nh)
+        {
+            x = nx;
+            y = ny;
+            w = nw;
+            h = nh;
+        }
+        int x, y;
+        int w, h;
+    };
 
 }
 
-#endif	/* KGRAPHICS_H */
+#endif /* KGRAPHICS_H */
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Robert Reinhart.
+ * Copyright 2017 Robert Reinhart.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,49 +15,51 @@
  */
 
 #ifndef KEVENTRATE_H
-#define	KEVENTRATE_H
+#define KEVENTRATE_H
 
 #include <chrono>
 
-namespace KayLib {
+namespace KayLib
+{
 
-class KEventRate {
-public:
-  KEventRate();
+    class KEventRate
+    {
+    public:
+        KEventRate();
 
-  /**
-   * Reset the counter.
-   */
-  void reset();
-  /**
-   * Count a event.
-   * @returns The instantaneous event rate
-   */
-  double tick();
-  /**
-   * Returns the average rate for the last 'seconds'
-   * This returns a more stable number than the instantaneous event rate
-   * @param seconds The number of seconds in the past to search.
-   * @return The event rate.
-   */
-  double getRateHistory(int seconds);
-  /**
-   * Get the total average event rate.
-   * @return The average event rate since the last counter reset started
-   */
-  double getTotalRate();
+        /**
+         * Reset the counter.
+         */
+        void reset();
+        /**
+         * Count a event.
+         * @returns The instantaneous event rate
+         */
+        double tick();
+        /**
+         * Returns the average rate for the last 'seconds'
+         * This returns a more stable number than the instantaneous event rate
+         * @param seconds The number of seconds in the past to search.
+         * @return The event rate.
+         */
+        double getRateHistory(int seconds);
+        /**
+         * Get the total average event rate.
+         * @return The average event rate since the last counter reset started
+         */
+        double getTotalRate();
 
-protected:
-  static const int maxRecordLength = 1024;
-  std::chrono::high_resolution_clock::time_point startTime;
-  std::chrono::high_resolution_clock::time_point lastTime;
-  std::chrono::high_resolution_clock::time_point tickRecord[maxRecordLength];
-  // Total ticks counted.
-  int totalTicks;
-  // Current record index.
-  int nextRecord;
+    protected:
+        static const int maxRecordLength = 1024;
+        std::chrono::high_resolution_clock::time_point startTime;
+        std::chrono::high_resolution_clock::time_point lastTime;
+        std::chrono::high_resolution_clock::time_point tickRecord[maxRecordLength];
+        // Total ticks counted.
+        int totalTicks;
+        // Current record index.
+        int nextRecord;
 
-};
+    };
 
 }
 

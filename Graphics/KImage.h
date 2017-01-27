@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Robert Reinhart.
+ * Copyright 2017 Robert Reinhart.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 #ifndef KIMAGE_H
-#define	KIMAGE_H
+#define KIMAGE_H
 
 #include "KGraphics.h"
 #include "KColor.h"
@@ -25,221 +25,230 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-namespace KayLib {
+namespace KayLib
+{
 
-class KImage {
-public:
-  /**
-   * Create an image with no surface.
-   */
-  KImage();
-  /**
-   * Create an image with a new surface.
-   * @param w The with of the surface to create.
-   * @param h The height of the surface to create.
-   */
-  KImage(int w, int h);
-  /**
-   * Create an image with a new surface with an optional alpha channel.
-   * @param w The with of the surface to create.
-   * @param h The height of the surface to create.
-   * @param alpah True if the alpha channel should be created.
-   */
-  KImage(int w, int h, bool alpha);
-  /**
-   * Create an image with the existing surface.
-   * @param surf The surface to use.
-   */
-  KImage(SDL_Surface *surf);
-  KImage(const KImage& orig) = delete;
-  virtual ~KImage();
+    class KImage
+    {
+    public:
+        /**
+         * Create an image with no surface.
+         */
+        KImage();
+        /**
+         * Create an image with a new surface.
+         * @param w The with of the surface to create.
+         * @param h The height of the surface to create.
+         */
+        KImage(int w, int h);
+        /**
+         * Create an image with a new surface with an optional alpha channel.
+         * @param w The with of the surface to create.
+         * @param h The height of the surface to create.
+         * @param alpah True if the alpha channel should be created.
+         */
+        KImage(int w, int h, bool alpha);
+        /**
+         * Create an image with the existing surface.
+         * @param surf The surface to use.
+         */
+        KImage(SDL_Surface *surf);
+        KImage(const KImage& orig) = delete;
+        virtual ~KImage();
 
-  /**
-   * Load an image into a surface.
-   * @param file The file to load.
-   * @returns True if successful.
-   */
-  bool loadImage(const std::string file);
-  /**
-   * Load an image into a surface.
-   * @param file The file to load.
-   * @param format The format to load to.
-   * @returns True if successful.
-   */
-  bool loadImage(const std::string file, const SDL_PixelFormat* format);
+        /**
+         * Load an image into a surface.
+         * @param file The file to load.
+         * @returns True if successful.
+         */
+        bool loadImage(const std::string file);
+        /**
+         * Load an image into a surface.
+         * @param file The file to load.
+         * @param format The format to load to.
+         * @returns True if successful.
+         */
+        bool loadImage(const std::string file, const SDL_PixelFormat* format);
 
-  /**
-   * Render this image to a surface.
-   * @param dest The surface to render to.
-   * @param x The x position to render to.
-   * @param y The y position to render to.
-   * @note The blit size will be the size of this image.
-   */
-  void blitSurface(SDL_Surface *dest, int x, int y);
-  /**
-   * Render this image to a surface.
-   * @param dest The image to render to.
-   * @param x The x position to render to.
-   * @param y The y position to render to.
-   * @note The blit size will be the size of this image.
-   */
-  void blitSurface(KImage *dest, int x, int y);
-  /**
-   * Render this image to a surface.
-   * @param dest The surface to render to.
-   * @param dRect The rectangle area of the destination to render to.
-   * @note The blit size will be the size of dRect.
-   */
-  void blitSurface(SDL_Surface *dest, const KRect &dRect);
-  /**
-   * Render this image to a surface.
-   * @param dest The image to render to.
-   * @param dRect The rectangle area of the destination to render to.
-   * @note The blit size will be the size of dRect.
-   */
-  void blitSurface(KImage *dest, const KRect &dRect);
-  /**
-   * Render this image to a surface.
-   * @param dest The surface to render to.
-   * @param x The x position to render to.
-   * @param y The y position to render to.
-   * @param sRect The rectangle area of the source to render from.
-   * @note The blit size will be the size of sRect.
-   */
-  void blitSurface(SDL_Surface *dest, int x, int y, const KRect &sRect);
-  /**
-   * Render this image to a surface.
-   * @param dest The image to render to.
-   * @param x The x position to render to.
-   * @param y The y position to render to.
-   * @param sRect The rectangle area of the source to render from.
-   * @note The blit size will be the size of sRect.
-   */
-  void blitSurface(KImage *dest, int x, int y, const KRect &sRect);
-  /**
-   * Render this image to a surface.
-   * @param dest The surface to render to.
-   * @param dRect The rectangle area of the destination to render to.
-   * @param sRect The rectangle area of the source to render from.
-   * @note The blit size will scale to the size of sRect.
-   */
-  void blitSurface(SDL_Surface *dest, const KRect &dRect, const KRect &sRect);
-  /**
-   * Render this image to a surface.
-   * @param dest The image to render to.
-   * @param dRect The rectangle area of the destination to render to.
-   * @param sRect The rectangle area of the source to render from.
-   * @note The blit size will scale to the size of sRect.
-   */
-  void blitSurface(KImage *dest, const KRect &dRect, const KRect &sRect);
+        /**
+         * Render this image to a surface.
+         * @param dest The surface to render to.
+         * @param x The x position to render to.
+         * @param y The y position to render to.
+         * @note The blit size will be the size of this image.
+         */
+        void blitSurface(SDL_Surface *dest, int x, int y);
+        /**
+         * Render this image to a surface.
+         * @param dest The image to render to.
+         * @param x The x position to render to.
+         * @param y The y position to render to.
+         * @note The blit size will be the size of this image.
+         */
+        void blitSurface(KImage *dest, int x, int y);
+        /**
+         * Render this image to a surface.
+         * @param dest The surface to render to.
+         * @param dRect The rectangle area of the destination to render to.
+         * @note The blit size will be the size of dRect.
+         */
+        void blitSurface(SDL_Surface *dest, const KRect &dRect);
+        /**
+         * Render this image to a surface.
+         * @param dest The image to render to.
+         * @param dRect The rectangle area of the destination to render to.
+         * @note The blit size will be the size of dRect.
+         */
+        void blitSurface(KImage *dest, const KRect &dRect);
+        /**
+         * Render this image to a surface.
+         * @param dest The surface to render to.
+         * @param x The x position to render to.
+         * @param y The y position to render to.
+         * @param sRect The rectangle area of the source to render from.
+         * @note The blit size will be the size of sRect.
+         */
+        void blitSurface(SDL_Surface *dest, int x, int y, const KRect &sRect);
+        /**
+         * Render this image to a surface.
+         * @param dest The image to render to.
+         * @param x The x position to render to.
+         * @param y The y position to render to.
+         * @param sRect The rectangle area of the source to render from.
+         * @note The blit size will be the size of sRect.
+         */
+        void blitSurface(KImage *dest, int x, int y, const KRect &sRect);
+        /**
+         * Render this image to a surface.
+         * @param dest The surface to render to.
+         * @param dRect The rectangle area of the destination to render to.
+         * @param sRect The rectangle area of the source to render from.
+         * @note The blit size will scale to the size of sRect.
+         */
+        void blitSurface(SDL_Surface *dest, const KRect &dRect, const KRect &sRect);
+        /**
+         * Render this image to a surface.
+         * @param dest The image to render to.
+         * @param dRect The rectangle area of the destination to render to.
+         * @param sRect The rectangle area of the source to render from.
+         * @note The blit size will scale to the size of sRect.
+         */
+        void blitSurface(KImage *dest, const KRect &dRect, const KRect &sRect);
 
-  /**
-   * Get the width of the surface.
-   * @return The width of the surface.
-   */
-  int width() {
-    return (surface == nullptr) ? 0 : surface->w;
-  }
+        /**
+         * Get the width of the surface.
+         * @return The width of the surface.
+         */
+        int width()
+        {
+            return (surface == nullptr) ? 0 : surface->w;
+        }
 
-  /**
-   * Get the height of the surface.
-   * @return The height of the surface.
-   */
-  int height() {
-    return (surface == nullptr) ? 0 : surface->h;
-  }
+        /**
+         * Get the height of the surface.
+         * @return The height of the surface.
+         */
+        int height()
+        {
+            return (surface == nullptr) ? 0 : surface->h;
+        }
 
-  /**
-   * Get the size of the image.
-   * @return The size of the image.
-   */
-  KSize getSize() {
-    return (surface == nullptr) ? KSize() : KSize(surface->w, surface->h);
-  }
-  /**
-   * Get the pixel format of the surface.
-   * @return The pixel format of the surface.
-   */
-  SDL_PixelFormat *format() {
-    return (surface == nullptr) ? 0 : surface->format;
-  }
+        /**
+         * Get the size of the image.
+         * @return The size of the image.
+         */
+        KSize getSize()
+        {
+            return (surface == nullptr) ? KSize() : KSize(surface->w, surface->h);
+        }
 
-  SDL_Surface *getSurface() {
-    return surface;
-  };
+        /**
+         * Get the pixel format of the surface.
+         * @return The pixel format of the surface.
+         */
+        SDL_PixelFormat *format()
+        {
+            return (surface == nullptr) ? 0 : surface->format;
+        }
 
-  KRect getRect() {
-    return surface == nullptr ? KRect() : KRect(0, 0, surface->w, surface->h);
-  };
+        SDL_Surface *getSurface()
+        {
+            return surface;
+        };
 
-private:
-  SDL_Surface *surface;
+        KRect getRect()
+        {
+            return surface == nullptr ? KRect() : KRect(0, 0, surface->w, surface->h);
+        };
 
-public:
-  // Drawing support fucntions.
-  /**
-   * Resize the surface.  All image data is lost.
-   * @param w The new width for the surface.
-   * @param h The new height for the surface.
-   */
-  void resize(int w, int h);
+    private:
+        SDL_Surface *surface;
 
-  /**
-   * Set the color of the specified pixel.
-   * @param p The location of the pixel.
-   * @param color The color to set.
-   */
-  void setPixel(const KPoint &p, const KColor &color);
-  /**
-   * Get the color of the specified pixel.
-   * @param p The location of the pixel.
-   * @return The color.
-   */
-  KColor getPixel(const KPoint &p);
+    public:
+        // Drawing support fucntions.
+        /**
+         * Resize the surface.  All image data is lost.
+         * @param w The new width for the surface.
+         * @param h The new height for the surface.
+         */
+        void resize(int w, int h);
 
-  /**
-   * Draw a line from p1 to p2
-   * @param p1 First point.
-   * @param p2 Second point.
-   * @param color The color to draw.
-   */
-  void drawLine(const KPoint &p1, const KPoint &p2, const KColor &color);
-  /**
-   * Draw a group of individual lines.
-   * <br>Each 2 points represents a discrete unconnected line (p1->p2, p3->p4, etc...)
-   * @param nPoints The number of point pointed to by p.
-   * @param p The points.
-   * @param color The color to draw.
-   * @note nPoints / 2 lines are drawn.
-   */
-  void drawLines(int nPoints, const KPoint p[], const KColor &color);
-  /**
-   * Draw a continuous strip of lines.
-   * <br>Each point after the first represents a line from the previous point. (p1->p2, p2->p3, etc...)
-   * @param nPoints The number of point pointed to by p.
-   * @param p The points.
-   * @param color The color to draw.
-   * @note nPoints-1 lines are drawn.
-   */
-  void drawLineStrip(int nPoints, const KPoint p[], const KColor &color);
-  /**
-   * Draw a continuous strip of lines.
-   * <br>Each point after the first represents a line from the previous point,
-   * with a final line from the last point to the first. (p1->p2, p2->p3, ..., pn->p1)
-   * @param nPoints The number of point pointed to by p.
-   * @param p The points.
-   * @param color The color to draw.
-   * @note nPoints lines are drawn.
-   */
-  void drawLineLoop(int nPoints, const KPoint p[], const KColor &color);
+        /**
+         * Set the color of the specified pixel.
+         * @param p The location of the pixel.
+         * @param color The color to set.
+         */
+        void setPixel(const KPoint &p, const KColor &color);
+        /**
+         * Get the color of the specified pixel.
+         * @param p The location of the pixel.
+         * @return The color.
+         */
+        KColor getPixel(const KPoint &p);
 
-  // rectangles
-  void drawRect(const KRect &rect, const KColor &color);
-  void fillRect(const KRect &rect, const KColor &color);
-  void drawFilledRect(const KRect &rect, const KColor &color, const KColor &borderColor);
+        /**
+         * Draw a line from p1 to p2
+         * @param p1 First point.
+         * @param p2 Second point.
+         * @param color The color to draw.
+         */
+        void drawLine(const KPoint &p1, const KPoint &p2, const KColor &color);
+        /**
+         * Draw a group of individual lines.
+         * <br>Each 2 points represents a discrete unconnected line (p1->p2, p3->p4, etc...)
+         * @param nPoints The number of point pointed to by p.
+         * @param p The points.
+         * @param color The color to draw.
+         * @note nPoints / 2 lines are drawn.
+         */
+        void drawLines(int nPoints, const KPoint p[], const KColor &color);
+        /**
+         * Draw a continuous strip of lines.
+         * <br>Each point after the first represents a line from the previous point. (p1->p2, p2->p3, etc...)
+         * @param nPoints The number of point pointed to by p.
+         * @param p The points.
+         * @param color The color to draw.
+         * @note nPoints-1 lines are drawn.
+         */
+        void drawLineStrip(int nPoints, const KPoint p[], const KColor &color);
+        /**
+         * Draw a continuous strip of lines.
+         * <br>Each point after the first represents a line from the previous point,
+         * with a final line from the last point to the first. (p1->p2, p2->p3, ..., pn->p1)
+         * @param nPoints The number of point pointed to by p.
+         * @param p The points.
+         * @param color The color to draw.
+         * @note nPoints lines are drawn.
+         */
+        void drawLineLoop(int nPoints, const KPoint p[], const KColor &color);
 
-};
+        // rectangles
+        void drawRect(const KRect &rect, const KColor &color);
+        void fillRect(const KRect &rect, const KColor &color);
+        void drawFilledRect(const KRect &rect, const KColor &color, const KColor &borderColor);
+
+    };
 
 }
-#endif	/* KIMAGE_H */
+#endif /* KIMAGE_H */
 
