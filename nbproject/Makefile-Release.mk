@@ -46,7 +46,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/KMath/Matrix.o \
 	${OBJECTDIR}/KMath/Quaternion.o \
 	${OBJECTDIR}/KMath/Spherical.o \
-	${OBJECTDIR}/KMath/Spline.o \
 	${OBJECTDIR}/KMath/Vector3D.o \
 	${OBJECTDIR}/KMath/Vector4D.o \
 	${OBJECTDIR}/Parser/JSON.o \
@@ -139,11 +138,6 @@ ${OBJECTDIR}/KMath/Spherical.o: KMath/Spherical.cpp
 	${MKDIR} -p ${OBJECTDIR}/KMath
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/KMath/Spherical.o KMath/Spherical.cpp
-
-${OBJECTDIR}/KMath/Spline.o: KMath/Spline.cpp
-	${MKDIR} -p ${OBJECTDIR}/KMath
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/KMath/Spline.o KMath/Spline.cpp
 
 ${OBJECTDIR}/KMath/Vector3D.o: KMath/Vector3D.cpp
 	${MKDIR} -p ${OBJECTDIR}/KMath

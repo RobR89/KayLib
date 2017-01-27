@@ -79,7 +79,6 @@
         <itemPath>KMath/Matrix.cpp</itemPath>
         <itemPath>KMath/Quaternion.cpp</itemPath>
         <itemPath>KMath/Spherical.cpp</itemPath>
-        <itemPath>KMath/Spline.cpp</itemPath>
         <itemPath>KMath/Vector3D.cpp</itemPath>
         <itemPath>KMath/Vector4D.cpp</itemPath>
       </logicalFolder>
@@ -189,8 +188,6 @@
       <item path="KMath/Spherical.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="KMath/Spherical.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="KMath/Spline.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="KMath/Spline.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -319,8 +316,6 @@
       <item path="KMath/Spherical.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="KMath/Spherical.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="KMath/Spline.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="KMath/Spline.h" ex="false" tool="3" flavor2="0">
       </item>
