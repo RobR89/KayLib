@@ -134,7 +134,7 @@ bool KSQLite::command(const std::string &query) {
   if(state != SQLITE_OK) {
     errorCode = sqlite3_errcode(connection);
     lastError = sqlite3_errmsg(connection);
-    return nullptr;
+    return false;
   }
   int result;
   affected = 0;
@@ -145,7 +145,7 @@ bool KSQLite::command(const std::string &query) {
     errorCode = sqlite3_errcode(connection);
     lastError = sqlite3_errmsg(connection);
     sqlite3_finalize(statement);
-    return nullptr;
+    return false;
   }
   sqlite3_finalize(statement);
   errorCode = 0;
@@ -167,7 +167,7 @@ bool KSQLite::command(const std::shared_ptr<KSQLStatement> &query) {
     errorCode = sqlite3_errcode(connection);
     lastError = sqlite3_errmsg(connection);
     sqlite3_finalize(lStatement->statement);
-    return nullptr;
+    return false;
   }
   errorCode = 0;
   lastError = "";

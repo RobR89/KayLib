@@ -18,7 +18,7 @@ DataCode::~DataCode() {
 }
 
 bool DataCode::writeDataToFile(const std::string variableName, const unsigned char *data, const int length) {
-  if(header == nullptr || cpp == nullptr) {
+  if(!header.is_open() || !cpp.is_open()) {
     return false;
   }
   std::string declaration = "extern int " + variableName + "_SZ;\n";

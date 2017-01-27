@@ -569,7 +569,7 @@ void JSONArray::format(std::ostream &out, const std::string &current, const std:
 }
 
 std::ostream& operator<<(std::ostream &out, const JSONValue& value) {
-  value.format(out, "", "");
+  value.format(out, "", "  ");
   return out;
 }
 

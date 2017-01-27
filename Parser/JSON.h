@@ -162,11 +162,11 @@ public:
 
   virtual ~JSONNull() { };
 
-  virtual JSONType type() const {
+  virtual JSONType type() const override {
     return JSONType::_NULL;
   };
 
-  virtual void format(std::ostream &out, const std::string &current, const std::string &indent) const;
+  virtual void format(std::ostream &out, const std::string &current, const std::string &indent) const override;
 
 };
 
@@ -176,11 +176,11 @@ public:
   JSONObject(const JSONObject& orig);
   virtual ~JSONObject();
 
-  virtual JSONType type() const {
+  virtual JSONType type() const override {
     return JSONType::OBJECT;
   };
 
-  virtual void format(std::ostream &out, const std::string &current, const std::string &indent) const;
+  virtual void format(std::ostream &out, const std::string &current, const std::string &indent) const override;
 
   /**
    * Get the names of all values of this element.
@@ -292,11 +292,11 @@ public:
   JSONString(const JSONString& orig);
   virtual ~JSONString();
 
-  virtual JSONType type() const {
+  virtual JSONType type() const override {
     return JSONType::STRING;
   };
 
-  virtual void format(std::ostream &out, const std::string &current, const std::string &indent) const;
+  virtual void format(std::ostream &out, const std::string &current, const std::string &indent) const override;
 
   /**
    * Get the value of this string.
@@ -324,11 +324,11 @@ public:
   JSONNumber(const JSONNumber& orig);
   virtual ~JSONNumber();
 
-  virtual JSONType type() const {
+  virtual JSONType type() const override {
     return JSONType::NUMBER;
   };
 
-  virtual void format(std::ostream &out, const std::string &current, const std::string &indent) const;
+  virtual void format(std::ostream &out, const std::string &current, const std::string &indent) const override;
 
   /**
    * Is this number a double?
@@ -387,11 +387,11 @@ public:
   JSONBool(const JSONBool& orig);
   virtual ~JSONBool();
 
-  virtual JSONType type() const {
+  virtual JSONType type() const override {
     return JSONType::BOOL;
   };
 
-  virtual void format(std::ostream &out, const std::string &current, const std::string &indent) const;
+  virtual void format(std::ostream &out, const std::string &current, const std::string &indent) const override;
 
   /**
    * Get the value of this bool.
@@ -418,11 +418,11 @@ public:
   JSONArray(const JSONArray& orig);
   virtual ~JSONArray();
 
-  virtual JSONType type() const {
+  virtual JSONType type() const override {
     return JSONType::ARRAY;
   };
 
-  virtual void format(std::ostream &out, const std::string &current, const std::string &indent) const;
+  virtual void format(std::ostream &out, const std::string &current, const std::string &indent) const override;
 
   /**
    * Get the array of values.
