@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "KMath.h"
+#include <glm/vec3.hpp>
 
 #ifndef SPLINE_H
 #define SPLINE_H
@@ -35,21 +35,69 @@ namespace KayLib
          * @return The interpolated point.
          */
         template<int N>
-        static Vector3D catmull_rom(double p, const Vector3D(&points)[N], bool loop)
+        static glm::vec3 catmull_rom(double p, const glm::vec3(&points)[N], bool loop = false)
         {
             if(points == nullptr)
             {
-                return Vector3D();
+                return glm::vec3();
             }
-            int pLen = N; //sizeof (points) / sizeof (Vector3D);
+            int pLen = N;
             ControlPoints con;
             getSplinePoints(con, p, pLen, loop);
             if(con.ret != -1)
             {
                 return points[con.ret];
             }
-            Vector3D V;
-            Vector3D v3, v2, v1;
+            glm::vec3 V;
+            glm::vec3 v3, v2, v1;
+            float t = p - ((int) p);
+            float t2, t3;
+            t2 = t * t;
+            t3 = t2 * t;
+            v3 = points[con.cp1] * -0.5f;
+            v3 += points[con.cp2] * 1.5f;
+            v3 += points[con.cp3] * -1.5f;
+            v3 += points[con.cp4] * 0.5f;
+            v3 *= t3;
+            v2 = points[con.cp1];
+            v2 += points[con.cp2] * -2.5f;
+            v2 += points[con.cp3] * 2.f;
+            v2 += points[con.cp4] * -0.5f;
+            v2 *= t2;
+            v1 = points[con.cp1] * -0.5f;
+            v1 += points[con.cp3] * 0.5f;
+            v1 *= t;
+            V = points[con.cp2];
+            V += v3;
+            V += v2;
+            V += v1;
+            return V;
+        }
+
+        /**
+         * Interpolate the point (p) in the Catmull-Rom spline defined by (points)
+         * A Catmull-Rom spline always passes through the control points.
+         * @param p The point to interpolate.
+         * @param points The control points of the Catmull-Rom spline.
+         * @param loop Whether or not to loop the spline.
+         * @return The interpolated point.
+         */
+        template<int N>
+        static glm::dvec3 catmull_rom(double p, const glm::dvec3(&points)[N], bool loop = false)
+        {
+            if(points == nullptr)
+            {
+                return glm::dvec3();
+            }
+            int pLen = N;
+            ControlPoints con;
+            getSplinePoints(con, p, pLen, loop);
+            if(con.ret != -1)
+            {
+                return points[con.ret];
+            }
+            glm::dvec3 V;
+            glm::dvec3 v3, v2, v1;
             double t = p - ((int) p);
             double t2, t3;
             t2 = t * t;
@@ -61,7 +109,7 @@ namespace KayLib
             v3 *= t3;
             v2 = points[con.cp1];
             v2 += points[con.cp2] * -2.5;
-            v2 += points[con.cp3] * 2;
+            v2 += points[con.cp3] * 2.0;
             v2 += points[con.cp4] * -0.5;
             v2 *= t2;
             v1 = points[con.cp1] * -0.5;
@@ -83,38 +131,88 @@ namespace KayLib
          * @return The interpolated point.
          */
         template<int N>
-        static Vector3D b_spline(double p, const Vector3D(&points)[N], bool loop)
+        static glm::vec3 b_spline(double p, const glm::vec3(&points)[N], bool loop = false)
         {
             if(points == nullptr)
             {
-                return Vector3D();
+                return glm::vec3();
             }
-            int pLen = N; //sizeof (points) / sizeof (Vector3D);
+            int pLen = N;
             ControlPoints con;
             getSplinePoints(con, p, pLen, loop);
             if(con.ret != -1)
             {
                 return points[con.ret];
             }
-            Vector3D V;
-            Vector3D v3, v2, v1;
+            glm::vec3 V;
+            glm::vec3 v3, v2, v1;
+            float t = p - ((int) p);
+            float t2, t3;
+            t2 = t * t;
+            t3 = t2 * t;
+            v3 = points[con.cp1] * -1.f;
+            v3 += points[con.cp2] * 3.f;
+            v3 += points[con.cp3] * -3.f;
+            v3 += points[con.cp4];
+            v3 *= t3;
+            v2 = points[con.cp1] * 3.f;
+            v2 += points[con.cp2] * -6.f;
+            v2 += points[con.cp3] * 3.f;
+            v2 *= t2;
+            v1 = points[con.cp1] * -3.f;
+            v1 += points[con.cp3] * 3.f;
+            v1 *= t;
+            V = points[con.cp2] * 4.f;
+            V += points[con.cp1];
+            V += points[con.cp3];
+            V += v3;
+            V += v2;
+            V += v1;
+            V *= 1.0f / 6.0f;
+            return V;
+        }
+
+        /**
+         * Interpolate the point (p) in the B-spline defined by (points)
+         * The line of a B-spline is pulled toward the control points as if by an elastic band.
+         * @param p The point to interpolate.
+         * @param points The control points of the B-spline.
+         * @param loop Whether or not to loop the spline.
+         * @return The interpolated point.
+         */
+        template<int N>
+        static glm::dvec3 b_spline(double p, const glm::dvec3(&points)[N], bool loop = false)
+        {
+            if(points == nullptr)
+            {
+                return glm::dvec3();
+            }
+            int pLen = N;
+            ControlPoints con;
+            getSplinePoints(con, p, pLen, loop);
+            if(con.ret != -1)
+            {
+                return points[con.ret];
+            }
+            glm::dvec3 V;
+            glm::dvec3 v3, v2, v1;
             double t = p - ((int) p);
             double t2, t3;
             t2 = t * t;
             t3 = t2 * t;
-            v3 = points[con.cp1] * -1;
-            v3 += points[con.cp2] * 3;
-            v3 += points[con.cp3] * -3;
+            v3 = points[con.cp1] * -1.0;
+            v3 += points[con.cp2] * 3.0;
+            v3 += points[con.cp3] * -3.0;
             v3 += points[con.cp4];
             v3 *= t3;
-            v2 = points[con.cp1] * 3;
-            v2 += points[con.cp2] * -6;
-            v2 += points[con.cp3] * 3;
+            v2 = points[con.cp1] * 3.0;
+            v2 += points[con.cp2] * -6.0;
+            v2 += points[con.cp3] * 3.0;
             v2 *= t2;
-            v1 = points[con.cp1] * -3;
-            v1 += points[con.cp3] * 3;
+            v1 = points[con.cp1] * -3.0;
+            v1 += points[con.cp3] * 3.0;
             v1 *= t;
-            V = points[con.cp2] * 4;
+            V = points[con.cp2] * 4.0;
             V += points[con.cp1];
             V += points[con.cp3];
             V += v3;
@@ -133,26 +231,57 @@ namespace KayLib
          * @return The interpolated point.
          */
         template<int N>
-        static Vector3D linear(double p, const Vector3D(&points)[N], bool loop)
+        static glm::vec3 linear(double p, const glm::vec3(&points)[N], bool loop = false)
         {
             if(points == nullptr)
             {
-                return Vector3D();
+                return glm::vec3();
             }
-            int pLen = N; //sizeof (points) / sizeof (points[0]);
+            int pLen = N;
             ControlPoints con;
             getSplinePoints(con, p, pLen, loop);
             if(con.ret != -1)
             {
                 return points[con.ret];
             }
-            Vector3D V;
+            glm::vec3 V;
+            float t = p - ((int) p);
+            V = points[con.cp3] - points[con.cp2];
+            V *= (t);
+            V += (points[con.cp2]);
+            return V;
+        }
+
+        /**
+         * Interpolate the point (p) in the line spline defined by (points)
+         * A straight liner interpolation of the points.
+         * @param p The point to interpolate.
+         * @param points The control points of the line spline.
+         * @param loop Whether or not to loop the spline.
+         * @return The interpolated point.
+         */
+        template<int N>
+        static glm::dvec3 linear(double p, const glm::dvec3(&points)[N], bool loop = false)
+        {
+            if(points == nullptr)
+            {
+                return glm::dvec3();
+            }
+            int pLen = N;
+            ControlPoints con;
+            getSplinePoints(con, p, pLen, loop);
+            if(con.ret != -1)
+            {
+                return points[con.ret];
+            }
+            glm::dvec3 V;
             double t = p - ((int) p);
             V = points[con.cp3] - points[con.cp2];
             V *= (t);
             V += (points[con.cp2]);
             return V;
         }
+        
     protected:
 
         struct ControlPoints

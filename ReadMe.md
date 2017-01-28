@@ -23,7 +23,7 @@ This library is licensed under Apache Version 2.0 as can be found here http://ww
   KayLib is a collection of files that I have been putting together for several years.  I finally decided to share them.
 
 * Why "KayLib"?  
-  Because "O**K**, this is my **Lib**rary" shortened to "KLib".  So why not "KayLib"
+  Because "O(**K**), this is my (**Lib**)rary" shortened to "KLib".  So why not "KayLib"
 
 * Why are some class names prefixed with a K?  
   I have done this to prevent confusion with commonly used class names.  Originally I was going to do this with all the classes but decided not to.
@@ -61,9 +61,6 @@ This library is licensed under Apache Version 2.0 as can be found here http://ww
 * KMath/*.h  
   A collection of various math objects.  
   Including:
-    * Matrix: a 4x4 Matrix
-    * Vector3D/4D: 3D and 4D vectors
-    * Quaternion: a quaternion rotation object
     * and perlin noise, interpolation, splines, and spherical coordinate objects.
 
 * Parser/JSON.h  
@@ -87,10 +84,11 @@ This library is licensed under Apache Version 2.0 as can be found here http://ww
   Useful for embedding things such as images or other resources in a program.
 
 ####Dependancies
-libsdl2-dev
-libsdl2-image-dev
-libsdl2-ttf-dev
-libmysqlclient-dev
-libsqlite3-dev
-libboost-dev
-liblua5.2-dev
+  libsdl2-dev
+  libsdl2-image-dev
+  libsdl2-ttf-dev
+  libmysqlclient-dev
+  libsqlite3-dev
+  libboost-dev
+  liblua5.2-dev
+  libglm-dev

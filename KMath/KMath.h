@@ -18,6 +18,7 @@
 #define KMATH_H
 
 #include <math.h>
+#include <cmath>
 
 namespace KayLib
 {
@@ -53,29 +54,6 @@ namespace KayLib
         return rad * one80overpi;
     }
 
-    // pre-define math classes.
-    class Vector3D;
-    class Vector4D;
-    class Matrix;
-    class Quaternion;
-
-    class LatLon
-    {
-    public:
-        double Latitude;
-        double Longatude;
-
-    };
-
-    class LatLonHead
-    {
-    public:
-        double Latitude;
-        double Longatude;
-        double Heading;
-
-    };
-
 }
 
 /**
@@ -83,10 +61,6 @@ namespace KayLib
  */
 
 #include "Interpolate.h"
-#include "Vector3D.h"
-#include "Vector4D.h"
-#include "Matrix.h"
-#include "Quaternion.h"
 #include "Spherical.h"
 #include "Spline.h"
 #include "PerlinNoise.h"

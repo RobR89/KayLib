@@ -42,12 +42,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/Graphics/KFontProperties.o \
 	${OBJECTDIR}/Graphics/KImage.o \
 	${OBJECTDIR}/IO/KFile.o \
-	${OBJECTDIR}/KMath/Interpolate.o \
-	${OBJECTDIR}/KMath/Matrix.o \
-	${OBJECTDIR}/KMath/Quaternion.o \
-	${OBJECTDIR}/KMath/Spherical.o \
-	${OBJECTDIR}/KMath/Vector3D.o \
-	${OBJECTDIR}/KMath/Vector4D.o \
 	${OBJECTDIR}/Parser/JSON.o \
 	${OBJECTDIR}/Parser/StringParser.o \
 	${OBJECTDIR}/Parser/XMLDocument.o \
@@ -118,36 +112,6 @@ ${OBJECTDIR}/IO/KFile.o: IO/KFile.cpp
 	${MKDIR} -p ${OBJECTDIR}/IO
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/IO/KFile.o IO/KFile.cpp
-
-${OBJECTDIR}/KMath/Interpolate.o: KMath/Interpolate.cpp
-	${MKDIR} -p ${OBJECTDIR}/KMath
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/KMath/Interpolate.o KMath/Interpolate.cpp
-
-${OBJECTDIR}/KMath/Matrix.o: KMath/Matrix.cpp
-	${MKDIR} -p ${OBJECTDIR}/KMath
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/KMath/Matrix.o KMath/Matrix.cpp
-
-${OBJECTDIR}/KMath/Quaternion.o: KMath/Quaternion.cpp
-	${MKDIR} -p ${OBJECTDIR}/KMath
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/KMath/Quaternion.o KMath/Quaternion.cpp
-
-${OBJECTDIR}/KMath/Spherical.o: KMath/Spherical.cpp
-	${MKDIR} -p ${OBJECTDIR}/KMath
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/KMath/Spherical.o KMath/Spherical.cpp
-
-${OBJECTDIR}/KMath/Vector3D.o: KMath/Vector3D.cpp
-	${MKDIR} -p ${OBJECTDIR}/KMath
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/KMath/Vector3D.o KMath/Vector3D.cpp
-
-${OBJECTDIR}/KMath/Vector4D.o: KMath/Vector4D.cpp
-	${MKDIR} -p ${OBJECTDIR}/KMath
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/KMath/Vector4D.o KMath/Vector4D.cpp
 
 ${OBJECTDIR}/Parser/JSON.o: Parser/JSON.cpp
 	${MKDIR} -p ${OBJECTDIR}/Parser
