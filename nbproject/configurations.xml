@@ -78,7 +78,6 @@
         <itemPath>Parser/XMLDocument.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f7" displayName="Scripting" projectFiles="true">
-        <itemPath>Scripting/KLUA.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="String" projectFiles="true">
         <itemPath>String/KString.cpp</itemPath>
@@ -185,8 +184,6 @@
       </item>
       <item path="ReadMe.md" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Scripting/KLUA.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="Scripting/KLUA.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="String/KString.cpp" ex="false" tool="1" flavor2="0">
@@ -292,8 +289,6 @@
       <item path="Parser/XMLDocument.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ReadMe.md" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Scripting/KLUA.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Scripting/KLUA.h" ex="false" tool="3" flavor2="0">
       </item>
