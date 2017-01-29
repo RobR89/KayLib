@@ -87,7 +87,7 @@ namespace KayLib
                 parser.skipWhitespace(true);
                 if(parser.peekChar() != '\"')
                 {
-                    throw new ParserException("Invalid JSONObject name", parser.getParseString(), parser.getIndex());
+                    throw ParserException("Invalid JSONObject name", parser.getParseString(), parser.getIndex());
                 }
                 // Get value name.
                 std::string name = parser.getQuotedString();
@@ -96,7 +96,7 @@ namespace KayLib
                 // name and value must be separated by a colon.
                 if(parser.getChar() != ':')
                 {
-                    throw new ParserException("Invalid JSONObject", parser.getParseString(), parser.getIndex());
+                    throw ParserException("Invalid JSONObject", parser.getParseString(), parser.getIndex());
                 }
                 // get the entries.
                 object->setValue(name, parse(parser));
@@ -116,7 +116,7 @@ namespace KayLib
         {
             // Delete the object to prevent memory leaks then throw the exception.
             delete object;
-            throw new ParserException("Invalid JSONObject", parser.getParseString(), parser.getIndex());
+            throw ParserException("Invalid JSONObject", parser.getParseString(), parser.getIndex());
         }
         return object;
     }
@@ -157,7 +157,7 @@ namespace KayLib
         {
             // Delete the array to prevent memory leaks then throw the exception.
             delete array;
-            throw new ParserException("Invalid JSONArray", parser.getParseString(), parser.getIndex());
+            throw ParserException("Invalid JSONArray", parser.getParseString(), parser.getIndex());
         }
         return array;
     }
@@ -202,7 +202,7 @@ namespace KayLib
             // A null.
             return new JSONNull();
         }
-        throw new ParserException("Invalid JSON", parser.getParseString(), parser.getIndex());
+        throw ParserException("Invalid JSON", parser.getParseString(), parser.getIndex());
     }
 
     JSONObject::JSONObject() { }
@@ -257,7 +257,7 @@ namespace KayLib
         {
             return nullptr;
         }
-        return std::shared_ptr<JSONString>(val->asString());
+        return std::dynamic_pointer_cast<JSONString>(val);
     }
 
     std::shared_ptr<JSONNumber> JSONObject::getValueAsNumber(const std::string &valName) const
@@ -271,7 +271,7 @@ namespace KayLib
         {
             return nullptr;
         }
-        return std::shared_ptr<JSONNumber>(val->asNumber());
+        return std::dynamic_pointer_cast<JSONNumber>(val);
     }
 
     std::shared_ptr<JSONBool> JSONObject::getValueAsBool(const std::string &valName) const
@@ -285,7 +285,7 @@ namespace KayLib
         {
             return nullptr;
         }
-        return std::shared_ptr<JSONBool>(val->asBool());
+        return std::dynamic_pointer_cast<JSONBool>(val);
     }
 
     std::shared_ptr<JSONNull> JSONObject::getValueAsNull(const std::string &valName) const
@@ -299,7 +299,7 @@ namespace KayLib
         {
             return nullptr;
         }
-        return std::shared_ptr<JSONNull>(val->asNull());
+        return std::dynamic_pointer_cast<JSONNull>(val);
     }
 
     std::shared_ptr<JSONObject> JSONObject::getValueAsObject(const std::string &valName) const
@@ -313,7 +313,7 @@ namespace KayLib
         {
             return nullptr;
         }
-        return std::shared_ptr<JSONObject>(val->asObject());
+        return std::dynamic_pointer_cast<JSONObject>(val);
     }
 
     std::shared_ptr<JSONArray> JSONObject::getValueAsArray(const std::string &valName) const
@@ -327,7 +327,7 @@ namespace KayLib
         {
             return nullptr;
         }
-        return std::shared_ptr<JSONArray>(val->asArray());
+        return std::dynamic_pointer_cast<JSONArray>(val);
     }
 
     std::string JSONObject::getString(const std::string &valName) const
@@ -340,12 +340,13 @@ namespace KayLib
         if(val->type() == JSONType::STRING)
         {
             // A string return the value.
-            return val->asString()->getValue();
+            std::shared_ptr<JSONString> str = std::dynamic_pointer_cast<JSONString>(val);
+            return str->getValue();
         }
         if(val->type() == JSONType::NUMBER)
         {
             // It's a number convert it to a string.
-            JSONNumber *num = val->asNumber();
+            std::shared_ptr<JSONNumber> num = std::dynamic_pointer_cast<JSONNumber>(val);
             if(num->isDouble())
             {
                 return std::to_string(num->getDouble());
@@ -354,8 +355,9 @@ namespace KayLib
         }
         if(val->type() == JSONType::BOOL)
         {
+            std::shared_ptr<JSONBool> bl = std::dynamic_pointer_cast<JSONBool>(val);
             // It's a bool return true/false
-            if(val->asBool()->get())
+            if(bl->get())
             {
                 return "true";
             }
@@ -378,19 +380,22 @@ namespace KayLib
         }
         if(val->type() == JSONType::STRING)
         {
+            std::shared_ptr<JSONString> str = std::dynamic_pointer_cast<JSONString>(val);
             // A string attempt to parse the value.
-            StringParser<char> parser(val->asString()->getValue());
+            StringParser<char> parser(str->getValue());
             return parser.getDouble();
         }
         if(val->type() == JSONType::NUMBER)
         {
+            std::shared_ptr<JSONNumber> num = std::dynamic_pointer_cast<JSONNumber>(val);
             // It's a number just return the value.
-            return val->asNumber()->getDouble();
+            return num->getDouble();
         }
         if(val->type() == JSONType::BOOL)
         {
+            std::shared_ptr<JSONBool> bl = std::dynamic_pointer_cast<JSONBool>(val);
             // It's a bool return 1/0
-            if(val->asBool()->get())
+            if(bl->get())
             {
                 return 1;
             }
@@ -414,8 +419,9 @@ namespace KayLib
         }
         if(val->type() == JSONType::STRING)
         {
+            std::shared_ptr<JSONString> str = std::dynamic_pointer_cast<JSONString>(val);
             // A string attempt to parse the value.
-            StringParser<char> parser(val->asString()->getValue());
+            StringParser<char> parser(str->getValue());
             if(parser.isDecimal())
             {
                 return (long) parser.getDouble();
@@ -424,13 +430,15 @@ namespace KayLib
         }
         if(val->type() == JSONType::NUMBER)
         {
+            std::shared_ptr<JSONNumber> num = std::dynamic_pointer_cast<JSONNumber>(val);
             // It's a number just return the value.
-            return val->asNumber()->getInt();
+            return num->getInt();
         }
         if(val->type() == JSONType::BOOL)
         {
+            std::shared_ptr<JSONBool> bl = std::dynamic_pointer_cast<JSONBool>(val);
             // It's a bool return 1/0
-            if(val->asBool()->get())
+            if(bl->get())
             {
                 return 1;
             }
@@ -454,8 +462,9 @@ namespace KayLib
         }
         if(val->type() == JSONType::STRING)
         {
+            std::shared_ptr<JSONString> str = std::dynamic_pointer_cast<JSONString>(val);
             // A string attempt to parse the value.
-            StringParser<char> parser(val->asString()->getValue());
+            StringParser<char> parser(str->getValue());
             if(parser.nextIs("true"))
             {
                 return true;
@@ -468,7 +477,7 @@ namespace KayLib
         }
         if(val->type() == JSONType::NUMBER)
         {
-            JSONNumber *num = val->asNumber();
+            std::shared_ptr<JSONNumber> num = std::dynamic_pointer_cast<JSONNumber>(val);
             if(num->isDouble())
             {
                 return num->getDouble() != 0;
@@ -477,8 +486,9 @@ namespace KayLib
         }
         if(val->type() == JSONType::BOOL)
         {
+            std::shared_ptr<JSONBool> bl = std::dynamic_pointer_cast<JSONBool>(val);
             // It's a bool return the value.
-            return val->asBool()->get();
+            return bl->get();
         }
         if(val->type() == JSONType::_NULL)
         {
@@ -607,7 +617,10 @@ namespace KayLib
         values.push_back(add);
     }
 
-    JSONDocument::JSONDocument() { }
+    JSONDocument::JSONDocument()
+    {
+        root = std::make_shared<JSONObject>();
+    }
 
     JSONDocument::JSONDocument(const std::string &doc)
     {

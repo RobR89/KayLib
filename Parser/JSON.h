@@ -83,81 +83,57 @@ namespace KayLib
         friend std::ostream& operator<<(std::ostream &out, const JSONValue& value);
 
         /**
-         * Return the value as a JSONObject or nullptr if the value is not a JSONObject.
-         * @return The value as a JSONObject.
+         * Check if this is a JSONObject.
+         * @return True if this is a JSONObject.
          */
-        inline JSONObject *asObject()
+        inline bool isObject()
         {
-            if(type() == JSONType::OBJECT)
-            {
-                return (JSONObject *)this;
-            }
-            return nullptr;
+            return (type() == JSONType::OBJECT);
         };
 
         /**
-         * Return the value as a JSONArray or nullptr if the value is not a JSONArray.
-         * @return The value as a JSONArray.
+         * Check if this is a JSONArray.
+         * @return True if this is a JSONArray.
          */
-        inline JSONArray *asArray()
+        inline bool isArray()
         {
-            if(type() == JSONType::ARRAY)
-            {
-                return (JSONArray *)this;
-            }
-            return nullptr;
+            return (type() == JSONType::ARRAY);
         };
 
         /**
-         * Return the value as a JSONString or nullptr if the value is not a JSONString.
-         * @return The value as a JSONString.
+         * Check if this is a JSONString.
+         * @return True if this is a JSONString.
          */
-        inline JSONString *asString()
+        inline bool isString()
         {
-            if(type() == JSONType::STRING)
-            {
-                return (JSONString *)this;
-            }
-            return nullptr;
+            return (type() == JSONType::STRING);
         };
 
         /**
-         * Return the value as a JSONNumber or nullptr if the value is not a JSONNumber.
-         * @return The value as a JSONNumber.
+         * Check if this is a JSONNumber.
+         * @return True if this is a JSONNumber.
          */
-        inline JSONNumber *asNumber()
+        inline bool isNumber()
         {
-            if(type() == JSONType::NUMBER)
-            {
-                return (JSONNumber *)this;
-            }
-            return nullptr;
+            return (type() == JSONType::NUMBER);
         };
 
         /**
-         * Return the value as a JSONBool or nullptr if the value is not a JSONBool.
-         * @return The value as a JSONBool.
+         * Check if this is a JSONBool.
+         * @return True if this is a JSONBool.
          */
-        inline JSONBool *asBool()
+        inline bool isBool()
         {
-            if(type() == JSONType::BOOL)
-            {
-                return (JSONBool *)this;
-            }
-            return nullptr;
+            return (type() == JSONType::BOOL);
         };
 
         /**
-         * Return the value as a JSONNull or nullptr if the value is not a JSONNull.
-         * @return The value as a JSONNull.
+         * Check if this is a JSONNull.
+         * @return True if this is a JSONNull.
          */
-        inline JSONNull *asNull()
+        inline bool isNull()
         {
-            if(type() == JSONType::_NULL)
-            {
-                return (JSONNull *)this;
-            }
-            return nullptr;
+            return (type() == JSONType::_NULL);
         };
 
     protected:

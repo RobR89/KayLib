@@ -281,7 +281,7 @@ namespace KayLib
             V += (points[con.cp2]);
             return V;
         }
-        
+
     protected:
 
         struct ControlPoints

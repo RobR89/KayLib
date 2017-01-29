@@ -29,11 +29,12 @@ namespace KayLib
         ValueNotFoundException(const std::string valueName)
         {
             value = valueName;
+            whatString = "Value " + value + " not found.";
         }
 
         virtual const char *what() const throw ()
         {
-            return ("Value " + value + " not found.").c_str();
+            return whatString.c_str();
         };
 
         std::string valueName()
@@ -43,6 +44,7 @@ namespace KayLib
 
     private:
         std::string value;
+        std::string whatString;
     };
 
     class AttributeNotFoundException : public std::exception
@@ -52,11 +54,12 @@ namespace KayLib
         AttributeNotFoundException(const std::string attributeName)
         {
             attribute = attributeName;
+            whatString = "Attribute " + attribute + " not found.";
         }
 
         virtual const char *what() const throw ()
         {
-            return ("Attribute " + attribute + " not found.").c_str();
+            return whatString.c_str();
         };
 
         std::string attributeName()
@@ -66,6 +69,7 @@ namespace KayLib
 
     private:
         std::string attribute;
+        std::string whatString;
     };
 
     class ParserException : public std::exception
@@ -76,17 +80,18 @@ namespace KayLib
         {
             parseError = error;
             parseIndex = index;
-            stringStart = index - 20;
+            stringStart = index;// - 20;
             if(stringStart < 0)
             {
                 stringStart = 0;
             }
             parseString = parse.substr(stringStart, 60);
+            whatString = parseError + ": Error parsing string \"" + parseString + "\" at index" + std::to_string(parseIndex);
         }
 
         virtual const char *what() const throw ()
         {
-            return (parseError + ": Error parsing string \"" + parseString + "\" at index" + std::to_string(parseIndex)).c_str();
+            return whatString.c_str();
         };
 
         /**
@@ -130,6 +135,7 @@ namespace KayLib
         std::string parseString;
         int parseIndex;
         int stringStart;
+        std::string whatString;
     };
 
 }
