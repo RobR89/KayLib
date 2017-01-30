@@ -88,6 +88,13 @@
         <itemPath>Utility/KEventRate.cpp</itemPath>
       </logicalFolder>
     </logicalFolder>
+    <logicalFolder name="f1" displayName="Test" projectFiles="true" kind="ROOT">
+      <itemPath>Test/IO.h</itemPath>
+      <itemPath>Test/LuaTest.h</itemPath>
+      <itemPath>Test/ParserTest.h</itemPath>
+      <itemPath>Test/StringTest.h</itemPath>
+      <itemPath>Test/Tests.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
                    projectFiles="false"
@@ -194,6 +201,16 @@
       </item>
       <item path="String/KUTF.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Test/IO.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/LuaTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/ParserTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/StringTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/Tests.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Utility/DataCode.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Utility/DataCode.h" ex="false" tool="3" flavor2="0">
@@ -299,6 +316,16 @@
       <item path="String/KUTF.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="String/KUTF.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/IO.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/LuaTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/ParserTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/StringTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/Tests.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Utility/DataCode.cpp" ex="false" tool="1" flavor2="0">
       </item>
