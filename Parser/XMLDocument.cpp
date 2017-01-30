@@ -103,6 +103,19 @@ namespace KayLib
         return childs;
     }
 
+    std::shared_ptr<XMLElement> XMLElement::getFirstChild(std::string tag) const
+    {
+        std::unique_lock<std::mutex> uLock = getLock();
+        for(auto child : children)
+        {
+            if(child->name == tag)
+            {
+                return child;
+            }
+        }
+        return nullptr;
+    }
+
     std::string XMLElement::format(const std::string current, const std::string indent) const
     {
         std::unique_lock<std::mutex> uLock = getLock();

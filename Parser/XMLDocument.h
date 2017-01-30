@@ -88,6 +88,13 @@ namespace KayLib
          */
         std::vector<std::shared_ptr<XMLElement>> getChildren(std::string tag) const;
 
+        /**
+         * Get the first child element with the specified tag name.
+         * @param tag The tag to find.
+         * @return The element found.
+         */
+        std::shared_ptr<XMLElement> getFirstChild(std::string tag) const;
+
     private:
         mutable std::mutex lockPtr;
         std::string name;

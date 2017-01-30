@@ -31,6 +31,11 @@ namespace KayLib
         KFile(const KFile &nFile);
         virtual ~KFile();
 
+        static std::shared_ptr<KFile> newFile(std::string nFileName)
+        {
+            return std::make_shared<KFile>(nFileName);
+        }
+        
         /**
          * Get the path and filename of this file.
          * @return
@@ -146,12 +151,29 @@ namespace KayLib
         static std::string getHomeDirectory();
 
         /**
+         * Get the current working directory.
+         * @return The current working directory.
+         */
+        static std::shared_ptr<KFile> getCurrentDirectoryFile()
+        {
+            return newFile(getCurrentDirectory());
+        }
+        /**
+         * Get the user home directory.
+         * @return The user home directory.
+         */
+        static std::shared_ptr<KFile> getHomeDirectoryFile()
+        {
+            return newFile(getHomeDirectory());
+        }
+
+        /**
          * Search backwards from the working directory to find the desired file or directory.
          * @param fileName The file or directory name to find.
          * @param recursion The limit of how far up the tree to search.
          * @return The found file or directory.  Or null if not found.
          */
-        static KFile *searchWorkingParent(const std::string &fileName, const int recursion);
+        static std::shared_ptr<KFile> searchWorkingParent(const std::string &fileName, const int recursion);
 
         /**
          * Search backwards from the specified directory to find the desired file or directory.
@@ -160,7 +182,7 @@ namespace KayLib
          * @param recursion The limit of how far up the tree to search.
          * @return The found file or directory.  Or null if not found.
          */
-        static KFile *searchParent(const std::string &base, const std::string &fileName, const int recursion);
+        static std::shared_ptr<KFile> searchParent(const std::string &base, const std::string &fileName, const int recursion);
 
         /**
          * Search the directory for the file specified.
@@ -169,7 +191,7 @@ namespace KayLib
          * @param recursion The limit of how many child directories to recurse.
          * @return The found file.
          */
-        static KFile *searchDirectory(const KFile *dir, const std::string &fileName, const int recursion);
+        static std::shared_ptr<KFile> searchDirectory(const KFile *dir, const std::string &fileName, const int recursion);
 
         /**
          * Get the file path of the file.

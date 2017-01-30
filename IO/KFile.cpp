@@ -286,19 +286,20 @@ namespace KayLib
 #endif
     }
 
-    KFile *KFile::searchWorkingParent(const std::string &fileName, const int recursion)
+    std::shared_ptr<KFile> KFile::searchWorkingParent(const std::string &fileName, const int recursion)
     {
         return searchParent("", fileName, recursion);
     }
 
-    KFile *KFile::searchParent(const std::string &base, const std::string &fileName, const int recursion)
+    std::shared_ptr<KFile> KFile::searchParent(const std::string &base, const std::string &fileName, const int recursion)
     {
+        std::shared_ptr<KFile> result;
         if(&fileName == nullptr)
         {
-            return nullptr;
+            return result;
         }
         std::string searchPath = base;
-        // remove leading slash.
+        // add trailing slash.
         if(!endsWith(searchPath, "/") && !searchPath.empty())
         {
             searchPath += "/";
@@ -309,58 +310,60 @@ namespace KayLib
         {
             fName = fName.substr(1);
         }
-        KFile dir(searchPath + fName);
+        KFile sFile(searchPath + fName);
         int max = recursion;
-        while(!dir.exists() && max > 0)
+        // Recurse the parent directorys till the file is found or the limit reached.
+        while(!sFile.exists() && max > 0)
         {
             max--;
             searchPath += "../";
-            dir.fileName = searchPath + fName;
+            sFile.fileName = searchPath + fName;
         }
-        if(dir.exists())
+        if(sFile.exists())
         {
-            return new KFile(dir);
+            // We found the file.
+            return std::make_shared<KFile>(sFile);
         }
-        return nullptr;
+        return result;
     }
 
-    KFile *KFile::searchDirectory(const KFile *dir, const std::string &fileName, const int recursion)
+    std::shared_ptr<KFile> KFile::searchDirectory(const KFile *dir, const std::string &fileName, const int recursion)
     {
+        std::shared_ptr<KFile> result;
         if(&fileName == nullptr || &dir == nullptr)
         {
-            return nullptr;
+            return result;
         }
         if(dir->isDirectory() && dir->canRead())
         {
             std::string searchName = dir->fileName + "/" + fileName;
-            for(auto file : dir->listFiles())
+            if(exists(searchName))
             {
-                if(file->isDirectory())
+                // We found the file.
+                return std::make_shared<KFile>(searchName);
+            }
+            // File not in this directory, look in subdirectories.
+            if(recursion > 0)
+            {
+                for(auto file : dir->listFiles())
                 {
-                    if(recursion > 0)
+                    if(file->isDirectory())
                     {
                         if(endsWith(file->fileName, "/.") || endsWith(file->fileName, "/.."))
                         {
                             // ignore parent directory and self directory entries.
                             continue;
                         }
-                        KFile *result = searchDirectory(file.get(), fileName, recursion - 1);
-                        if(result != nullptr)
+                        result = searchDirectory(file.get(), fileName, recursion - 1);
+                        if(result)
                         {
                             return result;
                         }
                     }
                 }
-                else
-                {
-                    if(file->getName().compare(searchName) == 0)
-                    {
-                        return new KFile(*file.get());
-                    }
-                }
             }
         }
-        return nullptr;
+        return result;
     }
 
     std::string KFile::getPath() const
