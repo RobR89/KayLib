@@ -18,14 +18,14 @@
 #define STRINGTEST_H
 
 #include <iostream>
-
-using namespace KayLib;
+#include <vector>
 
 //-------------------------------------------------------------------------
 // String parser tests
 
 #include "Parser/StringParser.h"
-#include <vector>
+
+using namespace KayLib;
 
 bool testStringParser()
 {

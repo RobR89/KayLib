@@ -19,12 +19,12 @@
 
 #include <iostream>
 
-using namespace KayLib;
-
 //-------------------------------------------------------------------------
 // String parser tests
 
 #include "IO/KFile.h"
+
+using namespace KayLib;
 
 void testKFile()
 {

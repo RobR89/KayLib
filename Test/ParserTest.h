@@ -19,8 +19,6 @@
 
 #include <iostream>
 
-using namespace KayLib;
-
 //-------------------------------------------------------------------------
 // struct for XML and JSON tests.
 
@@ -36,6 +34,8 @@ struct Item
 // XML test
 
 #include "../Parser/XMLDocument.h"
+
+using namespace KayLib;
 
 std::string xmlString =
         "<?xml version=\"1.0\"?>\
