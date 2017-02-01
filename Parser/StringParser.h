@@ -516,19 +516,73 @@ namespace KayLib
          * Peek at the next UTF encoded character.
          * @return The UTF character or -1 on failure.
          */
-        char32_t peekCharUTF();
+        char32_t peekCharUTF()
+        {
+            if(index >= length)
+            {
+                return -1;
+            }
+            int i = index;
+            int res;
+            while((res = code.addChar(string[i])) != 0 && i < length)
+            {
+                i++;
+            }
+            if(res != 0)
+            {
+                // There was an error.
+                code.reset();
+                return -1;
+            }
+            return code.getCode();
+        }
 
         /**
          * Get the next UTF encoded character.
          * @return The UTF character or -1 on failure.
          */
-        char32_t getCharUTF();
+        char32_t getCharUTF()
+        {
+            if(index >= length)
+            {
+                return -1;
+            }
+            int res;
+            do
+            {
+                res = code.addChar(string[index++]);
+            }
+            while(res != 0 && index < length);
+            if(res != 0)
+            {
+                // There was an error.
+                code.reset();
+                return -1;
+            }
+            return code.getCode();
+        }
 
         /**
          * Gets next word (space or tab separated) from the string.
          * @return The next word.
          */
-        std::string getWordUTF();
+        std::string getWordUTF()
+        {
+            std::string out;
+            int start = index;
+            int sz = 0;
+            char32_t c;
+            while((c = getCharUTF()) != ' ')
+            {
+                if(c == -1 || c == '\t')
+                {
+                    return out;
+                }
+                // 'code' still has our character so convert it to UTF8.
+                out += code.getUTF8();
+            }
+            return out;
+        }
     };
 
     class StringParserUTF16 : public StringParser<char16_t>
@@ -543,19 +597,73 @@ namespace KayLib
          * Peek at the next UTF encoded character.
          * @return The UTF character or -1 on failure.
          */
-        char32_t peekCharUTF();
+        char32_t peekCharUTF()
+        {
+            if(index >= length)
+            {
+                return -1;
+            }
+            int i = index;
+            int res;
+            while((res = code.addChar(string[i])) != 0 && i < length)
+            {
+                i++;
+            }
+            if(res != 0)
+            {
+                // There was an error.
+                code.reset();
+                return -1;
+            }
+            return code.getCode();
+        }
 
         /**
          * Get the next UTF encoded character.
          * @return The UTF character or -1 on failure.
          */
-        char32_t getCharUTF();
+        char32_t getCharUTF()
+        {
+            if(index >= length)
+            {
+                return -1;
+            }
+            int res;
+            do
+            {
+                res = code.addChar(string[index++]);
+            }
+            while(res != 0 && index < length);
+            if(res != 0)
+            {
+                // There was an error.
+                code.reset();
+                return -1;
+            }
+            return code.getCode();
+        }
 
         /**
          * Gets next word (space or tab separated) from the string.
          * @return The next word.
          */
-        std::u16string getWordUTF();
+        std::u16string getWordUTF()
+        {
+            std::u16string out;
+            int start = index;
+            int sz = 0;
+            char32_t c;
+            while((c = getCharUTF()) != ' ')
+            {
+                if(c == -1 || c == '\t')
+                {
+                    return out;
+                }
+                // 'code' still has our character so convert it to UTF16.
+                out += code.getUTF16();
+            }
+            return out;
+        }
     };
 
 }

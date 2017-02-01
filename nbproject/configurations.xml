@@ -74,7 +74,6 @@
       <logicalFolder name="f2" displayName="KMath" projectFiles="true">
       </logicalFolder>
       <logicalFolder name="f1" displayName="Parser" projectFiles="true">
-        <itemPath>Parser/StringParser.cpp</itemPath>
         <itemPath>Parser/XMLDocument.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f7" displayName="Scripting" projectFiles="true">
@@ -177,8 +176,6 @@
       <item path="Makefile" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Parser/JSON.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Parser/StringParser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Parser/StringParser.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -291,8 +288,6 @@
       <item path="Makefile" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Parser/JSON.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Parser/StringParser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Parser/StringParser.h" ex="false" tool="3" flavor2="0">
       </item>
