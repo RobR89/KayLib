@@ -22,6 +22,14 @@ CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux/libkaylib.a
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux/package
 CND_PACKAGE_NAME_Release=KayLib.tar
 CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux/package/KayLib.tar
+# Performance_Releas configuration
+CND_PLATFORM_Performance_Releas=GNU-Linux
+CND_ARTIFACT_DIR_Performance_Releas=dist/Performance_Releas/GNU-Linux
+CND_ARTIFACT_NAME_Performance_Releas=libkaylib.a
+CND_ARTIFACT_PATH_Performance_Releas=dist/Performance_Releas/GNU-Linux/libkaylib.a
+CND_PACKAGE_DIR_Performance_Releas=dist/Performance_Releas/GNU-Linux/package
+CND_PACKAGE_NAME_Performance_Releas=KayLib.tar
+CND_PACKAGE_PATH_Performance_Releas=dist/Performance_Releas/GNU-Linux/package/KayLib.tar
 #
 # include compiler specific variables
 #

@@ -326,5 +326,117 @@
       <item path="Utility/KEventRate.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
+    <conf name="Performance_Releas" type="3">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>6</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>6</developmentMode>
+          <standard>8</standard>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <archiverTool>
+        </archiverTool>
+      </compileType>
+      <item path="DB/KMySQL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DB/KMySQL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DB/KSQL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DB/KSQL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DB/KSQLite.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DB/KSQLite.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Graphics/KColor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Graphics/KFont.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Graphics/KFont.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Graphics/KFontProperties.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Graphics/KFontProperties.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Graphics/KGraphics.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Graphics/KImage.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Graphics/KImage.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IO/Event.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IO/Exceptions.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IO/KFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="IO/KFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="IO/KThread.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Interpolate.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/KMath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/PerlinNoise.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Spherical.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="KMath/Spline.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Makefile" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Parser/JSON.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Parser/StringParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Parser/XMLDocument.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Parser/XMLDocument.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ReadMe.md" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripting/KLUA.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="String/KString.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="String/KString.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="String/KUTF.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="String/KUTF.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/IO.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/LuaTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/ParserTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/StringTest.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/Tests.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/UtilityTests.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Utility/DataCode.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Utility/Endian.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Utility/KEventRate.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
   </confs>
 </configurationDescriptor>

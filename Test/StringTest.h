@@ -29,7 +29,7 @@ using namespace KayLib;
 
 bool testStringParser()
 {
-    std::vector<int> chrCodes = {122, 27700, 119051, 32, 72, 101, 108, 108, 111, 33};
+    std::vector<unsigned int> chrCodes = {122, 27700, 119051, 32, 72, 101, 108, 108, 111, 33};
     std::vector<std::string> words = {"z\346\260\264\360\235\204\213", "Hello!"};
     std::string utf8 = u8"z\u6c34\U0001d10b Hello!";
     std::u16string wutf = u"z\u6c34\U0001d10b Hello!";

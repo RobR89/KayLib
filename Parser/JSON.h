@@ -55,7 +55,7 @@ namespace KayLib
          * Create a copy of the value.
          * @return The copy.
          */
-        virtual JSONValue *copy() = 0;
+        virtual JSONValue *copy() const = 0;
 
         /**
          * Return a formated string representation of the Value.
@@ -159,7 +159,7 @@ namespace KayLib
          * Create a copy of the value.
          * @return The copy.
          */
-        JSONValue *copy()
+        JSONValue *copy() const override
         {
             return new JSONNull();
         }
@@ -196,7 +196,7 @@ namespace KayLib
          * Create a copy of the value.
          * @return The copy.
          */
-        JSONValue *copy()
+        JSONValue *copy() const override
         {
             return new JSONString(*this);
         }
@@ -273,7 +273,7 @@ namespace KayLib
          * Create a copy of the value.
          * @return The copy.
          */
-        JSONValue *copy()
+        JSONValue *copy() const override
         {
             return new JSONNumber(*this);
         }
@@ -393,7 +393,7 @@ namespace KayLib
          * Create a copy of the value.
          * @return The copy.
          */
-        JSONValue *copy()
+        JSONValue *copy() const override
         {
             return new JSONBool(*this);
         }
@@ -457,7 +457,7 @@ namespace KayLib
          * Create a copy of the value.
          * @return The copy.
          */
-        JSONValue *copy()
+        JSONValue *copy() const override
         {
             return new JSONObject(*this);
         }
@@ -882,7 +882,7 @@ namespace KayLib
          * Create a copy of the value.
          * @return The copy.
          */
-        JSONValue *copy()
+        JSONValue *copy() const override
         {
             return new JSONArray(*this);
         }
@@ -990,7 +990,7 @@ namespace KayLib
          */
         friend std::ostream& operator<<(std::ostream &out, const JSONDocument& doc)
         {
-            if(doc.root.get() != nullptr)
+            if(doc.root.get())
             {
                 out << *doc.root.get();
             }

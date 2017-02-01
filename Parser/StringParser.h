@@ -569,12 +569,11 @@ namespace KayLib
         std::string getWordUTF()
         {
             std::string out;
-            int start = index;
-            int sz = 0;
             char32_t c;
+            char32_t n = -1;
             while((c = getCharUTF()) != ' ')
             {
-                if(c == -1 || c == '\t')
+                if(c == n || c == '\t')
                 {
                     return out;
                 }
@@ -650,12 +649,11 @@ namespace KayLib
         std::u16string getWordUTF()
         {
             std::u16string out;
-            int start = index;
-            int sz = 0;
             char32_t c;
+            char32_t n = -1;
             while((c = getCharUTF()) != ' ')
             {
-                if(c == -1 || c == '\t')
+                if(c == n || c == '\t')
                 {
                     return out;
                 }
