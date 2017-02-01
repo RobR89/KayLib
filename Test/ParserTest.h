@@ -40,14 +40,14 @@ using namespace KayLib;
 std::string xmlString =
         "<?xml version=\"1.0\"?>\
 <Inventory>\
-  <Date>2015-11-5</Date>\
-  <Item InHouse=\"true\" volitile=\"true\">\
+  <Date>1999-12-31</Date>\
+  <Item InHouse=\'true\' volitile=\"true\">\
     <Name>Toilet Cleaner</Name>\
     <Location>Custodial Department</Location>\
     <Qty>12</Qty>\
   </Item>\
   <Item>\
-    <Name>Self removing underwear</Name>\
+    <Name>Self \"removing\" underwear</Name>\
     <Location>C4-D3T0NAT3</Location>\
     <Qty>327</Qty>\
   </Item>\
@@ -74,6 +74,8 @@ bool testXML()
         return false;
     }
     std::cout << "Document loaded." << std::endl;
+//    std::cout << "Copy test." << std::endl;
+//    root.reset(root->copy());
     std::cout << "pretty printed:" << std::endl << doc.format("  ") << std::endl;
 
     std::string date;
@@ -145,7 +147,7 @@ bool testXML()
     }
     for(auto entry : inventory)
     {
-        std::cout << "Found inventory: " << entry->Name << " at " << entry->Location << std::endl;
+        std::cout << "Found inventory: " << unescape(entry->Name) << " at " << entry->Location << std::endl;
     }
 
     std::cout << "XML test complete!" << std::endl;
@@ -171,7 +173,7 @@ std::string jsonString =
         \"Location\": \"Custodial Department\"\
       },\
       {\
-        \"Name\": \"Self removing underwear\",\
+        \"Name\": \"Self \\\"removing\\\" underwear\",\
         \"Location\": \"C4-D3T0NAT3\",\
         \"Qty\": 327\
       },\
@@ -205,6 +207,8 @@ bool testJSON()
             return false;
         }
         std::cout << "Document loaded." << std::endl;
+        std::cout << "Copy test." << std::endl;
+        root.reset(root->copy());
         // Print the pretty formated version of the document.
         std::cout << "pretty printed:" << std::endl << jDoc.format("  ") << std::endl;
         //std::cout << "stream format: " << std::endl << jDoc << std::endl;
@@ -215,6 +219,7 @@ bool testJSON()
         std::cout << "JSON error: " << pErr.what() << std::endl;
         return false;
     }
+
     std::string date;
     std::vector<std::shared_ptr < Item>> inventory;
 
@@ -269,7 +274,7 @@ bool testJSON()
     }
     for(auto entry : inventory)
     {
-        std::cout << "Found inventory: " << entry->Name << " at " << entry->Location << std::endl;
+        std::cout << "Found inventory: " << unescape(entry->Name) << " at " << entry->Location << std::endl;
     }
 
     std::cout << "JSON test complete!" << std::endl;

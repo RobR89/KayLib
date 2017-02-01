@@ -86,11 +86,25 @@ namespace KayLib
     std::string escape(const std::string &str, bool assumeEscapes = false);
 
     /**
+     * Converts escaped characters to non-escape characters.
+     * @param str The string to convert.
+     * @return The converted string.
+     */
+    std::string unescape(const std::string &str);
+
+    /**
      * Convert the string for use in an xml document.
      * @param str The string to convert.
      * @return The converted string.
      */
     std::string xmlEscape(const std::string &str);
+
+    /**
+     * Convert the xml string to a normal string.
+     * @param str The string to convert.
+     * @return The converted string.
+     */
+    std::string xmlUnescape(const std::string &str);
 
     /**
      * Convert the string to all lower case.

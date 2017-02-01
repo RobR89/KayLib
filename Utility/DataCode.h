@@ -29,25 +29,49 @@ namespace KayLib
     {
     public:
         /**
-         * A class for writing data to variables in cpp files as unsigned char arrays.
-         * @param headerFile The header file where the variable names should be defined.
-         * @param cppFile The cpp file where the data should written.
-         */
-        DataCode(const std::string headerFile, const std::string cppFile);
-        virtual ~DataCode();
-
-        /**
-         * Write the data to the code files as an unsigned char array.
+         * generate the header code for the data as an unsigned char array.
          * @param variableName The name of the variable to create.
-         * @param data The data to write.
          * @param length The length of the data.  Will be saved in the variable 'variableName_SZ'
          * @return True if successful.
          */
-        bool writeDataToFile(const std::string variableName, const unsigned char *data, const int length);
-
-    private:
-        std::ofstream header;
-        std::ofstream cpp;
+        static std::string generateHeader(const std::string variableName, const int length)
+        {
+            std::string declaration = "extern const int " + variableName + "_SZ;\n";
+            declaration += "extern const unsigned char " + variableName + "[" + std::to_string(length) + "];\n";
+            return declaration;
+        }
+        
+        /**
+         * generate the cpp code for the data as an unsigned char array.
+         * @param variableName The name of the variable to create.
+         * @param data The data to write.
+         * @param length The length of the data.  Will be saved in the variable 'variableName_SZ'
+         * @param bytesPerLine Number of bytes to put on each line of code.
+         * @return True if successful.
+         */
+        static std::string generateCode(const std::string variableName, const unsigned char *data, const int length, const int bytesPerLine = 16)
+        {
+            // Make sure their is at least one byte per line.
+            int bpl = std::max(bytesPerLine, 1);
+            // Generate variable names.
+            std::string instance = "const int " + variableName + "_SZ = " + std::to_string(length) + ";\n";
+            instance += "const unsigned char " + variableName + "[" + std::to_string(length) + "] = {\n";
+            int index = 0;
+            // Generate byte codes.
+            while(index < length)
+            {
+                int codes = std::min(length - index, bpl);
+                instance += " 0x" + toHex(&data[index], codes, ", 0x");
+                index += codes;
+                if(index < length)
+                {
+                    instance += ",";
+                }
+                instance += "\n";
+            }
+            instance += "};\n";
+            return instance;
+        }
 
     };
 

@@ -111,13 +111,28 @@ bool testStringParser()
 //-------------------------------------------------------------------------
 // UTF tests
 
-bool testUTFEscape()
+bool testEscape()
 {
+    std::cout << "Starting escape tests." << std::endl;
+    std::string unescaped = "Hello \n\"World!\"";
+    std::cout << "Escaping: " << unescaped << std::endl;
+    std::string escaped = escape(unescaped);
+    std::cout << "Escaped: " << escaped << std::endl;
+    unescaped = unescape(escaped);
+    std::cout << "Unescaped: " << unescaped << std::endl;
+    // XML test.
+    escaped = "&quotThis is a &lttag&gt&quot";
+    std::cout << "XML escaped: " << escaped << std::endl;
+    unescaped = xmlUnescape(escaped);
+    std::cout << "XML unescaped: " << unescaped << std::endl;
+    escaped = xmlEscape(unescaped);
+    std::cout << "XML escaped: " << escaped << std::endl;
+
     std::cout << "Starting UTF escape tests." << std::endl;
 
     std::string utf8 = u8"z\u6c34\U0001d10b Hello!";
-    std::string escaped = "z\\u6C34\\U0001D10B Hello!";
-    std::string unescaped = "z\346\260\264\360\235\204\213 Hello!";
+    escaped = "z\\u6C34\\U0001D10B Hello!";
+    unescaped = "z\346\260\264\360\235\204\213 Hello!";
 
     // perform escape sequence tests.
     std::cout << "UTF8: " << utf8 << std::endl;

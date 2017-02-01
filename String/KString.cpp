@@ -136,11 +136,14 @@ namespace KayLib
                 case '\"':
                     out << "\\\"";
                     continue;
+                case '\'':
+                    out << "\\\'";
+                    continue;
                 case '\\':
                     if(i < len - 1 && assumeEscapes)
                     {
                         // backslash or quote already escaped.
-                        if(str[i + 1] == '\\' || str[i + 1] == '\"')
+                        if(str[i + 1] == '\\' || str[i + 1] == '\"' || str[i + 1] == '\'')
                         {
                             i++;
                             out << c << str[i];
@@ -157,6 +160,77 @@ namespace KayLib
                     else
                     {
                         out << c;
+                    }
+                    continue;
+            }
+        }
+        return out.str();
+    }
+
+    std::string unescape(const std::string &str)
+    {
+        std::stringstream out;
+        int len = str.length();
+        for(int i = 0; i < len; i++)
+        {
+            char c = str[i];
+            if(c != '\\')
+            {
+                // Not an escape sequence.
+                out << c;
+                continue;
+            }
+            // An escape sequence.
+            i++;
+            if(i >= len)
+            {
+                // Error: occured at end of line.
+                // Output and end.
+                out << c;
+                break;
+            }
+            c = str[i];
+            switch(c)
+            {
+                case 'a': // 0x07
+                    out << "\a";
+                    continue;
+                case 'b': // 0x08
+                    out << "\b";
+                    continue;
+                case 't': // 0x09
+                    out << "\t";
+                    continue;
+                case 'n': // 0x0a
+                    out << "\n";
+                    continue;
+                case 'v': // 0x0b
+                    out << "\v";
+                    continue;
+                case 'f': // 0x0c
+                    out << "\f";
+                    continue;
+                case 'r': // 0x0d
+                    out << "\r";
+                    continue;
+                case '\"':
+                    out << "\"";
+                    continue;
+                case '\'':
+                    out << "\'";
+                    continue;
+                case '\\':
+                    out << "\\";
+                    continue;
+                default:
+                    // Unknown escape sequence, output as-is and continue.
+                    if(c <= 0x0F)
+                    {
+                        out << "\\\\u00" + toHex(c);
+                    }
+                    else
+                    {
+                        out << "\\" << c;
                     }
                     continue;
             }
@@ -191,6 +265,84 @@ namespace KayLib
                 default:
                     out << c;
             }
+        }
+        return out.str();
+    }
+
+    std::string xmlUnescape(const std::string &str)
+    {
+        std::stringstream out;
+        int len = str.length();
+        for(int i = 0; i < len; i++)
+        {
+            char c = str[i];
+            if(c != '&')
+            {
+                // Not an escape sequence.
+                out << c;
+                continue;
+            }
+            int lRem = len - i;
+            if(lRem < 3)
+            {
+                // Not enough space for an escape sequence, output as-is.
+                out << c;
+                continue;
+            }
+            if(str[i + 2] == 't')
+            {
+                // A less than or greater than.
+                if(str[i + 1] == 'l')
+                {
+                        out << "<";
+                        i+= 2;
+                        continue;
+                }
+                else if(str[i + 1] == 'g')
+                {
+                        out << ">";
+                        i+= 2;
+                        continue;
+                }
+            }
+            else if(lRem < 4)
+            {
+                // Not enough space for an escape sequence, output as-is.
+                out << c;
+                continue;
+            }
+            else if(str[i + 3] == 'p')
+            {
+                if(str[i + 1] == 'a' && str[i + 2] == 'm')
+                {
+                    out << "&";
+                    i+= 3;
+                    continue;
+                }
+            }
+            else if(str[i + 3] == 'o')
+            {
+                if(lRem < 5)
+                {
+                    // Not enough space for an escape sequence, output as-is.
+                    out << c;
+                    continue;
+                }
+                else if(str[i + 1] == 'q' && str[i + 2] == 'u' && str[i + 4] == 't')
+                {
+                    out << "\"";
+                    i+= 4;
+                    continue;
+                }
+                else if(str[i + 1] == 'a' && str[i + 2] == 'p' && str[i + 4] == 's')
+                {
+                    out << "\'";
+                    i+= 4;
+                    continue;
+                }
+            }
+            // Unknown escape sequence, output as-is
+            out << c;
         }
         return out.str();
     }

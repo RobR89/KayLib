@@ -345,7 +345,7 @@ namespace KayLib
                 // Exponential value.
                 double exp = getDouble();
                 // Raise 10 to the power of the exponent.
-                exp = pow(10.0, exp);
+                exp = std::pow(10.0, exp);
                 // Multiply by the exponent.
                 value = value * exp;
             }
@@ -407,23 +407,24 @@ namespace KayLib
         void skipWhitespace(bool andNewLine)
         {
             T c = peekChar();
-            bool newLine = (c == '\r' || c == '\n') && andNewLine;
-            while((c == ' ' || c == '\t' || newLine) && index < length)
+            while((c == ' ' || c == '\t' || ((c == '\r' || c == '\n') && andNewLine)) && index < length)
             {
                 index++;
                 c = peekChar();
-                newLine = (c == '\r' || c == '\n') && andNewLine;
             }
         }
 
         /**
-         * Gets the string contained in quotes.
+         * Gets the string contained in single or double quotes.
          * @return The string.
          * @note The index must be pointing to the initial quote.
+         * @note If the string is contained in single quotes double quotes will be ignored.
+         * @note If the string is contained in double quotes single quotes will be ignored.
          */
         std::basic_string<T> getQuotedString()
         {
-            if(peekChar() != '\"')
+            T quote = peekChar();
+            if(quote != '\"' && quote != '\'')
             {
                 return "";
             }
@@ -431,20 +432,16 @@ namespace KayLib
             int start = index;
             int sz = 0;
             T c;
-            while((c = getChar()) != '\"' && index < length)
+            while((c = getChar()) != quote && index < length)
             {
+                sz++;
                 // Check for escape character.
                 if(c == '\\')
                 {
                     // We have an escape character, skip it.
                     sz++;
                     index++;
-                    if(index >= length)
-                    {
-                        break;
-                    }
                 }
-                sz++;
             }
             if(sz == 0)
             {
@@ -471,28 +468,6 @@ namespace KayLib
                 return "";
             }
             return string.substr(start, sz);
-        }
-
-        /**
-         * Check if the next part of the string matches the query.
-         * @param next The string to check for.
-         * @return True if the string is found.
-         */
-        bool nextIs(const std::basic_string<T> &next) const
-        {
-            if(next.empty())
-            {
-                return true;
-            }
-            int len = next.length();
-            for(int i = 0; i < len; i++)
-            {
-                if(string[index + i] != next[i])
-                {
-                    return false;
-                }
-            }
-            return true;
         }
 
         /**

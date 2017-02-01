@@ -45,6 +45,7 @@
       </logicalFolder>
       <logicalFolder name="f4" displayName="Utility" projectFiles="true">
         <itemPath>Utility/DataCode.h</itemPath>
+        <itemPath>Utility/Endian.h</itemPath>
         <itemPath>Utility/KEventRate.h</itemPath>
       </logicalFolder>
     </logicalFolder>
@@ -73,7 +74,6 @@
       <logicalFolder name="f2" displayName="KMath" projectFiles="true">
       </logicalFolder>
       <logicalFolder name="f1" displayName="Parser" projectFiles="true">
-        <itemPath>Parser/JSON.cpp</itemPath>
         <itemPath>Parser/StringParser.cpp</itemPath>
         <itemPath>Parser/XMLDocument.cpp</itemPath>
       </logicalFolder>
@@ -84,16 +84,15 @@
         <itemPath>String/KUTF.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="Utility" projectFiles="true">
-        <itemPath>Utility/DataCode.cpp</itemPath>
-        <itemPath>Utility/KEventRate.cpp</itemPath>
       </logicalFolder>
     </logicalFolder>
-    <logicalFolder name="f1" displayName="Test" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f1" displayName="Test" projectFiles="true">
       <itemPath>Test/IO.h</itemPath>
       <itemPath>Test/LuaTest.h</itemPath>
       <itemPath>Test/ParserTest.h</itemPath>
       <itemPath>Test/StringTest.h</itemPath>
       <itemPath>Test/Tests.h</itemPath>
+      <itemPath>Test/UtilityTests.h</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -177,8 +176,6 @@
       </item>
       <item path="Makefile" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Parser/JSON.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="Parser/JSON.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Parser/StringParser.cpp" ex="false" tool="1" flavor2="0">
@@ -211,11 +208,11 @@
       </item>
       <item path="Test/Tests.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Utility/DataCode.cpp" ex="false" tool="1" flavor2="0">
+      <item path="Test/UtilityTests.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Utility/DataCode.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Utility/KEventRate.cpp" ex="false" tool="1" flavor2="0">
+      <item path="Utility/Endian.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Utility/KEventRate.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -293,8 +290,6 @@
       </item>
       <item path="Makefile" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Parser/JSON.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="Parser/JSON.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Parser/StringParser.cpp" ex="false" tool="1" flavor2="0">
@@ -327,11 +322,11 @@
       </item>
       <item path="Test/Tests.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Utility/DataCode.cpp" ex="false" tool="1" flavor2="0">
+      <item path="Test/UtilityTests.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Utility/DataCode.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Utility/KEventRate.cpp" ex="false" tool="1" flavor2="0">
+      <item path="Utility/Endian.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Utility/KEventRate.h" ex="false" tool="3" flavor2="0">
       </item>

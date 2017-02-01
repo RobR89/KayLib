@@ -42,13 +42,10 @@ OBJECTFILES= \
 	${OBJECTDIR}/Graphics/KFontProperties.o \
 	${OBJECTDIR}/Graphics/KImage.o \
 	${OBJECTDIR}/IO/KFile.o \
-	${OBJECTDIR}/Parser/JSON.o \
 	${OBJECTDIR}/Parser/StringParser.o \
 	${OBJECTDIR}/Parser/XMLDocument.o \
 	${OBJECTDIR}/String/KString.o \
-	${OBJECTDIR}/String/KUTF.o \
-	${OBJECTDIR}/Utility/DataCode.o \
-	${OBJECTDIR}/Utility/KEventRate.o
+	${OBJECTDIR}/String/KUTF.o
 
 
 # C Compiler Flags
@@ -112,11 +109,6 @@ ${OBJECTDIR}/IO/KFile.o: IO/KFile.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/IO/KFile.o IO/KFile.cpp
 
-${OBJECTDIR}/Parser/JSON.o: Parser/JSON.cpp
-	${MKDIR} -p ${OBJECTDIR}/Parser
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Parser/JSON.o Parser/JSON.cpp
-
 ${OBJECTDIR}/Parser/StringParser.o: Parser/StringParser.cpp
 	${MKDIR} -p ${OBJECTDIR}/Parser
 	${RM} "$@.d"
@@ -136,16 +128,6 @@ ${OBJECTDIR}/String/KUTF.o: String/KUTF.cpp
 	${MKDIR} -p ${OBJECTDIR}/String
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/String/KUTF.o String/KUTF.cpp
-
-${OBJECTDIR}/Utility/DataCode.o: Utility/DataCode.cpp
-	${MKDIR} -p ${OBJECTDIR}/Utility
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Utility/DataCode.o Utility/DataCode.cpp
-
-${OBJECTDIR}/Utility/KEventRate.o: Utility/KEventRate.cpp
-	${MKDIR} -p ${OBJECTDIR}/Utility
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Utility/KEventRate.o Utility/KEventRate.cpp
 
 # Subprojects
 .build-subprojects:
