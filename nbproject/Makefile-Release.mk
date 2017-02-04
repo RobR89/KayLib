@@ -42,7 +42,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/Graphics/KFontProperties.o \
 	${OBJECTDIR}/Graphics/KImage.o \
 	${OBJECTDIR}/IO/KFile.o \
-	${OBJECTDIR}/Parser/XMLDocument.o \
 	${OBJECTDIR}/String/KString.o \
 	${OBJECTDIR}/String/KUTF.o
 
@@ -107,11 +106,6 @@ ${OBJECTDIR}/IO/KFile.o: IO/KFile.cpp
 	${MKDIR} -p ${OBJECTDIR}/IO
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/IO/KFile.o IO/KFile.cpp
-
-${OBJECTDIR}/Parser/XMLDocument.o: Parser/XMLDocument.cpp
-	${MKDIR} -p ${OBJECTDIR}/Parser
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Parser/XMLDocument.o Parser/XMLDocument.cpp
 
 ${OBJECTDIR}/String/KString.o: String/KString.cpp
 	${MKDIR} -p ${OBJECTDIR}/String

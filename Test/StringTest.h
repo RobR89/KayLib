@@ -121,7 +121,7 @@ bool testEscape()
     unescaped = unescape(escaped);
     std::cout << "Unescaped: " << unescaped << std::endl;
     // XML test.
-    escaped = "&quotThis is a &lttag&gt&quot";
+    escaped = "&quot;This is a &lt;tag&gt;&quot;";
     std::cout << "XML escaped: " << escaped << std::endl;
     unescaped = xmlUnescape(escaped);
     std::cout << "XML unescaped: " << unescaped << std::endl;

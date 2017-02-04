@@ -34,6 +34,7 @@ namespace KayLib
         {
             index = 0;
             length = string.length();
+            tabAsWhitespace = true;
         }
 
         /**
@@ -62,6 +63,15 @@ namespace KayLib
                 index = length;
             }
             return index;
+        }
+
+        /**
+         * Set how tab characters '\t' should be considered in whitespace checks.
+         * @param tab True if tabs are whitespace.
+         */
+        void setTabAsWhitespace(bool tab)
+        {
+            tabAsWhitespace = tab;
         }
 
         /**
@@ -401,16 +411,24 @@ namespace KayLib
         }
 
         /**
+         * Check if the next character is a whitespace character.
+         * @param andNewLine True if newlines should be counted as whitespace as well.
+         */
+        bool isWhitespace(bool andNewLine)
+        {
+            T c = peekChar();
+            return (c == ' ' || (c == '\t' && tabAsWhitespace) || ((c == '\r' || c == '\n') && andNewLine));
+        }
+
+        /**
          * Skip all whitespace from current index.
          * @param andNewLine True if newlines should also be skipped.
          */
         void skipWhitespace(bool andNewLine)
         {
-            T c = peekChar();
-            while((c == ' ' || c == '\t' || ((c == '\r' || c == '\n') && andNewLine)) && index < length)
+            while(isWhitespace(andNewLine) && index < length)
             {
                 index++;
-                c = peekChar();
             }
         }
 
@@ -501,6 +519,7 @@ namespace KayLib
         const std::basic_string<T> string;
         int index;
         int length;
+        bool tabAsWhitespace;
 
     };
 

@@ -40,6 +40,7 @@ using namespace KayLib;
 std::string xmlString =
         "<?xml version=\"1.0\"?>\
 <Inventory>\
+  <!-- Inventory for this date -->\
   <Date>1999-12-31</Date>\
   <Item InHouse=\'true\' volitile=\"true\">\
     <Name>Toilet Cleaner</Name>\
@@ -74,8 +75,8 @@ bool testXML()
         return false;
     }
     std::cout << "Document loaded." << std::endl;
-//    std::cout << "Copy test." << std::endl;
-//    root.reset(root->copy());
+    std::cout << "Copy test." << std::endl;
+    root = root->copy();
     std::cout << "pretty printed:" << std::endl << doc.format("  ") << std::endl;
 
     std::string date;

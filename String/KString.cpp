@@ -248,19 +248,19 @@ namespace KayLib
             switch(c)
             {
                 case '<':
-                    out << "&lt";
+                    out << "&lt;";
                     continue;
                 case '>':
-                    out << "&gt";
+                    out << "&gt;";
                     continue;
                 case '&':
-                    out << "&amp";
+                    out << "&amp;";
                     continue;
                 case '\"':
-                    out << "&quot";
+                    out << "&quot;";
                     continue;
                 case '\'':
-                    out << "&apos";
+                    out << "&apos;";
                     continue;
                 default:
                     out << c;
@@ -282,67 +282,51 @@ namespace KayLib
                 out << c;
                 continue;
             }
-            int lRem = len - i;
-            if(lRem < 3)
+            int j = i;
+            while(j < len && c != ';' && j - i <= 6)
             {
-                // Not enough space for an escape sequence, output as-is.
-                out << c;
+                c = str[++j];
+            }
+            if(c != ';')
+            {
+                // Unknown escape sequence, output & and continue.
+                out << "&";
                 continue;
             }
-            if(str[i + 2] == 't')
+            std::string token = str.substr(i, (j-i) + 1);
+            token = strToLower(token);
+            if(token == "&lt;")
             {
-                // A less than or greater than.
-                if(str[i + 1] == 'l')
-                {
-                        out << "<";
-                        i+= 2;
-                        continue;
-                }
-                else if(str[i + 1] == 'g')
-                {
-                        out << ">";
-                        i+= 2;
-                        continue;
-                }
-            }
-            else if(lRem < 4)
-            {
-                // Not enough space for an escape sequence, output as-is.
-                out << c;
+                i = j;
+                out << "<";
                 continue;
             }
-            else if(str[i + 3] == 'p')
+            if(token == "&gt;")
             {
-                if(str[i + 1] == 'a' && str[i + 2] == 'm')
-                {
-                    out << "&";
-                    i+= 3;
-                    continue;
-                }
+                i = j;
+                out << ">";
+                continue;
             }
-            else if(str[i + 3] == 'o')
+            if(token == "&quot;")
             {
-                if(lRem < 5)
-                {
-                    // Not enough space for an escape sequence, output as-is.
-                    out << c;
-                    continue;
-                }
-                else if(str[i + 1] == 'q' && str[i + 2] == 'u' && str[i + 4] == 't')
-                {
-                    out << "\"";
-                    i+= 4;
-                    continue;
-                }
-                else if(str[i + 1] == 'a' && str[i + 2] == 'p' && str[i + 4] == 's')
-                {
-                    out << "\'";
-                    i+= 4;
-                    continue;
-                }
+                i = j;
+                out << "\"";
+                continue;
             }
-            // Unknown escape sequence, output as-is
-            out << c;
+            if(token == "&amp;")
+            {
+                i = j;
+                out << "&";
+                continue;
+            }
+            if(token == "&apos;")
+            {
+                i = j;
+                out << "\'";
+                continue;
+            }
+            // Unknown escape sequence, output & and continue.
+            out << "&";
         }
         return out.str();
     }
