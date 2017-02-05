@@ -66,14 +66,14 @@ bool testStringParser()
     }
 
     std::cout << "Convert UTF8 to UTF16" << std::endl;
-    std::u16string utf16 = utf8to16(utf8);
+    std::u16string utf16 = KUTF::utf8to16(utf8);
     if(utf16 != wutf)
     {
         std::cout << "Conversion from UTF8 to UTF16 failed." << std::endl;
         return false;
     }
     std::cout << "UFT8 length: " << utf8.length() << " UTF16 length: " << utf16.length() << std::endl;
-    std::cout << "Using UTF16 parser with u16string: " << utf16to8(utf16) << std::endl;
+    std::cout << "Using UTF16 parser with u16string: " << KUTF::utf16to8(utf16) << std::endl;
     StringParserUTF16 wp(utf16);
     std::cout << "Character codes: ";
     i = 0;
@@ -94,7 +94,7 @@ bool testStringParser()
     while(!wp.isEnd())
     {
         std::u16string word16 = wp.getWordUTF();
-        std::string word = utf16to8(word16);
+        std::string word = KUTF::utf16to8(word16);
         if(word != words[i++])
         {
             std::cout << "incorrect word..." << std::endl;
@@ -136,14 +136,14 @@ bool testEscape()
 
     // perform escape sequence tests.
     std::cout << "UTF8: " << utf8 << std::endl;
-    auto esc = utfEscape(utf8);
+    auto esc = KUTF::utfEscape(utf8);
     if(esc != escaped)
     {
         std::cout << "UTF8 escaped sequence invalid." << std::endl;
         return false;
     }
     std::cout << "UTF8 escaped: " << esc << std::endl;
-    esc = utfUnEscape(esc);
+    esc = KUTF::utfUnEscape(esc);
     if(esc != unescaped)
     {
         std::cout << "UTF8 unescaped sequence invalid." << std::endl;

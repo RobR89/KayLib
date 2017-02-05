@@ -526,7 +526,7 @@ namespace KayLib
     class StringParserUTF8 : public StringParser<char>
     {
     private:
-        KayLib::UTFCodeParser code;
+        KUTF::UTFCodeParser code;
     public:
 
         StringParserUTF8(const std::string &str) : StringParser<char>(str) { }
@@ -606,7 +606,7 @@ namespace KayLib
     class StringParserUTF16 : public StringParser<char16_t>
     {
     private:
-        KayLib::UTFCodeParser code;
+        KUTF::UTFCodeParser code;
     public:
 
         StringParserUTF16(const std::basic_string<char16_t> &str) : StringParser<char16_t>(str) { }
