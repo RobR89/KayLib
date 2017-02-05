@@ -231,7 +231,7 @@ namespace KayLib
     {
         if(file->isFile())
         {
-            if(strToLower(file->getExtension()) == ".ttf")
+            if(KString::strToLower(file->getExtension()) == ".ttf")
             {
                 if(!TTF_WasInit())
                 {

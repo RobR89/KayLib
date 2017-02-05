@@ -116,16 +116,16 @@ bool testEscape()
     std::cout << "Starting escape tests." << std::endl;
     std::string unescaped = "Hello \n\"World!\"";
     std::cout << "Escaping: " << unescaped << std::endl;
-    std::string escaped = escape(unescaped);
+    std::string escaped = KString::escape(unescaped);
     std::cout << "Escaped: " << escaped << std::endl;
-    unescaped = unescape(escaped);
+    unescaped = KString::unescape(escaped);
     std::cout << "Unescaped: " << unescaped << std::endl;
     // XML test.
     escaped = "&quot;This is a &lt;tag&gt;&quot;";
     std::cout << "XML escaped: " << escaped << std::endl;
-    unescaped = xmlUnescape(escaped);
+    unescaped = KString::xmlUnescape(escaped);
     std::cout << "XML unescaped: " << unescaped << std::endl;
-    escaped = xmlEscape(unescaped);
+    escaped = KString::xmlEscape(unescaped);
     std::cout << "XML escaped: " << escaped << std::endl;
 
     std::cout << "Starting UTF escape tests." << std::endl;

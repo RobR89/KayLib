@@ -260,7 +260,7 @@ namespace KayLib
         std::string ext = fFile.getExtension();
         if(ext.length() > 0)
         {
-            if(strToLower(fFile.getExtension()) != ".ttf")
+            if(KString::strToLower(fFile.getExtension()) != ".ttf")
             {
                 return KFile();
             }

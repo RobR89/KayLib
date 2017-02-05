@@ -206,7 +206,7 @@ namespace KayLib
             return files;
         }
         std::string dirName = fileName;
-        if(beginsWith(dirName, "./"))
+        if(KString::beginsWith(dirName, "./"))
         {
             dirName = dirName.substr(2);
         }
@@ -218,7 +218,7 @@ namespace KayLib
                 closedir(dir);
                 return files;
             }
-            if(endsWith(ent->d_name, "/.") || endsWith(ent->d_name, "/.."))
+            if(KString::endsWith(ent->d_name, "/.") || KString::endsWith(ent->d_name, "/.."))
             {
                 continue;
             }
@@ -300,13 +300,13 @@ namespace KayLib
         }
         std::string searchPath = base;
         // add trailing slash.
-        if(!endsWith(searchPath, "/") && !searchPath.empty())
+        if(!KString::endsWith(searchPath, "/") && !searchPath.empty())
         {
             searchPath += "/";
         }
         std::string fName = fileName;
         // remove leading slash.
-        while(beginsWith(fName, "/") && fName.length() > 1)
+        while(KString::beginsWith(fName, "/") && fName.length() > 1)
         {
             fName = fName.substr(1);
         }
@@ -349,7 +349,7 @@ namespace KayLib
                 {
                     if(file->isDirectory())
                     {
-                        if(endsWith(file->fileName, "/.") || endsWith(file->fileName, "/.."))
+                        if(KString::endsWith(file->fileName, "/.") || KString::endsWith(file->fileName, "/.."))
                         {
                             // ignore parent directory and self directory entries.
                             continue;

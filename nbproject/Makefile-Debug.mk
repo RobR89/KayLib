@@ -41,9 +41,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Graphics/KFont.o \
 	${OBJECTDIR}/Graphics/KFontProperties.o \
 	${OBJECTDIR}/Graphics/KImage.o \
-	${OBJECTDIR}/IO/KFile.o \
-	${OBJECTDIR}/String/KString.o \
-	${OBJECTDIR}/String/KUTF.o
+	${OBJECTDIR}/IO/KFile.o
 
 
 # C Compiler Flags
@@ -106,16 +104,6 @@ ${OBJECTDIR}/IO/KFile.o: IO/KFile.cpp
 	${MKDIR} -p ${OBJECTDIR}/IO
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/IO/KFile.o IO/KFile.cpp
-
-${OBJECTDIR}/String/KString.o: String/KString.cpp
-	${MKDIR} -p ${OBJECTDIR}/String
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/String/KString.o String/KString.cpp
-
-${OBJECTDIR}/String/KUTF.o: String/KUTF.cpp
-	${MKDIR} -p ${OBJECTDIR}/String
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/String/KUTF.o String/KUTF.cpp
 
 # Subprojects
 .build-subprojects:

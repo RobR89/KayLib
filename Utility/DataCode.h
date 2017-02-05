@@ -61,7 +61,7 @@ namespace KayLib
             while(index < length)
             {
                 int codes = std::min(length - index, bpl);
-                instance += " 0x" + toHex(&data[index], codes, ", 0x");
+                instance += " 0x" + KString::toHex(&data[index], codes, ", 0x");
                 index += codes;
                 if(index < length)
                 {

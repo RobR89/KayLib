@@ -25,7 +25,6 @@
 
 #include "../Parser/StringParser.h"
 #include "../String/KString.h"
-#include "../IO/Exceptions.h"
 
 namespace KayLib
 {
@@ -34,6 +33,31 @@ namespace KayLib
     {
         OBJECT, ARRAY, STRING, NUMBER, BOOL, _NULL
     };
+
+    enum JSONError
+    {
+        NONE, UnexpectedEndOfDocument, InvalidSyntax, InvalidObjectName
+    };
+
+    std::string JSONErrorString(JSONError err)
+    {
+        switch(err)
+        {
+            case NONE:
+                return "No error";
+                break;
+            case UnexpectedEndOfDocument:
+                return "Parser reached the end of string without finishing the document";
+                break;
+            case InvalidSyntax:
+                return "Invalid syntax";
+                break;
+            case InvalidObjectName:
+                return "A JSONObject name was improperly formated";
+                break;
+        }
+        return "Unknown error";
+    }
 
     class JSONObject;
     class JSONArray;
@@ -163,7 +187,7 @@ namespace KayLib
         {
             return new JSONNull();
         }
-        
+
         virtual void format(std::ostream &out, const std::string &current, const std::string &indent) const override
         {
             out << "null";
@@ -177,7 +201,7 @@ namespace KayLib
 
         JSONString(const std::string &nValue)
         {
-            value = escape(nValue, true);
+            value = KString::escape(nValue, true);
         }
 
         JSONString(const JSONString& orig)
@@ -200,7 +224,7 @@ namespace KayLib
         {
             return new JSONString(*this);
         }
-        
+
         virtual void format(std::ostream &out, const std::string &current, const std::string &indent) const override
         {
             std::unique_lock<std::mutex> uLock = getLock();
@@ -224,7 +248,7 @@ namespace KayLib
         void set(const std::string &nValue)
         {
             std::unique_lock<std::mutex> uLock = getLock();
-            value = escape(nValue, true);
+            value = KString::escape(nValue, true);
         }
 
     private:
@@ -935,21 +959,23 @@ namespace KayLib
 
         JSONDocument()
         {
+            resetError();
             root = std::make_shared<JSONObject>();
         }
 
         /**
          * Create a new JSONDocument from the string.
          * @param doc The string containing the document to parse.
-         * @throws ParserError If there was an error parsing the string.
          */
         JSONDocument(const std::string &doc)
         {
+            resetError();
             root = parse(doc);
         }
 
         JSONDocument(const JSONDocument& orig)
         {
+            resetError();
             if(root)
             {
                 root.reset(root->copy());
@@ -997,8 +1023,37 @@ namespace KayLib
             return out;
         }
 
+        /**
+         * Get the last error code.
+         * @return The error code.
+         */
+        JSONError getError()
+        {
+            return lastError;
+        }
+
+        /**
+         * Get the parser index of the last error.
+         * @return The index of the error.
+         */
+        int getErrorIndex()
+        {
+            return errorIndex;
+        }
+
+        /**
+         * Reset the error code.
+         */
+        void resetError()
+        {
+            lastError = NONE;
+            errorIndex = -1;
+        }
+
     private:
         std::shared_ptr<JSONValue> root;
+        JSONError lastError = NONE;
+        int errorIndex = -1;
 
         std::shared_ptr<JSONValue> parse(const std::string &doc)
         {
@@ -1047,7 +1102,10 @@ namespace KayLib
                 // A null.
                 return std::make_shared<JSONNull>();
             }
-            throw ParserException("Invalid JSON", parser.getParseString(), parser.getIndex());
+            // Set error.
+            errorIndex = parser.getIndex();
+            lastError = InvalidSyntax;
+            return std::shared_ptr<JSONValue>();
         }
 
         std::shared_ptr<JSONValue> parseObject(StringParser<char> &parser)
@@ -1070,7 +1128,12 @@ namespace KayLib
                 parser.skipWhitespace(true);
                 if(parser.peekChar() != '\"')
                 {
-                    throw ParserException("Invalid JSONObject name", parser.getParseString(), parser.getIndex());
+                    // Set error.
+                    errorIndex = parser.getIndex();
+                    lastError = InvalidObjectName;
+                    // There was an error, clear and return.
+                    object.reset();
+                    return object;
                 }
                 // Get value name.
                 std::string name = parser.getQuotedString();
@@ -1079,10 +1142,22 @@ namespace KayLib
                 // name and value must be separated by a colon.
                 if(parser.getChar() != ':')
                 {
-                    throw ParserException("Invalid JSONObject", parser.getParseString(), parser.getIndex());
+                    // Set error.
+                    errorIndex = parser.getIndex();
+                    lastError = InvalidSyntax;
+                    // There was an error, clear and return.
+                    object.reset();
+                    return object;
                 }
                 // get the entries.
-                object->setValue(name, parse(parser));
+                std::shared_ptr<JSONValue> child = parse(parser);
+                if(lastError != NONE)
+                {
+                    // There was an error, clear and return.
+                    object.reset();
+                    return object;
+                }
+                object->setValue(name, child);
                 // Skip whitespace.
                 parser.skipWhitespace(true);
             }
@@ -1090,7 +1165,12 @@ namespace KayLib
             // check that we are at the end of the array.
             if(last != '}')
             {
-                throw ParserException("Invalid JSONObject", parser.getParseString(), parser.getIndex()-1);
+                // Set error.
+                errorIndex = parser.getIndex();
+                lastError = InvalidSyntax;
+                // There was an error, clear and return.
+                object.reset();
+                return object;
             }
             return object;
         }
@@ -1112,7 +1192,14 @@ namespace KayLib
             do
             {
                 // get the entries.
-                array->add(std::shared_ptr<JSONValue>(parse(parser)));
+                std::shared_ptr<JSONValue> child = parse(parser);
+                if(lastError != NONE)
+                {
+                    // There was an error, clear and return.
+                    array.reset();
+                    return array;
+                }
+                array->add(child);
                 // Skip whitespace.
                 parser.skipWhitespace(true);
             }
@@ -1120,7 +1207,12 @@ namespace KayLib
             // check that we are at the end of the array.
             if(last != ']')
             {
-                throw ParserException("Invalid JSONArray", parser.getParseString(), parser.getIndex());
+                // Set error.
+                errorIndex = parser.getIndex();
+                lastError = InvalidSyntax;
+                // There was an error, clear and return.
+                array.reset();
+                return array;
             }
             return array;
         }

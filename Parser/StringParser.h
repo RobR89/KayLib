@@ -119,7 +119,7 @@ namespace KayLib
          */
         bool isDigit() const
         {
-            return digit(peekChar()) != -1;
+            return KString::digit(peekChar()) != -1;
         }
 
         /**
@@ -134,7 +134,7 @@ namespace KayLib
                 i++;
             }
             int v;
-            while((v = digit(string[i])) != -1 && i < length)
+            while((v = KString::digit(string[i])) != -1 && i < length)
             {
                 i++;
             }
@@ -254,7 +254,7 @@ namespace KayLib
             }
             int value = 0;
             int v;
-            while((v = digit(peekChar())) != -1 && index < length)
+            while((v = KString::digit(peekChar())) != -1 && index < length)
             {
                 value *= 10;
                 value += v;
@@ -282,7 +282,7 @@ namespace KayLib
             }
             long value = 0;
             int v;
-            while((v = digit(peekChar())) != -1 && index < length)
+            while((v = KString::digit(peekChar())) != -1 && index < length)
             {
                 value *= 10;
                 value += v;
@@ -328,7 +328,7 @@ namespace KayLib
             }
             double value = 0;
             int v;
-            while((v = digit(peekChar())) != -1 && index < length)
+            while((v = KString::digit(peekChar())) != -1 && index < length)
             {
                 value *= 10;
                 value += v;
@@ -339,7 +339,7 @@ namespace KayLib
             {
                 index++;
                 double div = 1;
-                while((v = digit(peekChar())) != -1 && index < length)
+                while((v = KString::digit(peekChar())) != -1 && index < length)
                 {
                     div *= 10;
                     value *= 10;

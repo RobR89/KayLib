@@ -148,7 +148,7 @@ bool testXML()
     }
     for(auto entry : inventory)
     {
-        std::cout << "Found inventory: " << unescape(entry->Name) << " at " << entry->Location << std::endl;
+        std::cout << "Found inventory: " << KString::unescape(entry->Name) << " at " << entry->Location << std::endl;
     }
 
     std::cout << "XML test complete!" << std::endl;
@@ -195,31 +195,28 @@ bool testJSON()
     std::cout << "JSON test started..." << std::endl;
 
     std::shared_ptr<JSONValue> root;
-    try
-    {
-        std::cout << "Loading document." << std::endl;
-        // Create the document.
-        JSONDocument jDoc(jsonString);
-        // Get the root element, this will survive the destruction of the document.
-        root = jDoc.getRoot();
-        if(!root)
-        {
-            std::cout << "Failed to get root element." << std::endl;
-            return false;
-        }
-        std::cout << "Document loaded." << std::endl;
-        std::cout << "Copy test." << std::endl;
-        root.reset(root->copy());
-        // Print the pretty formated version of the document.
-        std::cout << "pretty printed:" << std::endl << jDoc.format("  ") << std::endl;
-        //std::cout << "stream format: " << std::endl << jDoc << std::endl;
-    }
-    catch(ParserException pErr)
+    std::cout << "Loading document." << std::endl;
+    // Create the document.
+    JSONDocument jDoc(jsonString);
+    if(jDoc.getError() != JSONError::NONE)
     {
         // If there is an error loading the document something has gone wrong.
-        std::cout << "JSON error: " << pErr.what() << std::endl;
+        std::cout << "JSON error: " << JSONErrorString(jDoc.getError()) << " at location " << jDoc.getErrorIndex() << std::endl;
         return false;
     }
+    // Get the root element, this will survive the destruction of the document.
+    root = jDoc.getRoot();
+    if(!root)
+    {
+        std::cout << "Failed to get root element." << std::endl;
+        return false;
+    }
+    std::cout << "Document loaded." << std::endl;
+    std::cout << "Copy test." << std::endl;
+    root.reset(root->copy());
+    // Print the pretty formated version of the document.
+    std::cout << "pretty printed:" << std::endl << jDoc.format("  ") << std::endl;
+    //std::cout << "stream format: " << std::endl << jDoc << std::endl;
 
     std::string date;
     std::vector<std::shared_ptr < Item>> inventory;
@@ -275,7 +272,7 @@ bool testJSON()
     }
     for(auto entry : inventory)
     {
-        std::cout << "Found inventory: " << unescape(entry->Name) << " at " << entry->Location << std::endl;
+        std::cout << "Found inventory: " << KString::unescape(entry->Name) << " at " << entry->Location << std::endl;
     }
 
     std::cout << "JSON test complete!" << std::endl;
