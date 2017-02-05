@@ -24,9 +24,32 @@
 #include <boost/property_tree/xml_parser.hpp>
 
 #include "../IO/Exceptions.h"
+#include "StringParser.h"
 
 namespace KayLib
 {
+
+    enum class XMLError
+    {
+        NONE, UnexpectedEndOfDocument, InvalidSyntax
+    };
+
+    std::string XMLErrorString(XMLError err)
+    {
+        switch(err)
+        {
+            case XMLError::NONE:
+                return "No error";
+                break;
+            case XMLError::UnexpectedEndOfDocument:
+                return "Parser reached the end of string without finishing the document";
+                break;
+            case XMLError::InvalidSyntax:
+                return "Invalid syntax";
+                break;
+        }
+        return "Unknown error";
+    }
 
     class XMLElement
     {
@@ -298,15 +321,20 @@ namespace KayLib
     {
     public:
 
-        XMLDocument() { }
+        XMLDocument()
+        {
+            resetError();
+        }
 
         XMLDocument(const std::string &doc)
         {
+            resetError();
             root = parse(doc);
         }
 
         XMLDocument(const XMLDocument& orig)
         {
+            resetError();
             if(root.get() != nullptr)
             {
                 root == std::make_shared<XMLElement>(*root);
@@ -354,8 +382,37 @@ namespace KayLib
             return out;
         }
 
+        /**
+         * Get the last error code.
+         * @return The error code.
+         */
+        XMLError getError()
+        {
+            return lastError;
+        }
+
+        /**
+         * Get the parser index of the last error.
+         * @return The index of the error.
+         */
+        int getErrorIndex()
+        {
+            return errorIndex;
+        }
+
+        /**
+         * Reset the error code.
+         */
+        void resetError()
+        {
+            lastError = XMLError::NONE;
+            errorIndex = -1;
+        }
+
     private:
         std::shared_ptr<XMLElement> root;
+        XMLError lastError;
+        int errorIndex;
 
         static std::shared_ptr<XMLElement> parse(const std::string &doc)
         {
