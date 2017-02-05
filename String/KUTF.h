@@ -32,23 +32,6 @@
 namespace KayLib
 {
 
-    //---------------------------------------------------------------
-    // Predefine global functions.
-
-    //    std::string codeToUTF8(char32_t code);
-    //    std::u16string codeToUTF16(char32_t code);
-    //    std::u16string utf8to16(std::string &str);
-    //    std::u32string utf8to32(std::string &str);
-    //    std::string utf16to8(std::u16string &str);
-    //    std::u32string utf16to32(std::u16string &str);
-    //    std::string utf32to8(std::u32string &str);
-    //    std::u16string utf32to16(std::u32string &str);
-    //    std::string utfEscapeChar(char c);
-    //    std::string utfEscapeChar(char16_t c);
-    //    std::string utfEscapeChar(char32_t c);
-    //    std::string utfEscape(std::string &str);
-    //    std::string utfUnEscape(std::string &str);
-
     class KUTF
     {
     public:

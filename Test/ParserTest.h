@@ -67,6 +67,12 @@ bool testXML()
     std::cout << "Loading document." << std::endl;
     // Create the document.
     XMLDocument doc(xmlString);
+    if(doc.getError() != XMLError::NONE)
+    {
+        // If there is an error loading the document something has gone wrong.
+        std::cout << "XML error: " << XMLErrorString(doc.getError()) << " at location " << doc.getErrorIndex() << std::endl;
+        return false;
+    }
     // Get the root element.
     std::shared_ptr<XMLElement> root = doc.getRoot();
     if(!root)

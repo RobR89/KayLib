@@ -29,12 +29,12 @@
 namespace KayLib
 {
 
-    enum JSONType
+    enum class JSONType
     {
         OBJECT, ARRAY, STRING, NUMBER, BOOL, _NULL
     };
 
-    enum JSONError
+    enum class JSONError
     {
         NONE, UnexpectedEndOfDocument, InvalidSyntax, InvalidObjectName
     };
@@ -43,16 +43,16 @@ namespace KayLib
     {
         switch(err)
         {
-            case NONE:
+            case JSONError::NONE:
                 return "No error";
                 break;
-            case UnexpectedEndOfDocument:
+            case JSONError::UnexpectedEndOfDocument:
                 return "Parser reached the end of string without finishing the document";
                 break;
-            case InvalidSyntax:
+            case JSONError::InvalidSyntax:
                 return "Invalid syntax";
                 break;
-            case InvalidObjectName:
+            case JSONError::InvalidObjectName:
                 return "A JSONObject name was improperly formated";
                 break;
         }
@@ -1046,14 +1046,14 @@ namespace KayLib
          */
         void resetError()
         {
-            lastError = NONE;
+            lastError = JSONError::NONE;
             errorIndex = -1;
         }
 
     private:
         std::shared_ptr<JSONValue> root;
-        JSONError lastError = NONE;
-        int errorIndex = -1;
+        JSONError lastError;
+        int errorIndex;
 
         std::shared_ptr<JSONValue> parse(const std::string &doc)
         {
@@ -1104,7 +1104,7 @@ namespace KayLib
             }
             // Set error.
             errorIndex = parser.getIndex();
-            lastError = InvalidSyntax;
+            lastError = JSONError::InvalidSyntax;
             return std::shared_ptr<JSONValue>();
         }
 
@@ -1130,7 +1130,7 @@ namespace KayLib
                 {
                     // Set error.
                     errorIndex = parser.getIndex();
-                    lastError = InvalidObjectName;
+                    lastError = JSONError::InvalidObjectName;
                     // There was an error, clear and return.
                     object.reset();
                     return object;
@@ -1144,14 +1144,14 @@ namespace KayLib
                 {
                     // Set error.
                     errorIndex = parser.getIndex();
-                    lastError = InvalidSyntax;
+                    lastError = JSONError::InvalidSyntax;
                     // There was an error, clear and return.
                     object.reset();
                     return object;
                 }
                 // get the entries.
                 std::shared_ptr<JSONValue> child = parse(parser);
-                if(lastError != NONE)
+                if(lastError != JSONError::NONE)
                 {
                     // There was an error, clear and return.
                     object.reset();
@@ -1167,7 +1167,7 @@ namespace KayLib
             {
                 // Set error.
                 errorIndex = parser.getIndex();
-                lastError = InvalidSyntax;
+                lastError = JSONError::InvalidSyntax;
                 // There was an error, clear and return.
                 object.reset();
                 return object;
@@ -1193,7 +1193,7 @@ namespace KayLib
             {
                 // get the entries.
                 std::shared_ptr<JSONValue> child = parse(parser);
-                if(lastError != NONE)
+                if(lastError != JSONError::NONE)
                 {
                     // There was an error, clear and return.
                     array.reset();
@@ -1209,7 +1209,7 @@ namespace KayLib
             {
                 // Set error.
                 errorIndex = parser.getIndex();
-                lastError = InvalidSyntax;
+                lastError = JSONError::InvalidSyntax;
                 // There was an error, clear and return.
                 array.reset();
                 return array;
