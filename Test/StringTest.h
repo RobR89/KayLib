@@ -37,7 +37,7 @@ bool testStringParser()
     std::cout << "Starting string parser tests." << std::endl;
 
     std::cout << "Using UTF8 parser with string: " << utf8 << std::endl;
-    StringParserUTF8 p(utf8);
+    StringParser<char> p(utf8);
     std::cout << "Character codes: ";
     int i = 0;
     while(!p.isEnd())
@@ -74,7 +74,7 @@ bool testStringParser()
     }
     std::cout << "UFT8 length: " << utf8.length() << " UTF16 length: " << utf16.length() << std::endl;
     std::cout << "Using UTF16 parser with u16string: " << KUTF::utf16to8(utf16) << std::endl;
-    StringParserUTF16 wp(utf16);
+    StringParser<char16_t> wp(utf16);
     std::cout << "Character codes: ";
     i = 0;
     while(!wp.isEnd())

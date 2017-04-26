@@ -86,6 +86,19 @@ namespace KayLib
         }
 
         /**
+         * Skip the next 'num' characters.
+         * @param num The number of characters to skip.
+         */
+        void skip(int num)
+        {
+            index += num;
+            if(index > length)
+            {
+                index = length;
+            }
+        }
+
+        /**
          * Get the string being parsed.
          * @return A copy of the string being parsed.
          */
@@ -201,29 +214,12 @@ namespace KayLib
         }
 
         /**
-         * Gets a string from the current position to the separator or end of string if the separator is not found.
-         * @param separator The word separator to look for.
-         * @return The string.
-         */
-        std::basic_string<T> getTo(const T separator)
-        {
-            int start = index;
-            int sz = 0;
-            while(peekChar() != separator && index < length)
-            {
-                sz++;
-                index++;
-            }
-            return string.substr(start, sz);
-        }
-
-        /**
          * Gets a string from the current position to the separator or end of string or optionally newline if the separator is not found.
          * @param separator The word separator to look for.
          * @param includeNewline True if newlines should be included in the fetched string.
          * @return The string.
          */
-        std::basic_string<T> getTo(const T separator, bool includeNewline)
+        std::basic_string<T> getTo(const T separator, bool includeNewline = true)
         {
             int start = index;
             int sz = 0;
@@ -489,6 +485,21 @@ namespace KayLib
         }
 
         /**
+         * Get the 'size' characters starting at 'start'.
+         * @param start The first character.
+         * @param size The number of characters.
+         * @return The string.
+         */
+        std::basic_string<T> getRange(int start, int size)
+        {
+            if(start < 0 || start >= length || size < 1 || start + size > length)
+            {
+                return "";
+            }
+            return string.substr(start, size);
+        }
+
+        /**
          * Check if the next part of the string matches the query.
          * @param next The string to check for.
          * @param advance Should the index be advanced if the string matches?
@@ -515,22 +526,6 @@ namespace KayLib
             return true;
         }
 
-    protected:
-        const std::basic_string<T> string;
-        int index;
-        int length;
-        bool tabAsWhitespace;
-
-    };
-
-    class StringParserUTF8 : public StringParser<char>
-    {
-    private:
-        KUTF::UTFCodeParser code;
-    public:
-
-        StringParserUTF8(const std::string &str) : StringParser<char>(str) { }
-
         /**
          * Peek at the next UTF encoded character.
          * @return The UTF character or -1 on failure.
@@ -585,9 +580,9 @@ namespace KayLib
          * Gets next word (space or tab separated) from the string.
          * @return The next word.
          */
-        std::string getWordUTF()
+        std::basic_string<T> getWordUTF()
         {
-            std::string out;
+            std::basic_string<T> out;
             char32_t c;
             char32_t n = -1;
             while((c = getCharUTF()) != ' ')
@@ -597,90 +592,18 @@ namespace KayLib
                     return out;
                 }
                 // 'code' still has our character so convert it to UTF8.
-                out += code.getUTF8();
+                out += code.getUTF<T>();
             }
             return out;
         }
-    };
 
-    class StringParserUTF16 : public StringParser<char16_t>
-    {
-    private:
+    protected:
         KUTF::UTFCodeParser code;
-    public:
+        const std::basic_string<T> string;
+        int index;
+        int length;
+        bool tabAsWhitespace;
 
-        StringParserUTF16(const std::basic_string<char16_t> &str) : StringParser<char16_t>(str) { }
-
-        /**
-         * Peek at the next UTF encoded character.
-         * @return The UTF character or -1 on failure.
-         */
-        char32_t peekCharUTF()
-        {
-            if(index >= length)
-            {
-                return -1;
-            }
-            int i = index;
-            int res;
-            while((res = code.addChar(string[i])) != 0 && i < length)
-            {
-                i++;
-            }
-            if(res != 0)
-            {
-                // There was an error.
-                code.reset();
-                return -1;
-            }
-            return code.getCode();
-        }
-
-        /**
-         * Get the next UTF encoded character.
-         * @return The UTF character or -1 on failure.
-         */
-        char32_t getCharUTF()
-        {
-            if(index >= length)
-            {
-                return -1;
-            }
-            int res;
-            do
-            {
-                res = code.addChar(string[index++]);
-            }
-            while(res != 0 && index < length);
-            if(res != 0)
-            {
-                // There was an error.
-                code.reset();
-                return -1;
-            }
-            return code.getCode();
-        }
-
-        /**
-         * Gets next word (space or tab separated) from the string.
-         * @return The next word.
-         */
-        std::u16string getWordUTF()
-        {
-            std::u16string out;
-            char32_t c;
-            char32_t n = -1;
-            while((c = getCharUTF()) != ' ')
-            {
-                if(c == n || c == '\t')
-                {
-                    return out;
-                }
-                // 'code' still has our character so convert it to UTF16.
-                out += code.getUTF16();
-            }
-            return out;
-        }
     };
 
 }

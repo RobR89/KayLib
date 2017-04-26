@@ -106,6 +106,7 @@ namespace KayLib
                 {
                     if(c < 0xD800 || c >= 0xE000)
                     {
+                        // Single byte character.
                         code = c;
                         return byte;
                     }
@@ -122,14 +123,15 @@ namespace KayLib
                 if(c < 0xDC00 || c >= 0xE000)
                 {
                     // Error: Expected continuation character not found.
+                    // Assume, good code following bad character.
                     if(c < 0xD800)
                     {
-                        // Assume, good code following bad character.
+                        // Single byte character.
                         code = c;
                         byte = 0;
                         return 0;
                     }
-                    // Assume, good start code following bad character.
+                    // Multi-byte character.
                     byte = 1;
                     code = c & 0x3FF;
                     return byte;
@@ -154,10 +156,20 @@ namespace KayLib
             }
 
             /**
-             * Get the current code as a UTF8 character string.
-             * @return The UTF8 representation of the code of an empty string if the code is not valid.
+             * Get the current code as a UTF character string.
+             * @return The UTF representation of the code or an empty string if the code is not valid.
              */
-            std::string getUTF8()
+            template<typename T>
+            std::basic_string<T> getUTF() const
+            {
+                return "";
+            }
+
+            /**
+             * Get the current code as a UTF8 character string.
+             * @return The UTF8 representation of the code or an empty string if the code is not valid.
+             */
+            std::string getUTF8() const
             {
                 if(byte == 0)
                 {
@@ -168,9 +180,9 @@ namespace KayLib
 
             /**
              * Get the current code as a UTF16 character string.
-             * @return The UTF16 representation of the code of an empty string if the code is not valid.
+             * @return The UTF16 representation of the code or an empty string if the code is not valid.
              */
-            std::u16string getUTF16()
+            std::u16string getUTF16() const
             {
                 if(byte == 0)
                 {
@@ -181,9 +193,9 @@ namespace KayLib
 
             /**
              * Get the current code as a UTF32 character string.
-             * @return The UTF32 representation of the code of an empty string if the code is not valid.
+             * @return The UTF32 representation of the code or an empty string if the code is not valid.
              */
-            std::u32string getUTF32()
+            std::u32string getUTF32() const
             {
                 if(byte == 0)
                 {
@@ -603,6 +615,47 @@ namespace KayLib
             return out;
         }
     };
+
+    /**
+     * Get the current code as a UTF character string.
+     * @return The UTF representation of the code or an empty string if the code is not valid.
+     */
+    template<> std::basic_string<char> KUTF::UTFCodeParser::getUTF<char>() const
+    {
+        if(byte == 0)
+        {
+            return UTFCodeParser::getUTF8();
+        }
+        return "";
+    }
+
+    /**
+     * Get the current code as a UTF character string.
+     * @return The UTF representation of the code or an empty string if the code is not valid.
+     */
+    template<>
+    std::basic_string<char16_t> KUTF::UTFCodeParser::getUTF<char16_t>() const
+    {
+        if(byte == 0)
+        {
+            return UTFCodeParser::getUTF16();
+        }
+        return u"";
+    }
+
+    /**
+     * Get the current code as a UTF character string.
+     * @return The UTF representation of the code or an empty string if the code is not valid.
+     */
+    template<>
+    std::basic_string<char32_t> KUTF::UTFCodeParser::getUTF<char32_t>() const
+    {
+        if(byte == 0)
+        {
+            return UTFCodeParser::getUTF32();
+        }
+        return U"";
+    }
 
 }
 
