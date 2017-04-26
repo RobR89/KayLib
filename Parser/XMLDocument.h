@@ -20,8 +20,7 @@
 #include <mutex>
 #include <vector>
 #include <map>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
+#include <memory>
 
 #include "../IO/Exceptions.h"
 #include "StringParser.h"
@@ -31,7 +30,7 @@ namespace KayLib
 
     enum class XMLError
     {
-        NONE, UnexpectedEndOfDocument, InvalidSyntax
+        NONE, UnexpectedEndOfDocument, InvalidSyntax, DoubleDashInComment
     };
 
     std::string XMLErrorString(XMLError err)
@@ -46,6 +45,9 @@ namespace KayLib
                 break;
             case XMLError::InvalidSyntax:
                 return "Invalid syntax";
+                break;
+            case XMLError::DoubleDashInComment:
+                return "Double dash '--' in comment";
                 break;
         }
         return "Unknown error";
@@ -103,6 +105,15 @@ namespace KayLib
         std::string getValue() const
         {
             return value;
+        };
+
+        /**
+         * Get the string value of the element.
+         * @return The string value of the element.
+         */
+        void setValue(std::string val)
+        {
+            value = val;
         };
 
         /**
@@ -256,7 +267,7 @@ namespace KayLib
             }
             if(value.length() > 0 || !children.empty())
             {
-                if(!name.empty())
+                if(!name.empty() && name != "!--")
                 {
                     out << ">";
                 }
@@ -278,7 +289,14 @@ namespace KayLib
                 }
                 if(!name.empty())
                 {
-                    out << "</" << name << ">" << std::endl;
+                    if(name == "!--")
+                    {
+                        out << "-->" << std::endl;
+                    }
+                    else
+                    {
+                        out << "</" << name << ">" << std::endl;
+                    }
                 }
             }
             else
@@ -329,7 +347,7 @@ namespace KayLib
         XMLDocument(const std::string &doc)
         {
             resetError();
-            root = parse(doc);
+            parse(doc);
         }
 
         XMLDocument(const XMLDocument& orig)
@@ -414,41 +432,257 @@ namespace KayLib
         XMLError lastError;
         int errorIndex;
 
-        static std::shared_ptr<XMLElement> parse(const std::string &doc)
+        bool parse(const std::string &doc)
         {
-            // Put document into a stream for parsing.
-            std::stringstream docStream;
-            docStream << doc;
-            boost::property_tree::ptree tree;
-            // Read the XML stream.
-            boost::property_tree::xml_parser::read_xml(docStream, tree, boost::property_tree::xml_parser::trim_whitespace);
-            return parseNode("", tree);
+            resetError();
+            root = std::make_shared<XMLElement>("", "");
+            StringParser<char> parser(doc);
+            while(!parser.isEnd())
+            {
+                parser.skipWhitespace(true);
+                if(parser.isEnd())
+                {
+                    // Apparently there is no root element.
+                    break;
+                }
+                if(parser.peekChar() != '<')
+                {
+                    // Invalid XML
+                    lastError = XMLError::InvalidSyntax;
+                    errorIndex = parser.getIndex();
+                    return false;
+                }
+                std::shared_ptr<XMLElement> element = parseElement<char>(parser);
+                if(!element)
+                {
+                    // Error!
+                    return false;
+                }
+                root->addChild(element);
+                std::string tag = element->getName();
+                if(tag.length() == 0)
+                {
+                    // Invalid XML.
+                    lastError = XMLError::InvalidSyntax;
+                    errorIndex = parser.getIndex();
+                    return false;
+                }
+                if(tag == "!--")
+                {
+                    // We have a comment.
+                    continue;
+                }
+                if(tag == "?xml")
+                {
+                    // We have a declaration.
+                    continue;
+                }
+                if(tag == "xs:schema")
+                {
+                    // We have a schema.
+                    continue;
+                }
+                if(tag[0] == '!')
+                {
+                    // We have a dtd header.
+                    continue;
+                }
+            }
+
+            return true;
         }
 
-        static std::shared_ptr<XMLElement> parseNode(const std::string name, const boost::property_tree::ptree &tree)
+        template<typename T>
+        std::shared_ptr<XMLElement> parseElement(StringParser<T> &parser)
         {
-            std::shared_ptr<XMLElement> node = std::make_shared<XMLElement>(name, tree.get_value<std::string>());
-            for(const boost::property_tree::ptree::value_type &entry : tree)
+            // Make sure we are at the next tag.
+            parser.skipWhitespace(true);
+            std::shared_ptr<XMLElement> element;
+            if(parser.nextIs("<?xml", true))
             {
-                if(entry.first == "<xmlattr>")
+                // Found declaration.
+                element = parseDeclaration(parser);
+            }
+            else if(parser.nextIs("<!--", true))
+            {
+                // Found comment.
+                element = parseComment(parser);
+            }
+            else if(parser.nextIs("<", true))
+            {
+                element = parseGeneric(parser);
+            }
+            return element;
+        }
+
+        template<typename T>
+        std::shared_ptr<XMLElement> parseComment(StringParser<T> &parser)
+        {
+            std::shared_ptr<XMLElement> element;
+            int start = parser.getIndex();
+            int end = start;
+            while(!parser.nextIs("--", true))
+            {
+                T c;
+                while((c = parser.peekChar()) != '-' && !parser.isEnd())
                 {
-                    // Parse the attribute.
-                    for(boost::property_tree::ptree::value_type attr : entry.second)
-                    {
-                        node->addAttribute(attr.first, attr.second.get_value<std::string>());
-                    }
+                    parser.getChar();
+                }
+                if(parser.isEnd())
+                {
+                    lastError = XMLError::UnexpectedEndOfDocument;
+                    errorIndex = parser.getIndex();
+                    return element;
+                }
+                //parser.back();
+            }
+            if(parser.isEnd())
+            {
+                lastError = XMLError::UnexpectedEndOfDocument;
+                errorIndex = parser.getIndex();
+                return element;
+            }
+            if(parser.peekChar() != '>')
+            {
+                lastError = XMLError::DoubleDashInComment;
+                errorIndex = parser.getIndex();
+                return element;
+            }
+            parser.skip(1);
+            end = parser.getIndex() - 3;
+            std::string comment = parser.getRange(start, (end - start));
+            element = std::make_shared<XMLElement>("!--", comment);
+            return element;
+        }
+
+        template<typename T>
+        std::shared_ptr<XMLElement> parseDeclaration(StringParser<T> &parser)
+        {
+            std::shared_ptr<XMLElement> element = std::make_shared<XMLElement>("?xml", "");
+            while(!parser.nextIs("?", true) && !parser.isEnd())
+            {
+                if(!parseAttribute(parser, element))
+                {
+                    lastError = XMLError::InvalidSyntax;
+                    errorIndex = parser.getIndex();
+                    element.reset();
+                    return element;
+                }
+                parser.skipWhitespace(true);
+            }
+            if(parser.isEnd())
+            {
+                lastError = XMLError::UnexpectedEndOfDocument;
+                errorIndex = parser.getIndex();
+                element.reset();
+                return element;
+            }
+            if(parser.peekChar() != '>')
+            {
+                lastError = XMLError::InvalidSyntax;
+                errorIndex = parser.getIndex();
+                element.reset();
+                return element;
+            }
+            parser.skip(1);
+            return element;
+        }
+
+        template<typename T>
+        std::basic_string<T> getName(StringParser<T> &parser)
+        {
+            std::basic_string<T> name;
+            while(!parser.isWhitespace(true) && parser.peekChar() != '>' && parser.peekChar() != '=' && !parser.isEnd())
+            {
+                name += parser.getChar();
+            }
+            return name;
+        }
+        
+        template<typename T>
+        std::shared_ptr<XMLElement> parseGeneric(StringParser<T> &parser)
+        {
+            std::basic_string<T> tag = getName(parser);
+            std::shared_ptr<XMLElement> element = std::make_shared<XMLElement>(tag, "");
+            T c = parser.peekChar();
+            while((c != '>' && c != '/') && !parser.isEnd())
+            {
+                if(!parseAttribute(parser, element))
+                {
+                    lastError = XMLError::InvalidSyntax;
+                    errorIndex = parser.getIndex();
+                    element.reset();
+                    return element;
+                }
+                parser.skipWhitespace(true);
+                c = parser.peekChar();
+            }
+            if(parser.isEnd())
+            {
+                lastError = XMLError::UnexpectedEndOfDocument;
+                errorIndex = parser.getIndex();
+                element.reset();
+                return element;
+            }
+            if(parser.nextIs("/>", true))
+            {
+                // A complete tag.
+                return element;
+            }
+            if(parser.peekChar() != '>')
+            {
+                lastError = XMLError::InvalidSyntax;
+                errorIndex = parser.getIndex();
+                element.reset();
+                return element;
+            }
+            parser.skip(1);
+            // An incomplete element.
+            parser.skipWhitespace(true);
+            std::basic_string<T> endTag = "</" + tag + ">";
+            std::basic_string<T> value;
+            while(!parser.nextIs(endTag, true))
+            {
+                if(parser.peekChar() == '<')
+                {
+                    std::shared_ptr<XMLElement> child = parseElement(parser);
+                    element->addChild(child);
+                    parser.skipWhitespace(true);
                 }
                 else
                 {
-                    // Create new child element.
-                    std::shared_ptr<XMLElement> element = parseNode(entry.first, entry.second);
-                    // Add the element to the child list.
-                    node->addChild(element);
+                    value += parser.getTo('<');
                 }
             }
-            return node;
+            element->setValue(value);
+            return element;
         }
 
+        template<typename T>
+        bool parseAttribute(StringParser<T> &parser, std::shared_ptr<XMLElement> element)
+        {
+            parser.skipWhitespace(true);
+            std::basic_string<T> attrName = getName(parser);
+            if(attrName.length() == 0)
+            {
+                return false;
+            }
+            if(parser.peekChar() != '=')
+            {
+                return false;
+            }
+            parser.skip(1);
+            parser.skipWhitespace(true);
+            T c = parser.peekChar();
+            if(c != '\'' && c != '"')
+            {
+                return false;
+            }
+            std::basic_string<T> attrValue = parser.getQuotedString();
+            element->addAttribute(attrName, attrValue);
+            parser.skipWhitespace(true);
+            return true;
+        }
     };
 
 }
