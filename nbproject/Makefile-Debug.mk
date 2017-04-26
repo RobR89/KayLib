@@ -40,8 +40,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/DB/KSQLite.o \
 	${OBJECTDIR}/Graphics/KFont.o \
 	${OBJECTDIR}/Graphics/KFontProperties.o \
-	${OBJECTDIR}/Graphics/KImage.o \
-	${OBJECTDIR}/IO/KFile.o
+	${OBJECTDIR}/Graphics/KImage.o
 
 
 # C Compiler Flags
@@ -99,11 +98,6 @@ ${OBJECTDIR}/Graphics/KImage.o: Graphics/KImage.cpp
 	${MKDIR} -p ${OBJECTDIR}/Graphics
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Graphics/KImage.o Graphics/KImage.cpp
-
-${OBJECTDIR}/IO/KFile.o: IO/KFile.cpp
-	${MKDIR} -p ${OBJECTDIR}/IO
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/IO/KFile.o IO/KFile.cpp
 
 # Subprojects
 .build-subprojects:

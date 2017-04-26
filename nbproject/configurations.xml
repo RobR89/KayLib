@@ -69,7 +69,6 @@
         <itemPath>Graphics/KImage.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="IO" projectFiles="true">
-        <itemPath>IO/KFile.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="KMath" projectFiles="true">
       </logicalFolder>
@@ -153,8 +152,6 @@
       <item path="IO/Event.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="IO/Exceptions.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="IO/KFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="IO/KFile.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -260,8 +257,6 @@
       </item>
       <item path="IO/Exceptions.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="IO/KFile.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="IO/KFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="IO/KThread.h" ex="false" tool="3" flavor2="0">
@@ -365,8 +360,6 @@
       <item path="IO/Event.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="IO/Exceptions.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="IO/KFile.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="IO/KFile.h" ex="false" tool="3" flavor2="0">
       </item>
