@@ -35,9 +35,6 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/DB/KMySQL.o \
-	${OBJECTDIR}/DB/KSQL.o \
-	${OBJECTDIR}/DB/KSQLite.o \
 	${OBJECTDIR}/Graphics/KFont.o \
 	${OBJECTDIR}/Graphics/KFontProperties.o \
 	${OBJECTDIR}/Graphics/KImage.o
@@ -68,21 +65,6 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libkaylib.a: ${OBJECTFILES}
 	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libkaylib.a
 	${AR} -rv ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libkaylib.a ${OBJECTFILES} 
 	$(RANLIB) ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libkaylib.a
-
-${OBJECTDIR}/DB/KMySQL.o: DB/KMySQL.cpp
-	${MKDIR} -p ${OBJECTDIR}/DB
-	${RM} "$@.d"
-	$(COMPILE.cc) -O3 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/DB/KMySQL.o DB/KMySQL.cpp
-
-${OBJECTDIR}/DB/KSQL.o: DB/KSQL.cpp
-	${MKDIR} -p ${OBJECTDIR}/DB
-	${RM} "$@.d"
-	$(COMPILE.cc) -O3 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/DB/KSQL.o DB/KSQL.cpp
-
-${OBJECTDIR}/DB/KSQLite.o: DB/KSQLite.cpp
-	${MKDIR} -p ${OBJECTDIR}/DB
-	${RM} "$@.d"
-	$(COMPILE.cc) -O3 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/DB/KSQLite.o DB/KSQLite.cpp
 
 ${OBJECTDIR}/Graphics/KFont.o: Graphics/KFont.cpp
 	${MKDIR} -p ${OBJECTDIR}/Graphics

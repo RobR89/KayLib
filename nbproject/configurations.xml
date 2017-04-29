@@ -59,9 +59,6 @@
       <logicalFolder name="f8" displayName="App" projectFiles="true">
       </logicalFolder>
       <logicalFolder name="f6" displayName="DB" projectFiles="true">
-        <itemPath>DB/KMySQL.cpp</itemPath>
-        <itemPath>DB/KSQL.cpp</itemPath>
-        <itemPath>DB/KSQLite.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f9" displayName="Graphics" projectFiles="true">
         <itemPath>Graphics/KFont.cpp</itemPath>
@@ -121,15 +118,9 @@
         <archiverTool>
         </archiverTool>
       </compileType>
-      <item path="DB/KMySQL.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="DB/KMySQL.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="DB/KSQL.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="DB/KSQL.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="DB/KSQLite.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="DB/KSQLite.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -225,15 +216,9 @@
         <archiverTool>
         </archiverTool>
       </compileType>
-      <item path="DB/KMySQL.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="DB/KMySQL.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="DB/KSQL.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="DB/KSQL.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="DB/KSQLite.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="DB/KSQLite.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -329,15 +314,9 @@
         <archiverTool>
         </archiverTool>
       </compileType>
-      <item path="DB/KMySQL.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="DB/KMySQL.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="DB/KSQL.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="DB/KSQL.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="DB/KSQLite.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="DB/KSQLite.h" ex="false" tool="3" flavor2="0">
       </item>

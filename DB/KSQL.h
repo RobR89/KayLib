@@ -30,9 +30,10 @@ namespace KayLib
     class KSQL
     {
     public:
-        KSQL();
+
+        KSQL() { }
         KSQL(const KSQL &) = delete;
-        virtual ~KSQL();
+        virtual ~KSQL() { }
 
         /**
          * Connect to a server.
@@ -147,9 +148,35 @@ namespace KayLib
         friend class KSQL;
     public:
 
-        KSQLResult(int cols, const std::vector<std::vector<const KSQLCell *>> &results);
+        KSQLResult(int cols, const std::vector<std::vector<const KSQLCell *>> &results)
+        {
+            columns = cols;
+            for(auto row : results)
+            {
+                std::vector<const KSQLCell *> nRow;
+                for(auto col : row)
+                {
+                    nRow.push_back(col);
+                }
+                rows.push_back(nRow);
+            }
+        }
+
         KSQLResult(const KSQL &) = delete;
-        virtual ~KSQLResult();
+
+        virtual ~KSQLResult()
+        {
+            for(auto row : rows)
+            {
+                for(auto cel : row)
+                {
+                    if(cel != nullptr)
+                    {
+                        delete cel;
+                    }
+                }
+            }
+        }
 
         /**
          * Get the number of rows in the result.
@@ -174,7 +201,14 @@ namespace KayLib
          * @param row The row to get.
          * @return The result row.
          */
-        virtual std::vector<const KSQLCell *> getRow(int row);
+        virtual std::vector<const KSQLCell *> getRow(int row)
+        {
+            if(row < 0 || row > rows.size())
+            {
+                return std::vector<const KSQLCell *>();
+            }
+            return std::vector<const KSQLCell *>(rows[row]);
+        }
 
     private:
         int columns;
@@ -188,8 +222,9 @@ namespace KayLib
         friend KSQL;
     public:
 
-        KSQLStatement();
-        virtual ~KSQLStatement();
+        KSQLStatement() { }
+
+        virtual ~KSQLStatement() { }
 
         /**
          * Bind data to a statement index
