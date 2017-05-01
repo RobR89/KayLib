@@ -34,10 +34,7 @@ include Makefile
 OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
-OBJECTFILES= \
-	${OBJECTDIR}/Graphics/KFont.o \
-	${OBJECTDIR}/Graphics/KFontProperties.o \
-	${OBJECTDIR}/Graphics/KImage.o
+OBJECTFILES=
 
 
 # C Compiler Flags
@@ -65,21 +62,6 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libkaylib.a: ${OBJECTFILES}
 	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libkaylib.a
 	${AR} -rv ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libkaylib.a ${OBJECTFILES} 
 	$(RANLIB) ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libkaylib.a
-
-${OBJECTDIR}/Graphics/KFont.o: Graphics/KFont.cpp
-	${MKDIR} -p ${OBJECTDIR}/Graphics
-	${RM} "$@.d"
-	$(COMPILE.cc) -O3 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Graphics/KFont.o Graphics/KFont.cpp
-
-${OBJECTDIR}/Graphics/KFontProperties.o: Graphics/KFontProperties.cpp
-	${MKDIR} -p ${OBJECTDIR}/Graphics
-	${RM} "$@.d"
-	$(COMPILE.cc) -O3 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Graphics/KFontProperties.o Graphics/KFontProperties.cpp
-
-${OBJECTDIR}/Graphics/KImage.o: Graphics/KImage.cpp
-	${MKDIR} -p ${OBJECTDIR}/Graphics
-	${RM} "$@.d"
-	$(COMPILE.cc) -O3 -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Graphics/KImage.o Graphics/KImage.cpp
 
 # Subprojects
 .build-subprojects:

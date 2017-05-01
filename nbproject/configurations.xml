@@ -48,6 +48,7 @@
         <itemPath>Utility/Endian.h</itemPath>
         <itemPath>Utility/KEventRate.h</itemPath>
       </logicalFolder>
+      <itemPath>Test/GraphicsTest.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -56,27 +57,6 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="f8" displayName="App" projectFiles="true">
-      </logicalFolder>
-      <logicalFolder name="f6" displayName="DB" projectFiles="true">
-      </logicalFolder>
-      <logicalFolder name="f9" displayName="Graphics" projectFiles="true">
-        <itemPath>Graphics/KFont.cpp</itemPath>
-        <itemPath>Graphics/KFontProperties.cpp</itemPath>
-        <itemPath>Graphics/KImage.cpp</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f3" displayName="IO" projectFiles="true">
-      </logicalFolder>
-      <logicalFolder name="f2" displayName="KMath" projectFiles="true">
-      </logicalFolder>
-      <logicalFolder name="f1" displayName="Parser" projectFiles="true">
-      </logicalFolder>
-      <logicalFolder name="f7" displayName="Scripting" projectFiles="true">
-      </logicalFolder>
-      <logicalFolder name="f5" displayName="String" projectFiles="true">
-      </logicalFolder>
-      <logicalFolder name="f4" displayName="Utility" projectFiles="true">
-      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="f1" displayName="Test" projectFiles="true">
       <itemPath>Test/IO.h</itemPath>
@@ -126,17 +106,11 @@
       </item>
       <item path="Graphics/KColor.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Graphics/KFont.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="Graphics/KFont.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Graphics/KFontProperties.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Graphics/KFontProperties.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Graphics/KGraphics.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Graphics/KImage.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Graphics/KImage.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -173,6 +147,8 @@
       <item path="String/KString.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="String/KUTF.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/GraphicsTest.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Test/IO.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -224,17 +200,11 @@
       </item>
       <item path="Graphics/KColor.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Graphics/KFont.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="Graphics/KFont.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Graphics/KFontProperties.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Graphics/KFontProperties.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Graphics/KGraphics.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Graphics/KImage.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Graphics/KImage.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -271,6 +241,8 @@
       <item path="String/KString.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="String/KUTF.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/GraphicsTest.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Test/IO.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -322,17 +294,11 @@
       </item>
       <item path="Graphics/KColor.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Graphics/KFont.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="Graphics/KFont.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Graphics/KFontProperties.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Graphics/KFontProperties.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Graphics/KGraphics.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Graphics/KImage.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Graphics/KImage.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -369,6 +335,8 @@
       <item path="String/KString.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="String/KUTF.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Test/GraphicsTest.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Test/IO.h" ex="false" tool="3" flavor2="0">
       </item>

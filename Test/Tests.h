@@ -6,6 +6,7 @@
 #include "LuaTest.h"
 #include "IO.h"
 #include "UtilityTests.h"
+#include "GraphicsTest.h"
 
 #endif /* TESTS_H */
 
