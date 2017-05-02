@@ -71,24 +71,29 @@ void testEndian()
     }
     
     std::cout << "Endian swap test complere." << std::endl;
-    std::cout << std::endl;
+    // Reset to decimal output and add blank line.
+    std::cout << std::dec << std::endl;
 }
 
 #include "Utility/DataCode.h"
+
+static constexpr int test_SZ = 24;
+static constexpr unsigned char test[24] = {
+    0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF,
+    0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF, 0x01,
+    0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF, 0x01, 0x23
+};
 
 void testDataCode()
 {
     // test writing data to files.
     std::cout << "Data code test." << std::endl;
-    static unsigned char test[24] = {
-        0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF,
-        0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF, 0x01,
-        0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF, 0x01, 0x23
-    };
     std::cout << "Header output:" << std::endl;
-    std::cout << KayLib::DataCode::generateHeader("key", 24);
+    std::cout << KayLib::DataCode::generateHeader("key", test_SZ);
     std::cout << "Code output:" << std::endl;
-    std::cout << KayLib::DataCode::generateCode("key", test, 24, 8);
+    std::cout << KayLib::DataCode::generateCode("key", test_SZ, test, 8);
+    std::cout << "Static header-only Code output:" << std::endl;
+    std::cout << KayLib::DataCode::generateStaticHeaderOnly("key", test_SZ, test, 8);
     std::cout << "Data code test compelte." << std::endl;
     std::cout << std::endl;
 }

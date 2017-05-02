@@ -43,19 +43,52 @@ namespace KayLib
         
         /**
          * generate the cpp code for the data as an unsigned char array.
+         * @note can be used as non-static member of class.
          * @param variableName The name of the variable to create.
-         * @param data The data to write.
          * @param length The length of the data.  Will be saved in the variable 'variableName_SZ'
+         * @param data The data to write.
          * @param bytesPerLine Number of bytes to put on each line of code.
          * @return True if successful.
          */
-        static std::string generateCode(const std::string variableName, const unsigned char *data, const int length, const int bytesPerLine = 16)
+        static std::string generateCode(const std::string variableName, const int length, const unsigned char *data, const int bytesPerLine = 16)
         {
             // Make sure their is at least one byte per line.
             int bpl = std::max(bytesPerLine, 1);
             // Generate variable names.
             std::string instance = "const int " + variableName + "_SZ = " + std::to_string(length) + ";\n";
             instance += "const unsigned char " + variableName + "[" + std::to_string(length) + "] = {\n";
+            int index = 0;
+            // Generate byte codes.
+            while(index < length)
+            {
+                int codes = std::min(length - index, bpl);
+                instance += " 0x" + KString::toHex(&data[index], codes, ", 0x");
+                index += codes;
+                if(index < length)
+                {
+                    instance += ",";
+                }
+                instance += "\n";
+            }
+            instance += "};\n";
+            return instance;
+        }
+
+        /**
+         * generate the header only version of the code for the data as an unsigned char array.
+         * @param variableName The name of the variable to create.
+         * @param length The length of the data.  Will be saved in the variable 'variableName_SZ'
+         * @param data The data to write.
+         * @param bytesPerLine Number of bytes to put on each line of code.
+         * @return The code.
+         */
+        static std::string generateStaticHeaderOnly(const std::string variableName, const int length, const unsigned char *data, const int bytesPerLine = 16)
+        {
+            // Make sure their is at least one byte per line.
+            int bpl = std::max(bytesPerLine, 1);
+            // Generate variable names.
+            std::string instance = "static constexpr int " + variableName + "_SZ = " + std::to_string(length) + ";\n";
+            instance += "static constexpr unsigned char " + variableName + "[" + std::to_string(length) + "] = {\n";
             int index = 0;
             // Generate byte codes.
             while(index < length)
