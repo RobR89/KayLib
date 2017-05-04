@@ -28,13 +28,23 @@ namespace KayLib
             x = y = 0;
         };
 
-        KPoint(int nx, int ny)
+        KPoint(const int nx, const int ny)
         {
             x = nx;
             y = ny;
         };
         int x;
         int y;
+
+        bool operator==(const KPoint &p) const
+        {
+            return (x == p.x) && (y == p.y);
+        }
+
+        bool operator!=(const KPoint &p) const
+        {
+            return !(*this == p);
+        }
     };
 
     struct KSize
@@ -45,13 +55,23 @@ namespace KayLib
             w = h = 0;
         }
 
-        KSize(int nw, int nh)
+        KSize(const int nw, const int nh)
         {
             w = nw;
             h = nh;
         }
         int w;
         int h;
+
+        bool operator==(const KSize &s) const
+        {
+            return (w == s.w) && (h == s.h);
+        }
+
+        bool operator!=(const KSize &s) const
+        {
+            return !(*this == s);
+        }
     };
 
     struct KRect
@@ -62,7 +82,7 @@ namespace KayLib
             x = y = w = h = 0;
         }
 
-        KRect(int nx, int ny, int nw, int nh)
+        KRect(const int nx, const int ny, const int nw, const int nh)
         {
             x = nx;
             y = ny;
@@ -71,6 +91,16 @@ namespace KayLib
         }
         int x, y;
         int w, h;
+
+        bool operator==(const KRect &r) const
+        {
+            return (x == r.x) && (y == r.y) && (w == r.w) && (h == r.h);
+        }
+
+        bool operator!=(const KRect &r) const
+        {
+            return !(*this == r);
+        }
     };
 
 }

@@ -33,7 +33,7 @@ namespace KayLib
 
         KFont(const std::shared_ptr<KFontProperties> prop)
         {
-            font = nullptr;
+            m_font = nullptr;
             fontColor = {0, 0, 0};
             backgroundColor = {255, 255, 255};
             quality = BLENDED;
@@ -43,9 +43,9 @@ namespace KayLib
 
         virtual ~KFont()
         {
-            if(font != nullptr)
+            if(m_font != nullptr)
             {
-                TTF_CloseFont(font);
+                TTF_CloseFont(m_font);
             }
         }
 
@@ -60,7 +60,7 @@ namespace KayLib
          * @param ptSize The point size of the font to create.
          * @returns null if font not found.
          */
-        static std::shared_ptr<KFont> create(const std::string &fontFile, int ptSize)
+        static std::shared_ptr<KFont> create(const std::string &fontFile, const int ptSize)
         {
             KFile fntFile = findFont(fontFile);
             if(!fntFile.isFile())
@@ -176,15 +176,15 @@ namespace KayLib
 
             if(useQuality == SOLID)
             {
-                resulting_text = TTF_RenderUTF8_Solid(font, text.c_str(), tColor);
+                resulting_text = TTF_RenderUTF8_Solid(m_font, text.c_str(), tColor);
             }
             else if(useQuality == SHADED)
             {
-                resulting_text = TTF_RenderUTF8_Shaded(font, text.c_str(), tColor, bColor);
+                resulting_text = TTF_RenderUTF8_Shaded(m_font, text.c_str(), tColor, bColor);
             }
             else if(useQuality == BLENDED)
             {
-                resulting_text = TTF_RenderUTF8_Blended(font, text.c_str(), tColor);
+                resulting_text = TTF_RenderUTF8_Blended(m_font, text.c_str(), tColor);
             }
 
             return resulting_text;
@@ -197,12 +197,12 @@ namespace KayLib
          */
         int lineLenght(const std::string &text) const
         {
-            if(font == nullptr)
+            if(m_font == nullptr)
             {
                 return 0;
             }
             int w, h;
-            int r = TTF_SizeText(font, text.c_str(), &w, &h);
+            int r = TTF_SizeText(m_font, text.c_str(), &w, &h);
             if(r != 0)
             {
                 return -1;
@@ -249,24 +249,24 @@ namespace KayLib
          */
         int getStyle() const
         {
-            if(font == nullptr)
+            if(m_font == nullptr)
             {
                 return 0;
             }
-            return TTF_GetFontStyle(font);
+            return TTF_GetFontStyle(m_font);
         }
 
         /**
          * Set the font style.
          * @param style The file to set.
          */
-        void setStyle(int style)
+        void setStyle(const int style)
         {
-            if(font == nullptr)
+            if(m_font == nullptr)
             {
                 return;
             }
-            TTF_SetFontStyle(font, style);
+            TTF_SetFontStyle(m_font, style);
         }
 
         /**
@@ -360,11 +360,11 @@ namespace KayLib
          */
         bool isMonospaced() const
         {
-            if(font == nullptr)
+            if(m_font == nullptr)
             {
                 return false;
             }
-            return TTF_FontFaceIsFixedWidth(font);
+            return TTF_FontFaceIsFixedWidth(m_font);
         }
 
         /**
@@ -372,18 +372,18 @@ namespace KayLib
          * @param ch The glyph to check for.
          * @return True if this font has the glyph.
          */
-        bool isGlyphProvided(int ch) const
+        bool isGlyphProvided(const int ch) const
         {
-            if(font == nullptr)
+            if(m_font == nullptr)
             {
                 return false;
             }
-            return TTF_GlyphIsProvided(font, ch);
+            return TTF_GlyphIsProvided(m_font, ch);
         }
 
 
     private:
-        TTF_Font *font;
+        TTF_Font *m_font;
 
         static std::unique_lock<std::mutex> getLock()
         {

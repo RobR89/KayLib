@@ -57,7 +57,7 @@ namespace KayLib
          * @param font The font file the properties are for.
          * @param ptSize The point size of the font.
          */
-        KFontProperties(const TTF_Font *_Font, const KFile *file, int ptSize) :
+        KFontProperties(const TTF_Font *_Font, const KFile *file, const int ptSize) :
         fontPath(file->getAbsolutePath().c_str()),
         familyName(TTF_FontFaceFamilyName(_Font)),
         styleName(TTF_FontFaceStyleName(_Font)),
@@ -84,7 +84,7 @@ namespace KayLib
          * @param fontFile The font file to get the properties for.
          * @param ptSize The point size of the font.
          */
-        static std::shared_ptr<KFontProperties> create(const std::string &fontFile, int ptSize)
+        static std::shared_ptr<KFontProperties> create(const std::string &fontFile, const int ptSize)
         {
             KFile file(fontFile);
             return create(file, ptSize);
@@ -95,7 +95,7 @@ namespace KayLib
          * @param fontFile The font file to get the properties for.
          * @param ptSize The point size of the font.
          */
-        static std::shared_ptr<KFontProperties> create(const KFile &file, int ptSize)
+        static std::shared_ptr<KFontProperties> create(const KFile &file, const int ptSize)
         {
             std::string absFont = file.getAbsolutePath();
             auto lock = getLock();
@@ -159,7 +159,7 @@ namespace KayLib
          * @param style The style to match. (TTF_STYLE_<NORMAL,BOLD,STRIKETHROUGH,UNDERLINE,ITALIC>)
          * @return A list of found fonts
          */
-        static std::vector<std::shared_ptr<KFontProperties>> findFonts(const std::string &fnt, int style)
+        static std::vector<std::shared_ptr<KFontProperties>> findFonts(const std::string &fnt, const int style)
         {
             std::vector<std::shared_ptr < KFontProperties>> found = findFonts(fnt);
             auto fp = found.begin();
@@ -295,7 +295,7 @@ namespace KayLib
          * @param depth The depth of the directory recursion.
          * @param ptSize The point size of the fonts to enumerate.
          */
-        static void enumerateFonts(const std::vector<KFile> &paths, int depth, int ptSize)
+        static void enumerateFonts(const std::vector<KFile> &paths, const int depth, const int ptSize)
         {
             std::string found;
             for(auto sPath : paths)
@@ -394,7 +394,7 @@ namespace KayLib
          * @param ptSize The point size of the font.
          * @return True if file was a ttf file.
          */
-        static bool enumerateFont(const KayLib::KFile *file, int ptSize)
+        static bool enumerateFont(const KayLib::KFile *file, const int ptSize)
         {
             if(KString::strToLower(file->getExtension()) != ".ttf")
             {
@@ -444,7 +444,7 @@ namespace KayLib
          * @param depth the depth of the directory recursion.
          * @param ptSize The point size of the fonts to enumerate.
          */
-        static void enumerateDirectory(const KFile &sPath, int depth, int ptSize)
+        static void enumerateDirectory(const KFile &sPath, const int depth, const int ptSize)
         {
             if(sPath.isDirectory())
             {

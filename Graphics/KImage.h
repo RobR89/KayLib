@@ -37,7 +37,7 @@ namespace KayLib
          */
         KImage()
         {
-            surface = nullptr;
+            m_surface = nullptr;
         }
 
         /**
@@ -45,9 +45,9 @@ namespace KayLib
          * @param w The with of the surface to create.
          * @param h The height of the surface to create.
          */
-        KImage(int w, int h)
+        KImage(const int w, const int h)
         {
-            surface = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
+            m_surface = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
         }
 
         /**
@@ -56,7 +56,7 @@ namespace KayLib
          * @param h The height of the surface to create.
          * @param alpah True if the alpha channel should be created.
          */
-        KImage(int w, int h, bool alpha)
+        KImage(const int w, const int h, const bool alpha)
         {
             uint32_t rmask, gmask, bmask, amask;
 
@@ -76,16 +76,17 @@ namespace KayLib
                 amask = 0;
             }
 
-            surface = SDL_CreateRGBSurface(0, w, h, 32, rmask, gmask, bmask, amask);
+            m_surface = SDL_CreateRGBSurface(0, w, h, 32, rmask, gmask, bmask, amask);
         }
 
         /**
          * Create an image with the existing surface.
          * @param surf The surface to use.
+         * @note KImage takes ownership of the surface and will free it on delete.
          */
         KImage(SDL_Surface *surf)
         {
-            surface = surf;
+            m_surface = surf;
         }
 
         KImage(const KImage& orig) = delete;
@@ -93,9 +94,9 @@ namespace KayLib
         virtual ~KImage()
         {
             // if a surface exists free it.
-            if(surface != nullptr)
+            if(m_surface != nullptr)
             {
-                SDL_FreeSurface(surface);
+                SDL_FreeSurface(m_surface);
             }
         }
 
@@ -107,16 +108,16 @@ namespace KayLib
         bool loadImage(const std::string file)
         {
             // if a surface exists free it.
-            if(surface != nullptr)
+            if(m_surface != nullptr)
             {
-                SDL_FreeSurface(surface);
+                SDL_FreeSurface(m_surface);
             }
 
             // attempt to load the image.
-            surface = IMG_Load(file.c_str());
+            m_surface = IMG_Load(file.c_str());
 
             // if it failed return an error state and push message to output.
-            if(surface == nullptr)
+            if(m_surface == nullptr)
             {
                 //    KError::Error("Failed to load texture \"" + file + "\": " + IMG_GetError());
                 return false;
@@ -139,16 +140,16 @@ namespace KayLib
             }
 
             // if it failed return an error state and push message to output.
-            if(surface == nullptr)
+            if(m_surface == nullptr)
             {
                 //    KError::Error("Failed to load texture \"" + file + "\": " + IMG_GetError());
                 return false;
             }
 
-            SDL_Surface *loadedImage = surface;
+            SDL_Surface *loadedImage = m_surface;
 
-            surface = SDL_ConvertSurface(loadedImage, format, 0);
-            if(surface == nullptr)
+            m_surface = SDL_ConvertSurface(loadedImage, format, 0);
+            if(m_surface == nullptr)
             {
                 // if the surface was not optimized return an error state and push message to output.
                 // push the error message.
@@ -170,9 +171,9 @@ namespace KayLib
          * @param y The y position to render to.
          * @note The blit size will be the size of this image.
          */
-        void blitSurface(SDL_Surface *dest, int x, int y)
+        void blitSurface(SDL_Surface *dest, const int x, const int y) const
         {
-            if(surface == nullptr || dest == nullptr)
+            if(m_surface == nullptr || dest == nullptr)
             {
                 return;
             }
@@ -181,7 +182,7 @@ namespace KayLib
             pos.x = x;
             pos.y = y;
 
-            if(SDL_BlitSurface(surface, nullptr, dest, &pos) == -2)
+            if(SDL_BlitSurface(m_surface, nullptr, dest, &pos) == -2)
             {
                 // to-do: image memory was lost reload it.
             }
@@ -194,11 +195,11 @@ namespace KayLib
          * @param y The y position to render to.
          * @note The blit size will be the size of this image.
          */
-        void blitSurface(KImage *dest, int x, int y)
+        void blitSurface(KImage *dest, const int x, const int y) const
         {
             if(dest != nullptr)
             {
-                blitSurface(dest->surface, x, y);
+                blitSurface(dest->m_surface, x, y);
             }
         }
 
@@ -208,9 +209,9 @@ namespace KayLib
          * @param dRect The rectangle area of the destination to render to.
          * @note The blit size will be the size of dRect.
          */
-        void blitSurface(SDL_Surface *dest, const KRect &dRect)
+        void blitSurface(SDL_Surface *dest, const KRect &dRect) const
         {
-            if(surface == nullptr || dest == nullptr)
+            if(m_surface == nullptr || dest == nullptr)
             {
                 return;
             }
@@ -218,7 +219,7 @@ namespace KayLib
             SDL_Rect dr = KRectTOSDLRect(dRect);
             SDL_Rect sr = KRectTOSDLRect(dRect);
             sr.x = sr.y = 0;
-            if(SDL_BlitSurface(surface, &sr, dest, &dr) == -2)
+            if(SDL_BlitSurface(m_surface, &sr, dest, &dr) == -2)
             {
                 // to-do: image memory was lost reload it.
             }
@@ -230,11 +231,11 @@ namespace KayLib
          * @param dRect The rectangle area of the destination to render to.
          * @note The blit size will be the size of dRect.
          */
-        void blitSurface(KImage *dest, const KRect &dRect)
+        void blitSurface(KImage *dest, const KRect &dRect) const
         {
             if(dest != nullptr)
             {
-                blitSurface(dest->surface, dRect);
+                blitSurface(dest->m_surface, dRect);
             }
         }
 
@@ -246,9 +247,9 @@ namespace KayLib
          * @param sRect The rectangle area of the source to render from.
          * @note The blit size will be the size of sRect.
          */
-        void blitSurface(SDL_Surface *dest, int x, int y, const KRect &sRect)
+        void blitSurface(SDL_Surface *dest, const int x, const int y, const KRect &sRect) const
         {
-            if(surface == nullptr || dest == nullptr)
+            if(m_surface == nullptr || dest == nullptr)
             {
                 return;
             }
@@ -258,7 +259,7 @@ namespace KayLib
             dr.x = x;
             dr.y = y;
 
-            if(SDL_BlitSurface(surface, &sr, dest, &dr) == -2)
+            if(SDL_BlitSurface(m_surface, &sr, dest, &dr) == -2)
             {
                 // to-do: image memory was lost reload it.
             }
@@ -272,11 +273,11 @@ namespace KayLib
          * @param sRect The rectangle area of the source to render from.
          * @note The blit size will be the size of sRect.
          */
-        void blitSurface(KImage *dest, int x, int y, const KRect &sRect)
+        void blitSurface(KImage *dest, const int x, const int y, const KRect &sRect) const
         {
             if(dest != nullptr)
             {
-                blitSurface(dest->surface, x, y, sRect);
+                blitSurface(dest->m_surface, x, y, sRect);
             }
         }
 
@@ -287,9 +288,9 @@ namespace KayLib
          * @param sRect The rectangle area of the source to render from.
          * @note The blit size will scale to the size of sRect.
          */
-        void blitSurface(SDL_Surface *dest, const KRect &dRect, const KRect &sRect)
+        void blitSurface(SDL_Surface *dest, const KRect &dRect, const KRect &sRect) const
         {
-            if(surface == nullptr || dest == nullptr)
+            if(m_surface == nullptr || dest == nullptr)
             {
                 return;
             }
@@ -297,7 +298,7 @@ namespace KayLib
             SDL_Rect sr = KRectTOSDLRect(sRect);
             SDL_Rect dr = KRectTOSDLRect(dRect);
 
-            if(SDL_BlitScaled(surface, &sr, dest, &dr) == -2)
+            if(SDL_BlitScaled(m_surface, &sr, dest, &dr) == -2)
             {
                 // to-do: image memory was lost reload it.
             }
@@ -310,11 +311,11 @@ namespace KayLib
          * @param sRect The rectangle area of the source to render from.
          * @note The blit size will scale to the size of sRect.
          */
-        void blitSurface(KImage *dest, const KRect &dRect, const KRect &sRect)
+        void blitSurface(KImage *dest, const KRect &dRect, const KRect &sRect) const
         {
             if(dest != nullptr)
             {
-                blitSurface(dest->surface, dRect, sRect);
+                blitSurface(dest->m_surface, dRect, sRect);
             }
         }
 
@@ -322,52 +323,52 @@ namespace KayLib
          * Get the width of the surface.
          * @return The width of the surface.
          */
-        int width()
+        int width() const
         {
-            return (surface == nullptr) ? 0 : surface->w;
+            return (m_surface == nullptr) ? 0 : m_surface->w;
         }
 
         /**
          * Get the height of the surface.
          * @return The height of the surface.
          */
-        int height()
+        int height() const
         {
-            return (surface == nullptr) ? 0 : surface->h;
+            return (m_surface == nullptr) ? 0 : m_surface->h;
         }
 
         /**
          * Get the size of the image.
          * @return The size of the image.
          */
-        KSize getSize()
+        KSize getSize() const
         {
-            return (surface == nullptr) ? KSize() : KSize(surface->w, surface->h);
+            return (m_surface == nullptr) ? KSize() : KSize(m_surface->w, m_surface->h);
         }
 
         /**
          * Get the pixel format of the surface.
          * @return The pixel format of the surface.
          */
-        SDL_PixelFormat *format()
+        SDL_PixelFormat *format() const
         {
-            return (surface == nullptr) ? 0 : surface->format;
+            return (m_surface == nullptr) ? 0 : m_surface->format;
         }
 
-        SDL_Surface *getSurface()
+        SDL_Surface *getSurface() const
         {
-            return surface;
+            return m_surface;
         };
 
-        KRect getRect()
+        KRect getRect() const
         {
-            return surface == nullptr ? KRect() : KRect(0, 0, surface->w, surface->h);
+            return m_surface == nullptr ? KRect() : KRect(0, 0, m_surface->w, m_surface->h);
         };
 
     private:
-        SDL_Surface *surface;
+        SDL_Surface *m_surface;
 
-        inline SDL_Rect KRectTOSDLRect(const KRect &k)
+        inline SDL_Rect KRectTOSDLRect(const KRect &k) const 
         {
             SDL_Rect rect;
             rect.x = k.x;
@@ -385,17 +386,17 @@ namespace KayLib
          * @param w The new width for the surface.
          * @param h The new height for the surface.
          */
-        void resize(int w, int h)
+        void resize(const int w, const int h)
         {
-            if(surface != nullptr)
+            if(m_surface != nullptr)
             {
-                if(surface->w == w && surface->h == h)
+                if(m_surface->w == w && m_surface->h == h)
                     return; // surface size remains constant. do nothing.
                 // different size free old surface
-                SDL_FreeSurface(surface);
+                SDL_FreeSurface(m_surface);
             }
             // create new surface.
-            surface = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
+            m_surface = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
         }
 
         /**
@@ -405,18 +406,18 @@ namespace KayLib
          */
         void setPixel(const KPoint &p, const KColor &color)
         {
-            if(surface == nullptr)
+            if(m_surface == nullptr)
             {
                 return;
             }
-            if(p.x >= surface->w || p.y >= surface->h || p.x < 0 || p.y < 0)
+            if(p.x >= m_surface->w || p.y >= m_surface->h || p.x < 0 || p.y < 0)
             {
                 return;
             }
-            int bpp = surface->format->BytesPerPixel;
+            int bpp = m_surface->format->BytesPerPixel;
             // Get pixel pointer.
-            uint8_t *pixel = (uint8_t *) surface->pixels;
-            pixel += p.y * surface->pitch;
+            uint8_t *pixel = (uint8_t *) m_surface->pixels;
+            pixel += p.y * m_surface->pitch;
             pixel += p.x * bpp;
             // Get pixel mask.
             uint32_t mask = 0xffffffff;
@@ -425,7 +426,7 @@ namespace KayLib
             // Set new value.
             uint32_t *pixel32 = (uint32_t *) pixel;
             *pixel32 =
-                    (SDL_MapRGBA(surface->format, color.r, color.g, color.b, color.a) & mask) |
+                    (SDL_MapRGBA(m_surface->format, color.r, color.g, color.b, color.a) & mask) |
                     (*pixel32 & invMask);
             //*pixel32 = colorToUInt(color);
         }
@@ -435,21 +436,21 @@ namespace KayLib
          * @param p The location of the pixel.
          * @return The color.
          */
-        KColor getPixel(const KPoint &p)
+        KColor getPixel(const KPoint &p) const
         {
             KColor color;
-            if(surface == nullptr)
+            if(m_surface == nullptr)
             {
                 return color;
             }
-            if(p.x >= surface->w || p.y >= surface->h || p.x < 0 || p.y < 0)
+            if(p.x >= m_surface->w || p.y >= m_surface->h || p.x < 0 || p.y < 0)
             {
                 return color;
             }
-            uint8_t *pixel = (uint8_t *) surface->pixels;
-            pixel += p.y * surface->pitch;
-            pixel += p.x * surface->format->BytesPerPixel;
-            SDL_GetRGBA(*((uint32_t *) pixel), surface->format, &color.r, &color.g, &color.b, &color.a);
+            uint8_t *pixel = (uint8_t *) m_surface->pixels;
+            pixel += p.y * m_surface->pitch;
+            pixel += p.x * m_surface->format->BytesPerPixel;
+            SDL_GetRGBA(*((uint32_t *) pixel), m_surface->format, &color.r, &color.g, &color.b, &color.a);
             return color;
         }
 
@@ -461,7 +462,7 @@ namespace KayLib
          */
         void drawLine(const KPoint &p1, const KPoint &p2, const KColor &color)
         {
-            if(surface == nullptr)
+            if(m_surface == nullptr)
             {
                 return;
             }
@@ -475,7 +476,7 @@ namespace KayLib
             int c = dx > dy ? dx : dy;
 
             // TO-DO: improve the efficiency by using a formula not a loop.
-            if(p.x >= surface->w || p.y >= surface->h || p.x < 0 || p.y < 0)
+            if(p.x >= m_surface->w || p.y >= m_surface->h || p.x < 0 || p.y < 0)
             {
                 // Line starts out of bounds of image. iterate till it's in bounds.
                 while(c >= 0)
@@ -494,28 +495,28 @@ namespace KayLib
                         e += dx;
                         p.y += sy;
                     }
-                    if(p.x < surface->w && p.y < surface->h && p.x >= 0 && p.y >= 0)
+                    if(p.x < m_surface->w && p.y < m_surface->h && p.x >= 0 && p.y >= 0)
                     {
                         // We are now in bounds.
                         break;
                     }
                 }
             }
-            int bpp = surface->format->BytesPerPixel;
-            int ptch = surface->pitch;
+            int bpp = m_surface->format->BytesPerPixel;
+            int ptch = m_surface->pitch;
             // Get pixel mask.
             uint32_t mask = 0xffffffff;
             uint32_t invMask = 0xffffffff << bpp;
             mask = invMask ^ 0xffffffff;
             // Get pixel pointer.
-            uint8_t *pixel = (uint8_t *) surface->pixels;
+            uint8_t *pixel = (uint8_t *) m_surface->pixels;
             pixel += p.y * ptch;
             pixel += p.x * bpp;
             // pre multiply so this is only once.
             bpp *= sx;
             ptch *= sy;
             // Get color.
-            uint32_t col = mask & SDL_MapRGBA(surface->format, color.r, color.g, color.b, color.a);
+            uint32_t col = mask & SDL_MapRGBA(m_surface->format, color.r, color.g, color.b, color.a);
             while(c >= 0)
             {
                 c--;
@@ -530,7 +531,7 @@ namespace KayLib
                     e -= dy;
                     p.x += sx;
                     // Are we still in bounds?
-                    if(p.x >= surface->w || p.x < 0)
+                    if(p.x >= m_surface->w || p.x < 0)
                     {
                         // We have gone out of bounds, no need to continue.
                         break;
@@ -543,7 +544,7 @@ namespace KayLib
                     e += dx;
                     p.y += sy;
                     // Are we still in bounds?
-                    if(p.y >= surface->h || p.y < 0)
+                    if(p.y >= m_surface->h || p.y < 0)
                     {
                         // We have gone out of bounds, no need to continue.
                         break;
@@ -561,7 +562,7 @@ namespace KayLib
          * @param color The color to draw.
          * @note nPoints / 2 lines are drawn.
          */
-        void drawLines(int nPoints, const KPoint p[], const KColor &color)
+        void drawLines(const int nPoints, const KPoint p[], const KColor &color)
         {
             int i = 0;
             while(i < nPoints - 1)
@@ -579,7 +580,7 @@ namespace KayLib
          * @param color The color to draw.
          * @note nPoints-1 lines are drawn.
          */
-        void drawLineStrip(int nPoints, const KPoint p[], const KColor &color)
+        void drawLineStrip(const int nPoints, const KPoint p[], const KColor &color)
         {
             int i = 0;
             while(i < nPoints - 1)
@@ -598,7 +599,7 @@ namespace KayLib
          * @param color The color to draw.
          * @note nPoints lines are drawn.
          */
-        void drawLineLoop(int nPoints, const KPoint p[], const KColor &color)
+        void drawLineLoop(const int nPoints, const KPoint p[], const KColor &color)
         {
             int i = 0;
             while(i < nPoints - 1)
@@ -625,9 +626,9 @@ namespace KayLib
         void fillRect(const KRect &rect, const KColor &color)
         {
             SDL_Rect r = KRectTOSDLRect(rect);
-            if(surface != nullptr)
+            if(m_surface != nullptr)
             {
-                SDL_FillRect(surface, &r, SDL_MapRGBA(surface->format, color.r, color.g, color.b, color.a));
+                SDL_FillRect(m_surface, &r, SDL_MapRGBA(m_surface->format, color.r, color.g, color.b, color.a));
             }
         }
 

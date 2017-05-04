@@ -47,6 +47,16 @@ namespace KayLib
             a = alpha;
         }
 
+        bool operator==(const KColor &c) const
+        {
+            return (r == c.r) && (g == c.g) && (b == c.b) && (a == c.a);
+        }
+
+        bool operator!=(const KColor &c) const
+        {
+            return !(*this == c);
+        }
+
         static KColor aliceBlue()
         {
             return KColor(240, 248, 255);
