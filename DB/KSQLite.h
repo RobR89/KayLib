@@ -23,7 +23,7 @@
 namespace KayLib
 {
     class KSQLite;
-    
+
     class KSQLiteStatement : public KSQLStatement
     {
     public:
@@ -31,20 +31,20 @@ namespace KayLib
 
         KSQLiteStatement()
         {
-            statement = nullptr;
+            m_statement = nullptr;
         }
 
         virtual ~KSQLiteStatement()
         {
-            if(statement != nullptr)
+            if(m_statement != nullptr)
             {
-                sqlite3_finalize(statement);
+                sqlite3_finalize(m_statement);
             }
         }
 
-        bool bind(int index, const char *data, int length)
+        bool bind(const int index, const char *data, const int length)
         {
-            int result = sqlite3_bind_blob(statement, index, data, length, SQLITE_TRANSIENT);
+            int result = sqlite3_bind_blob(m_statement, index, data, length, SQLITE_TRANSIENT);
             if(result != SQLITE_OK)
             {
                 return false;
@@ -65,7 +65,7 @@ namespace KayLib
             return protocol;
         }
 
-        sqlite3_stmt *statement;
+        sqlite3_stmt *m_statement;
     };
 
     class KSQLite : public KSQL
@@ -74,7 +74,7 @@ namespace KayLib
 
         KSQLite()
         {
-            connection = nullptr;
+            m_connection = nullptr;
             //TO-DO: add mutex lock to prevent multi-init.
             int &inits = getInits();
             if(inits == 0)
@@ -92,10 +92,10 @@ namespace KayLib
 
         virtual ~KSQLite()
         {
-            if(connection != nullptr)
+            if(m_connection != nullptr)
             {
-                sqlite3_close(connection);
-                connection = nullptr;
+                sqlite3_close(m_connection);
+                m_connection = nullptr;
             }
             //TO-DO: add mutex lock to prevent premature shutdown.
             int &inits = getInits();
@@ -108,49 +108,153 @@ namespace KayLib
 
         virtual bool connect(const std::string &host, const std::string &user, const std::string &passWord, const std::string &database)
         {
-            int state = sqlite3_open(database.c_str(), &connection);
+            int state = sqlite3_open(database.c_str(), &m_connection);
             if(state)
             {
-                errorCode = sqlite3_errcode(connection);
-                lastError = sqlite3_errmsg(connection);
+                m_errorCode = sqlite3_errcode(m_connection);
+                m_lastError = sqlite3_errmsg(m_connection);
                 return false;
             }
-            errorCode = 0;
-            lastError = "";
+            m_errorCode = 0;
+            m_lastError = "";
             return true;
         }
 
         virtual std::shared_ptr<KSQLStatement> prepare(const std::string &query)
         {
             sqlite3_stmt *statement;
-            int state = sqlite3_prepare_v2(connection, query.c_str(), -1, &statement, 0);
+            int state = sqlite3_prepare_v2(m_connection, query.c_str(), -1, &statement, 0);
             if(state != SQLITE_OK)
             {
-                errorCode = sqlite3_errcode(connection);
-                lastError = sqlite3_errmsg(connection);
+                m_errorCode = sqlite3_errcode(m_connection);
+                m_lastError = sqlite3_errmsg(m_connection);
                 return nullptr;
             }
             std::shared_ptr<KSQLiteStatement> stmt = std::make_shared<KSQLiteStatement>();
-            stmt->statement = statement;
+            stmt->m_statement = statement;
             return stmt;
         }
 
         virtual std::shared_ptr<KSQLResult> query(const std::string &query)
         {
             sqlite3_stmt *statement;
-            int state = sqlite3_prepare_v2(connection, query.c_str(), -1, &statement, 0);
+            int state = sqlite3_prepare_v2(m_connection, query.c_str(), -1, &statement, 0);
             if(state != SQLITE_OK)
             {
-                errorCode = sqlite3_errcode(connection);
-                lastError = sqlite3_errmsg(connection);
+                m_errorCode = sqlite3_errcode(m_connection);
+                m_lastError = sqlite3_errmsg(m_connection);
                 return nullptr;
             }
-            std::vector<std::vector<const KSQLCell *>> rows;
+            sqlRowList_t rows;
             int cols = sqlite3_column_count(statement);
+            int result = constructResult(cols, statement, rows);
+            m_affected = sqlite3_changes(m_connection);
+            if(result != SQLITE_DONE)
+            {
+                m_errorCode = sqlite3_errcode(m_connection);
+                m_lastError = sqlite3_errmsg(m_connection);
+                sqlite3_finalize(statement);
+                return nullptr;
+            }
+            std::shared_ptr<KSQLResult> res = std::make_shared<KSQLResult>(cols, rows);
+            sqlite3_finalize(statement);
+            m_errorCode = 0;
+            m_lastError = "";
+            return res;
+        }
+
+        virtual std::shared_ptr<KSQLResult> query(const std::shared_ptr<KSQLStatement> &query)
+        {
+            if(query.get() == nullptr || query->getProtocol() != KSQLiteStatement::protocol())
+            {
+                return nullptr;
+            }
+            KSQLiteStatement *lStatement = (KSQLiteStatement *) query.get();
+            sqlRowList_t rows;
+            int cols = sqlite3_column_count(lStatement->m_statement);
+            int result = constructResult(cols, lStatement->m_statement, rows);
+            m_affected = sqlite3_changes(m_connection);
+            if(result != SQLITE_DONE)
+            {
+                m_errorCode = sqlite3_errcode(m_connection);
+                m_lastError = sqlite3_errmsg(m_connection);
+                return nullptr;
+            }
+            std::shared_ptr<KSQLResult> res = std::make_shared<KSQLResult>(cols, rows);
+            m_errorCode = 0;
+            m_lastError = "";
+            return res;
+        }
+
+        virtual bool command(const std::string &query)
+        {
+            sqlite3_stmt *statement;
+            int state = sqlite3_prepare_v2(m_connection, query.c_str(), -1, &statement, 0);
+            if(state != SQLITE_OK)
+            {
+                m_errorCode = sqlite3_errcode(m_connection);
+                m_lastError = sqlite3_errmsg(m_connection);
+                return false;
+            }
             int result;
             while((result = sqlite3_step(statement)) == SQLITE_ROW)
             {
-                std::vector<const KSQLCell *> values;
+                // unexpected data....
+            }
+            m_affected = sqlite3_changes(m_connection);
+            if(result != SQLITE_DONE)
+            {
+                m_errorCode = sqlite3_errcode(m_connection);
+                m_lastError = sqlite3_errmsg(m_connection);
+                sqlite3_finalize(statement);
+                return false;
+            }
+            sqlite3_finalize(statement);
+            m_errorCode = 0;
+            m_lastError = "";
+            return true;
+        }
+
+        virtual bool command(const std::shared_ptr<KSQLStatement> &query)
+        {
+            if(query.get() == nullptr || query->getProtocol() != KSQLiteStatement::protocol())
+            {
+                return false;
+            }
+            KSQLiteStatement *lStatement = (KSQLiteStatement *) query.get();
+            int result;
+            while((result = sqlite3_step(lStatement->m_statement)) == SQLITE_ROW)
+            {
+                // unexpected data...
+            }
+            m_affected = sqlite3_changes(m_connection);
+            if(result != SQLITE_DONE)
+            {
+                m_errorCode = sqlite3_errcode(m_connection);
+                m_lastError = sqlite3_errmsg(m_connection);
+                sqlite3_finalize(lStatement->m_statement);
+                return false;
+            }
+            m_errorCode = 0;
+            m_lastError = "";
+            return true;
+        }
+
+    private:
+        sqlite3 *m_connection;
+
+        static int &getInits()
+        {
+            static int sqLiteInits = 0;
+            return sqLiteInits;
+        }
+
+        int constructResult(const int cols, sqlite3_stmt *statement, sqlRowList_t & rows)
+        {
+            int result;
+            while((result = sqlite3_step(statement)) == SQLITE_ROW)
+            {
+                sqlCellList_t values;
                 for(int col = 0; col < cols; col++)
                 {
                     char *data = nullptr;
@@ -167,127 +271,9 @@ namespace KayLib
                     }
                     values.push_back(new KSQLCell(len, data));
                 }
-                rows.push_back(values);
+                rows.push_back(new KSQLResultRow(cols, values));
             }
-            affected = rows.size();
-            if(result != SQLITE_DONE)
-            {
-                errorCode = sqlite3_errcode(connection);
-                lastError = sqlite3_errmsg(connection);
-                sqlite3_finalize(statement);
-                return nullptr;
-            }
-            std::shared_ptr<KSQLResult> res = std::make_shared<KSQLResult>(cols, rows);
-            sqlite3_finalize(statement);
-            errorCode = 0;
-            lastError = "";
-            return res;
-        }
-
-        virtual std::shared_ptr<KSQLResult> query(const std::shared_ptr<KSQLStatement> &query)
-        {
-            if(query.get() == nullptr || query->getProtocol() != KSQLiteStatement::protocol())
-            {
-                return nullptr;
-            }
-            KSQLiteStatement *lStatement = (KSQLiteStatement *) query.get();
-            std::vector<std::vector<const KSQLCell *>> rows;
-            int cols = sqlite3_column_count(lStatement->statement);
-            int result;
-            while((result = sqlite3_step(lStatement->statement)) == SQLITE_ROW)
-            {
-                std::vector<const KSQLCell *> values;
-                for(int col = 0; col < cols; col++)
-                {
-                    char *data = nullptr;
-                    int len = 0;
-                    if(sqlite3_column_type((lStatement->statement), col) == SQLITE_BLOB)
-                    {
-                        data = (char*) sqlite3_column_blob((lStatement->statement), col);
-                        len = sqlite3_column_bytes((lStatement->statement), col);
-                    }
-                    else
-                    {
-                        data = (char*) sqlite3_column_text((lStatement->statement), col);
-                        len = std::strlen(data) + 1;
-                    }
-                    values.push_back(new KSQLCell(len, data));
-                }
-                rows.push_back(values);
-            }
-            affected = rows.size();
-            if(result != SQLITE_DONE)
-            {
-                errorCode = sqlite3_errcode(connection);
-                lastError = sqlite3_errmsg(connection);
-                return nullptr;
-            }
-            std::shared_ptr<KSQLResult> res = std::make_shared<KSQLResult>(cols, rows);
-            errorCode = 0;
-            lastError = "";
-            return res;
-        }
-
-        virtual bool command(const std::string &query)
-        {
-            sqlite3_stmt *statement;
-            int state = sqlite3_prepare_v2(connection, query.c_str(), -1, &statement, 0);
-            if(state != SQLITE_OK)
-            {
-                errorCode = sqlite3_errcode(connection);
-                lastError = sqlite3_errmsg(connection);
-                return false;
-            }
-            int result;
-            affected = 0;
-            while((result = sqlite3_step(statement)) == SQLITE_ROW)
-            {
-                affected++;
-            }
-            if(result != SQLITE_DONE)
-            {
-                errorCode = sqlite3_errcode(connection);
-                lastError = sqlite3_errmsg(connection);
-                sqlite3_finalize(statement);
-                return false;
-            }
-            sqlite3_finalize(statement);
-            errorCode = 0;
-            lastError = "";
-            return true;
-        }
-
-        virtual bool command(const std::shared_ptr<KSQLStatement> &query)
-        {
-            if(query.get() == nullptr || query->getProtocol() != KSQLiteStatement::protocol())
-            {
-                return false;
-            }
-            KSQLiteStatement *lStatement = (KSQLiteStatement *) query.get();
-            int result;
-            affected = 0;
-            while((result = sqlite3_step(lStatement->statement)) == SQLITE_ROW)
-            {
-                affected++;
-            }
-            if(result != SQLITE_DONE)
-            {
-                errorCode = sqlite3_errcode(connection);
-                lastError = sqlite3_errmsg(connection);
-                sqlite3_finalize(lStatement->statement);
-                return false;
-            }
-            errorCode = 0;
-            lastError = "";
-            return true;
-        }
-
-    private:
-        sqlite3 *connection;
-        static int &getInits()
-        {
-            static int sqLiteInits = 0;
-            return sqLiteInits;
+            return result;
         }
     };
 

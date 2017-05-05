@@ -7,6 +7,7 @@
 #include "IO.h"
 #include "UtilityTests.h"
 #include "GraphicsTest.h"
+#include "DBTest.h"
 
 #endif /* TESTS_H */
 

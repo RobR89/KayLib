@@ -26,6 +26,11 @@ namespace KayLib
 
     class KSQLResult;
     class KSQLStatement;
+    class KSQLCell;
+    class KSQLResultRow;
+
+    typedef std::vector<const KSQLCell *> sqlCellList_t;
+    typedef std::vector<const KSQLResultRow *> sqlRowList_t;
 
     class KSQL
     {
@@ -79,33 +84,33 @@ namespace KayLib
          * Return the number of rows affected by the last query.
          * @return The number of rows affected.  Or -1 on error.
          */
-        int rowsAffected()
+        int rowsAffected() const
         {
-            return affected;
+            return m_affected;
         }
 
         /**
          * Get the last error message generated.
          * @return The error message.
          */
-        std::string getLastError()
+        std::string getLastError() const
         {
-            return lastError;
+            return m_lastError;
         }
 
         /**
          * Get the last error code.
          * @return The error code.
          */
-        int getLastErrorCode()
+        int getLastErrorCode() const
         {
-            return errorCode;
+            return m_errorCode;
         }
 
     protected:
-        int affected = 0;
-        int errorCode;
-        std::string lastError;
+        int m_affected = 0;
+        int m_errorCode;
+        std::string m_lastError;
 
     };
 
@@ -113,7 +118,7 @@ namespace KayLib
     {
     public:
 
-        KSQLCell(int len, char *data) : length(len), value(KSQLCell::cpy(data, len)) { }
+        KSQLCell(const int len, const char *data) : length(len), value(KSQLCell::cpy(data, len)) { }
 
         KSQLCell(const KSQLCell &orig) = delete;
 
@@ -130,7 +135,7 @@ namespace KayLib
 
     private:
 
-        static const char *cpy(const char *data, int len)
+        static const char *cpy(const char *data, const int len)
         {
             if(data == nullptr || len == 0)
             {
@@ -143,57 +148,88 @@ namespace KayLib
         }
     };
 
-    class KSQLResult
+    class KSQLResultRow
     {
-        friend class KSQL;
     public:
-
-        KSQLResult(int cols, const std::vector<std::vector<const KSQLCell *>> &results)
+        KSQLResultRow(const int cols, const sqlCellList_t &results)
+        : m_cols(results)
         {
-            columns = cols;
-            for(auto row : results)
-            {
-                std::vector<const KSQLCell *> nRow;
-                for(auto col : row)
-                {
-                    nRow.push_back(col);
-                }
-                rows.push_back(nRow);
-            }
         }
-
-        KSQLResult(const KSQL &) = delete;
-
-        virtual ~KSQLResult()
+        ~KSQLResultRow()
         {
-            for(auto row : rows)
+            for(auto col : m_cols)
             {
-                for(auto cel : row)
-                {
-                    if(cel != nullptr)
-                    {
-                        delete cel;
-                    }
-                }
+                delete col;
             }
-        }
-
-        /**
-         * Get the number of rows in the result.
-         * @return The number of rows.
-         */
-        virtual int numRows()
-        {
-            return rows.size();
+            m_cols.clear();
         }
 
         /**
          * Get the number of columns in each row.
          * @return The number of columns.
          */
-        virtual int numColumns()
+        int numColumns() const
         {
-            return columns;
+            return m_cols.size();
+        }
+
+        const KSQLCell *operator[](const size_t index) const
+        {
+            if(index < 0 || index >= m_cols.size())
+            {
+                return nullptr;
+            }
+            return m_cols.at(index);
+        }
+        
+        const KSQLCell *getCol(const size_t index) const
+        {
+            return (*this)[index];
+        }
+
+    private:
+        sqlCellList_t m_cols;
+
+    };
+    
+    class KSQLResult
+    {
+        friend class KSQL;
+    public:
+
+        KSQLResult(const int cols, const sqlRowList_t &results)
+        : m_rows(results)
+        {
+            m_columns = cols;
+        }
+
+        KSQLResult(const KSQL &) = delete;
+
+        virtual ~KSQLResult()
+        {
+            for(auto row : m_rows)
+            {
+                delete row;
+            }
+            m_rows.clear();
+        }
+
+        /**
+         * Get the number of rows in the result.
+         * @return The number of rows.
+         */
+        virtual int numRows() const
+        {
+            return m_rows.size();
+        }
+
+        /**
+         * Get the number of columns in each row.
+         * @return The number of columns.
+         */
+        virtual int numColumns() const
+        {
+            return m_columns;
         }
 
         /**
@@ -201,18 +237,18 @@ namespace KayLib
          * @param row The row to get.
          * @return The result row.
          */
-        virtual std::vector<const KSQLCell *> getRow(int row)
+        virtual const KSQLResultRow *getRow(int row) const
         {
-            if(row < 0 || row > rows.size())
+            if(row < 0 || row >= m_rows.size())
             {
-                return std::vector<const KSQLCell *>();
+                return nullptr;
             }
-            return std::vector<const KSQLCell *>(rows[row]);
+            return m_rows[row];
         }
 
     private:
-        int columns;
-        std::vector<std::vector<const KSQLCell *>> rows;
+        int m_columns;
+        sqlRowList_t m_rows;
 
     };
 
@@ -233,7 +269,7 @@ namespace KayLib
          * @param length The length of the data.
          * @return True on success.
          */
-        virtual bool bind(int index, const char *data, int length) = 0;
+        virtual bool bind(const int index, const char *data, const int length) = 0;
 
         /**
          * Get an identifier string that indicates what type of prepared statement this is.
