@@ -21,6 +21,7 @@
       <logicalFolder name="f3" displayName="IO" projectFiles="true">
         <itemPath>IO/Event.h</itemPath>
         <itemPath>IO/Exceptions.h</itemPath>
+        <itemPath>IO/KChecksum.h</itemPath>
         <itemPath>IO/KFile.h</itemPath>
         <itemPath>IO/KThread.h</itemPath>
       </logicalFolder>
@@ -48,7 +49,6 @@
         <itemPath>Utility/Endian.h</itemPath>
         <itemPath>Utility/KEventRate.h</itemPath>
       </logicalFolder>
-      <itemPath>Test/GraphicsTest.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -59,7 +59,9 @@
                    projectFiles="true">
     </logicalFolder>
     <logicalFolder name="f1" displayName="Test" projectFiles="true">
-      <itemPath>Test/IO.h</itemPath>
+      <itemPath>Test/DBTest.h</itemPath>
+      <itemPath>Test/GraphicsTest.h</itemPath>
+      <itemPath>Test/IOTest.h</itemPath>
       <itemPath>Test/LuaTest.h</itemPath>
       <itemPath>Test/ParserTest.h</itemPath>
       <itemPath>Test/StringTest.h</itemPath>
@@ -118,6 +120,8 @@
       </item>
       <item path="IO/Exceptions.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="IO/KChecksum.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="IO/KFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="IO/KThread.h" ex="false" tool="3" flavor2="0">
@@ -148,9 +152,11 @@
       </item>
       <item path="String/KUTF.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Test/DBTest.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Test/GraphicsTest.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Test/IO.h" ex="false" tool="3" flavor2="0">
+      <item path="Test/IOTest.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Test/LuaTest.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -212,6 +218,8 @@
       </item>
       <item path="IO/Exceptions.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="IO/KChecksum.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="IO/KFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="IO/KThread.h" ex="false" tool="3" flavor2="0">
@@ -242,9 +250,11 @@
       </item>
       <item path="String/KUTF.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Test/DBTest.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Test/GraphicsTest.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Test/IO.h" ex="false" tool="3" flavor2="0">
+      <item path="Test/IOTest.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Test/LuaTest.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -306,6 +316,8 @@
       </item>
       <item path="IO/Exceptions.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="IO/KChecksum.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="IO/KFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="IO/KThread.h" ex="false" tool="3" flavor2="0">
@@ -336,9 +348,11 @@
       </item>
       <item path="String/KUTF.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Test/DBTest.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Test/GraphicsTest.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="Test/IO.h" ex="false" tool="3" flavor2="0">
+      <item path="Test/IOTest.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Test/LuaTest.h" ex="false" tool="3" flavor2="0">
       </item>

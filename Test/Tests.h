@@ -4,7 +4,7 @@
 #include "StringTest.h"
 #include "ParserTest.h"
 #include "LuaTest.h"
-#include "IO.h"
+#include "IOTest.h"
 #include "UtilityTests.h"
 #include "GraphicsTest.h"
 #include "DBTest.h"
